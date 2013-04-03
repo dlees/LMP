@@ -1,0 +1,33 @@
+#ifndef SONG_H
+#define SONG_H
+
+#include "music_item.h"
+
+#include <QString>
+#include <QList>
+#include <QDateTime>
+
+class Song : public Music_Item
+{
+public:
+    Song(QString filename_);
+
+    QString get_filename()
+        { return filename;}
+
+
+private:
+    int id;
+    QString filename;
+    int seconds;
+    int rating; // rating out of 5
+    QDateTime created;
+
+    //    Artist *artist; //consider List
+    //    Album *album; // consider list
+    //    QList<Playlist *> playlists; //could be useful
+
+    static int max_id;
+};
+
+#endif // SONG_H
