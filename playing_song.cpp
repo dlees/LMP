@@ -1,8 +1,12 @@
 #include "playing_song.h"
 
+#include <QDateTime>
+
 #include "error.h"
 #include "song.h"
-#include <QDateTime>
+#include "database.h"
+
+const int min_secs_c = 0;
 
 Playing_Song::Playing_Song()
     : cur_playing(0),
@@ -41,7 +45,7 @@ void Playing_Song::update_position()
     // don't update if it's paused, there is no song,
     // or it hasn't been a second yet
     // this logic should be changed to the oposite way! 381!
-    if (!paused && song_exists() && cur_time - start_time > 1000)
+    if (!paused && song_exists() && cur_time - start_time > min_secs_c)
     {
         long start_sec = position;
         position += cur_time - start_time;
@@ -49,7 +53,9 @@ void Playing_Song::update_position()
 
         start_time = cur_time;
 
- //       DB.insert_sec_count(song, start_sec, end_sec);
+        cur_playing->add_secs(end_sec - start_sec);
+
+        Database::get()->save_sec_count(cur_playing->get_id(), start_sec, end_sec);
     }
 }
 

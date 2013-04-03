@@ -7,9 +7,10 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-    QHBoxLayout *layout = new QHBoxLayout(this);
 
     QWidget *widget = new QWidget;
+
+    QHBoxLayout *layout = new QHBoxLayout(widget);
 
     QPushButton *butt = new QPushButton("play", widget);
 

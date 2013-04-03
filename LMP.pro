@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     mainwindow.cpp \
     main.cpp \
     collection.cpp \
-    media_manager.cpp
+    media_manager.cpp \
+    database.cpp
 
 HEADERS  += mainwindow.h \
     song.h \
@@ -31,6 +32,7 @@ HEADERS  += mainwindow.h \
     mainwindow.h \
     error.h \
     collection.h \
-    media_manager.h
+    media_manager.h \
+    database.h
 
 OTHER_FILES +=

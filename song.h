@@ -15,6 +15,11 @@ public:
     QString get_filename()
         { return filename;}
 
+    int get_id()
+        { return id; }
+
+    void add_secs(int amt);
+
 
 private:
     int id;

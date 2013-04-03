@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PLAYING_SONG
+#define PLAYING_SONG
 
 class Song;
 #include "music_player.h"
@@ -68,3 +69,4 @@ private:
     void set_song(Song *song_);
 };
 
+#endif
