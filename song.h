@@ -10,7 +10,7 @@
 class Song : public Music_Item
 {
 public:
-    Song(QString filename_);
+    Song(const QString &filename_, const QString &name = "new song");
 
     QString get_filename()
         { return filename;}
@@ -19,7 +19,6 @@ public:
         { return id; }
 
     void add_secs(int amt);
-
 
 private:
     int id;

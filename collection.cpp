@@ -1,6 +1,7 @@
 #include "collection.h"
 
-Collection::Collection()
+Collection::Collection(const QString &name)
+    : Music_Item(name)
 {
 }
 

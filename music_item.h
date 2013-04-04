@@ -6,12 +6,11 @@
 class Music_Item
 {
 public:
-    Music_Item();    
-    virtual ~Music_Item() = 0 {}
+    Music_Item(const QString &name);
+    virtual ~Music_Item() = 0;
 
     const QString &get_name()
         { return name; }
-
 
 
 private:

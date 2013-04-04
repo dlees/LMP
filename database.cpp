@@ -22,7 +22,8 @@ void Database::save_sec_count(int ID, qint64 start, qint64 end)
      */
 }
 
-void Database::add_song(int ID, const QString &filename, const QDateTime& created)
+void Database::add_song(int ID, const QString &filename,
+                        const QString &name, const QDateTime& created)
 {
     qDebug() << "At" << created << filename << "added to DB with ID =" << ID ;
 }

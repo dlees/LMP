@@ -1,10 +1,13 @@
 #include "media_manager.h"
 
 #include "song.h"
+#include "library.h"
+#include "playlist.h"
 
 Media_Manager::Media_Manager()
+    : cur_list(new Playlist())
 {
-    playing.replace_song(new Song("C:/Friday.mp3"));
+    play_new("C:\Friday.mp3");
 }
 
 void Media_Manager::play_cur()
@@ -17,8 +20,13 @@ void Media_Manager::play_cur()
 
 void Media_Manager::play_new(QString filename)
 {
-    playing.replace_song(new Song(filename));
+    Song *new_song;
+
+    playing.replace_song(new_song = new Song(filename));
     playing.play();
+
+    lib.add_song(new_song);
+    cur_list->add(new_song);
 }
 
 void Media_Manager::play_new(Song *song)

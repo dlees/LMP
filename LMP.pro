@@ -22,7 +22,9 @@ SOURCES += main.cpp\
     main.cpp \
     collection.cpp \
     media_manager.cpp \
-    database.cpp
+    database.cpp \
+    library.cpp \
+    playlist.cpp
 
 HEADERS  += mainwindow.h \
     song.h \
@@ -33,6 +35,8 @@ HEADERS  += mainwindow.h \
     error.h \
     collection.h \
     media_manager.h \
-    database.h
+    database.h \
+    library.h \
+    playlist.h
 
 OTHER_FILES +=

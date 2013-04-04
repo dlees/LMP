@@ -4,8 +4,10 @@
 #include <QString>
 
 #include "playing_song.h"
+#include "library.h"
 
 class Song;
+class Playlist;
 
 /* This class is the main "Model" for the music player.
  *  MainWindow is the "View/Controller" for it.
@@ -34,8 +36,8 @@ public:
 
 private:
     Playing_Song playing;
-
-
+    Library lib;
+    Playlist *cur_list;
 };
 
 #endif // MEDIA_MANAGER_H

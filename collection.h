@@ -8,8 +8,9 @@
 class Collection : public Music_Item
 {
 public:
-    Collection();
+    Collection(const QString &);
 
+public:
     void add(Music_Item *);
     void remove(Music_Item *);
     const QSet<Music_Item*> &get_children();
