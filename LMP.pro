@@ -18,8 +18,6 @@ SOURCES += main.cpp\
     playing_song.cpp \
     music_player.cpp \
     music_item.cpp \
-    mainwindow.cpp \
-    main.cpp \
     collection.cpp \
     media_manager.cpp \
     database.cpp \
@@ -31,7 +29,6 @@ HEADERS  += mainwindow.h \
     playing_song.h \
     music_player.h \
     music_item.h \
-    mainwindow.h \
     error.h \
     collection.h \
     media_manager.h \
