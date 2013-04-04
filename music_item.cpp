@@ -5,3 +5,8 @@ Music_Item::Music_Item(const QString &name_)
 {
 
 }
+
+Music_Item::~Music_Item()
+{
+
+}
