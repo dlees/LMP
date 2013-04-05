@@ -16,9 +16,14 @@ public:
 
 private:
     QToolButton *play;
-    QToolButton *pause;
     QToolButton *previous;
     QToolButton *next;
+
+//public signals:
+
+
+//slots:
+
 
 };
 

@@ -1,20 +1,15 @@
 #include "button_container.h"
+#include "media_manager.h"
 
 Button_Container::Button_Container(QWidget *parent)
 {
-    QToolBar *toolBar = new QToolBar(parent);
-    QHBoxLayout *layout = new QHBoxLayout(toolBar);
-    //QHBoxLayout *layout = new QHBoxLayout(this);
-
-    play = new QToolButton(toolBar);
-    //pause = new QToolButton(toolBar);
-    //play = new QToolButton(this);
+    play = new QToolButton(this);
     play->setIcon(QIcon(QString::fromUtf8(":/buttons/play.png")));
+    play->setGeometry(0, 0, 10, 20);
+    connect(play, SIGNAL(clicked()),
+            Media_Manager::get(), SLOT(play_cur()));
 
-    layout->addWidget(play);
-    //layout->addWidget(pause);
-    this->setLayout(layout);
-    //this->setCentralWidget(toolBar);
+    this->addWidget(play);
 }
 
 Button_Container::~Button_Container()
