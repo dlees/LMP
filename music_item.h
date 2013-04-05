@@ -12,9 +12,15 @@ public:
     const QString &get_name()
         { return name; }
 
+    int get_id()
+        { return id; }
+
 private:
+    int id;
     QString name;
 
+
+    static int max_id;
 };
 
 #endif // MUSIC_ITEM_H
