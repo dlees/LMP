@@ -20,7 +20,6 @@ public slots:
 private:
     void setupMenu();
 
-
 };
 
 #endif // MAINWINDOW_H
