@@ -37,3 +37,6 @@ HEADERS  += mainwindow.h \
     playlist.h
 
 OTHER_FILES +=
+
+RESOURCES += \
+    icons/buttons.qrc

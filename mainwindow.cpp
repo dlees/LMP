@@ -12,7 +12,13 @@ MainWindow::MainWindow(QWidget *parent)
 
     QHBoxLayout *layout = new QHBoxLayout(widget);
 
-    QPushButton *butt = new QPushButton("play", widget);
+    QToolButton *butt = new QToolButton(widget);
+    QIcon icon;
+    QPixmap pixmap(":/buttons/pause.png");
+    icon.addPixmap(pixmap, QIcon::Normal, QIcon::Off);
+    butt->setIcon(icon);
+
+    //QPushButton *butt = new QPushButton("play", widget);
 
     connect(butt, SIGNAL(clicked())
             , this, SLOT(play()));
