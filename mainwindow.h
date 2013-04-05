@@ -18,6 +18,8 @@ public slots:
     void open_and_play();
 
 private:
+    void setupMenu();
+
 
 };
 

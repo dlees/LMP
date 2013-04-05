@@ -8,10 +8,12 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-
     QWidget *widget = new QWidget;
+    QVBoxLayout *mainLayout = new QVBoxLayout(widget);
 
-    QVBoxLayout *layout = new QVBoxLayout(widget);
+    QHBoxLayout *centerLayout = new QHBoxLayout;
+    QLabel *label_placeholder = new QLabel("Center panes");
+    centerLayout->addWidget(label_placeholder);
 
     Button_Container *button_container = new Button_Container(100, 30);
 
@@ -20,14 +22,21 @@ MainWindow::MainWindow(QWidget *parent)
     connect(butt2, SIGNAL(clicked())
             , this, SLOT(open_and_play()));
 
-    layout->addWidget(button_container);
+    mainLayout->addLayout(centerLayout);
+    mainLayout->addWidget(button_container);
+    //mainLayout.addWidget(play_controller);
+    mainLayout->addWidget(butt2);
 
-    layout->addWidget(butt2);
-
-    widget->setLayout(layout);
+    widget->setLayout(mainLayout);
 
     this->setCentralWidget(widget);
+    setupMenu();
+}
 
+void MainWindow::setupMenu()
+{
+    QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
+    QMenu *editMenu = menuBar()->addMenu(tr("&Edit"));
 }
 
 MainWindow::~MainWindow()

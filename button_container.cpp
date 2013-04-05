@@ -40,5 +40,7 @@ void Button_Container::set_icon_pause()
 
 Button_Container::~Button_Container()
 {
-
+    delete playPause;
+    delete previous;
+    delete next;
 }
