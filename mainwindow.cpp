@@ -44,10 +44,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::play()
 {
-    manager.play_cur();
+    Media_Manager::get()->play_cur();
 }
 
 void MainWindow::open_and_play()
 {
-    manager.play_new("C:/Call Me Maybe");
+    Media_Manager::get()->play_new("C:/Call Me Maybe");
 }
