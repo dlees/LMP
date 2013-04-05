@@ -12,7 +12,6 @@ public:
     const QString &get_name()
         { return name; }
 
-
 private:
     QString name;
 

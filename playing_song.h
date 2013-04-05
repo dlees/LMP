@@ -1,8 +1,11 @@
 #ifndef PLAYING_SONG
 #define PLAYING_SONG
 
-class Song;
+#include <QObject>
+
 #include "music_player.h"
+
+class Song;
 
 /* This class is used to record Second Counts
  *
@@ -10,8 +13,10 @@ class Song;
  *
  */
 
-class Playing_Song
+class Playing_Song : public QObject
 {
+    Q_OBJECT
+
 public:
     Playing_Song();
 
@@ -49,6 +54,10 @@ public:
 
     Song *get_cur_song()
         { return cur_playing; }
+
+signals:
+    void became_paused();
+    void started_playing();
 
 private:
     Song *cur_playing;

@@ -54,8 +54,14 @@ public slots:
     void next();
     void prev();
 
-private:
+    void became_paused_slot() {emit became_paused();}
+    void started_playing_slot() {emit started_playing();}
 
+signals:
+    void became_paused();
+    void started_playing();
+
+private:
     Media_Manager();
 
     Playing_Song playing;

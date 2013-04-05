@@ -7,6 +7,12 @@
 Media_Manager::Media_Manager()
     : cur_list(new Playlist())
 {
+    connect(&playing, SIGNAL(became_paused()),
+            this, SLOT(became_paused_slot()));
+    connect(&playing, SIGNAL(started_playing()),
+            this, SLOT(started_playing_slot()));
+
+
     play_new("C:\\Friday.mp3");
 }
 

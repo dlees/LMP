@@ -11,7 +11,7 @@ public:
     Collection(const QString &);
 
 public:
-    void add(Music_Item *);
+    virtual void add(Music_Item *);
     void remove(Music_Item *);
     const QSet<Music_Item*> &get_children();
 

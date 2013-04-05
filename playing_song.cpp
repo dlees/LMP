@@ -28,6 +28,8 @@ void Playing_Song::play()
     start_time = QDateTime::currentMSecsSinceEpoch();
 
     paused = false;
+
+    emit started_playing();
 }
 
 void Playing_Song::pause()
@@ -35,6 +37,8 @@ void Playing_Song::pause()
     update_position();
     mp.pause_song();
     paused = true;
+
+    emit became_paused();
 }
 
 // prints second count to the file
