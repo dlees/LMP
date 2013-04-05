@@ -7,7 +7,7 @@
 Media_Manager::Media_Manager()
     : cur_list(new Playlist())
 {
-    play_new("C:\Friday.mp3");
+    play_new("C:\\Friday.mp3");
 }
 
 void Media_Manager::play_cur()
@@ -20,18 +20,18 @@ void Media_Manager::play_cur()
 
 void Media_Manager::play_new(QString filename)
 {
-    Song *new_song;
+    Song *new_song = new Song(filename);
 
-    playing.replace_song(new_song = new Song(filename));
+    play_new(new_song);
+}
+
+void Media_Manager::play_new(Song *new_song)
+{    
+    playing.replace_song(new_song);
     playing.play();
 
     lib.add_song(new_song);
     cur_list->add(new_song);
-}
-
-void Media_Manager::play_new(Song *song)
-{
-
 }
 
 void Media_Manager::first()

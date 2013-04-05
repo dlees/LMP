@@ -3,6 +3,8 @@
 
 #include <QString>
 
+#include <QObject>
+
 #include "playing_song.h"
 #include "library.h"
 
@@ -24,12 +26,16 @@ class Playlist;
  *  So, to call play_cur(),
  *      Media_Manager::get()->play_cur();
  *
+ *  to connect a signal to play_cur(),
+ *      connect(###, ###, Media_Manager::get(), SLOT(play_cur()));
  *
  */
 
 
-class Media_Manager
+class Media_Manager : public QObject
 {
+    Q_OBJECT
+
 public:
     static Media_Manager *get()
     {
@@ -37,6 +43,7 @@ public:
         return m;
     }
 
+public slots:
     // plays the current song
     void play_cur();
 

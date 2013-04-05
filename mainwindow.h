@@ -18,7 +18,6 @@ public slots:
     void open_and_play();
 
 private:
-    Media_Manager manager;
 
 };
 
