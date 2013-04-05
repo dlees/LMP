@@ -13,18 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     QVBoxLayout *layout = new QVBoxLayout(widget);
 
-    Button_Container *button_container = new Button_Container(this);
-    //QToolButton *butt = new QToolButton(widget);
-    /*QIcon icon;
-    QPixmap pixmap(":/buttons/play.png");
-    icon.addPixmap(pixmap, QIcon::Normal, QIcon::Off);
-    butt->setIcon(icon);
-    */
-
-    //butt->setIcon(QIcon(QString::fromUtf8(":/buttons/play.png")));
-
-   // connect(butt, SIGNAL(clicked())
-     //       , this, SLOT(play()));
+    Button_Container *button_container = new Button_Container(100, 30);
 
     QPushButton *butt2 = new QPushButton("Call Me Maybe", widget);
 
@@ -32,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
             , this, SLOT(open_and_play()));
 
     layout->addWidget(button_container);
-   // layout->addWidget(butt);
+
     layout->addWidget(butt2);
 
     widget->setLayout(layout);

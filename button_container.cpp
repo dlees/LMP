@@ -1,15 +1,41 @@
 #include "button_container.h"
 #include "media_manager.h"
 
-Button_Container::Button_Container(QWidget *parent)
+Button_Container::Button_Container(int w, int h)
 {
-    play = new QToolButton(this);
-    play->setIcon(QIcon(QString::fromUtf8(":/buttons/play.png")));
-    play->setGeometry(0, 0, 10, 20);
-    connect(play, SIGNAL(clicked()),
+    setFixedSize(w, h);
+
+    playPause = new QToolButton(this);
+    playPause->setIcon(QIcon(":/buttons/play.png"));
+    playPause->setGeometry(0, 0, 10, 20);
+    connect(playPause, SIGNAL(clicked()),
             Media_Manager::get(), SLOT(play_cur()));
 
-    this->addWidget(play);
+    previous = new QToolButton(this);
+    previous->setIcon(QIcon(":/buttons/prev.png"));
+    previous->setGeometry(0, 0, 10, 20);
+    connect(previous, SIGNAL(clicked()),
+            Media_Manager::get(), SLOT(prev()));
+
+    next = new QToolButton(this);
+    next->setIcon(QIcon(":/buttons/next.png"));
+    next->setGeometry(0, 0, 10, 20);
+    connect(next, SIGNAL(clicked()),
+            Media_Manager::get(), SLOT(next()));
+
+    addWidget(previous);
+    addWidget(playPause);
+    addWidget(next);
+}
+
+void Button_Container::set_icon_play()
+{
+    playPause->setIcon(QIcon(QString::fromUtf8(":/buttons/play.png")));
+}
+
+void Button_Container::set_icon_pause()
+{
+    playPause->setIcon(QIcon(QString::fromUtf8(":/buttons/pause.png")));
 }
 
 Button_Container::~Button_Container()

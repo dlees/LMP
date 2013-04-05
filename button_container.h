@@ -10,20 +10,19 @@ class Button_Container : public QToolBar
     Q_OBJECT
 
 public:
-    //Width, Height parameter?
-    Button_Container(QWidget *parent = 0);
+    Button_Container(int w, int h);
     ~Button_Container();
 
 private:
-    QToolButton *play;
+    QToolButton *playPause;
     QToolButton *previous;
     QToolButton *next;
 
-//public signals:
+public slots:
+    void set_icon_play();
+    void set_icon_pause();
 
-
-//slots:
-
+signals:
 
 };
 
