@@ -3,6 +3,8 @@
 
 #include <QString>
 
+#include <QObject>
+
 #include "playing_song.h"
 #include "library.h"
 
@@ -16,14 +18,32 @@ class Playlist;
  *      keeping track of the library
  *      playing playlists
  *      manipulating the library
+ *
+ *  This is a Singleton. You can access the single
+ *  instance anywhere by calling:
+ *    Media_Manager::get()
+ *
+ *  So, to call play_cur(),
+ *      Media_Manager::get()->play_cur();
+ *
+ *  to connect a signal to play_cur(),
+ *      connect(###, ###, Media_Manager::get(), SLOT(play_cur()));
+ *
  */
 
 
-class Media_Manager
+class Media_Manager : public QObject
 {
-public:
-    Media_Manager();
+    Q_OBJECT
 
+public:
+    static Media_Manager *get()
+    {
+        static Media_Manager *m = new Media_Manager();
+        return m;
+    }
+
+public slots:
     // plays the current song
     void play_cur();
 
@@ -35,6 +55,9 @@ public:
     void prev();
 
 private:
+
+    Media_Manager();
+
     Playing_Song playing;
     Library lib;
     Playlist *cur_list;
