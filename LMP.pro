@@ -24,7 +24,8 @@ SOURCES += main.cpp\
     library.cpp \
     playlist.cpp \
     button_container.cpp \
-    play_controller.cpp
+    play_controller.cpp \
+    pane.cpp
 
 HEADERS  += mainwindow.h \
     song.h \
@@ -38,7 +39,8 @@ HEADERS  += mainwindow.h \
     library.h \
     playlist.h \
     button_container.h \
-    play_controller.h
+    play_controller.h \
+    pane.h
 
 OTHER_FILES +=
 
