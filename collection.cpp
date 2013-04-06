@@ -19,3 +19,26 @@ const QSet<Music_Item *> &Collection::get_children()
 {
     return children;
 }
+
+int Collection::total_secs()
+{
+    Music_Item *item;
+    int sum = 0;
+
+    foreach (item, children)
+        sum += item->total_secs();
+
+    return sum;
+}
+
+
+QLinkedList<Song*> Collection::get_leaves()
+{
+    Music_Item *item;
+    QLinkedList<Song*> leaves;
+
+    foreach (item, children)
+        leaves += item->get_leaves();
+
+    return leaves;
+}

@@ -2,6 +2,9 @@
 #define MUSIC_ITEM_H
 
 #include <QString>
+#include <QLinkedList>
+
+class Song;
 
 class Music_Item
 {
@@ -14,6 +17,9 @@ public:
 
     int get_id()
         { return id; }
+
+    virtual int total_secs() = 0;
+    virtual QLinkedList<Song*> get_leaves() = 0;
 
 private:
     int id;

@@ -17,6 +17,13 @@ public:
 
     void add_secs(int amt);
 
+    virtual int total_secs()
+        { return seconds; }
+
+
+    virtual QLinkedList<Song *> get_leaves();
+
+
 private:
     QString filename;
     int seconds;

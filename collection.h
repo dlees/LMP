@@ -15,6 +15,10 @@ public:
     void remove(Music_Item *);
     const QSet<Music_Item*> &get_children();
 
+    virtual int total_secs();
+
+    virtual QLinkedList<Song*> get_leaves();
+
 private:
     QSet<Music_Item*> children;
 

@@ -38,6 +38,8 @@ void Media_Manager::play_new(Song *new_song)
 
     lib.add_song(new_song);
     cur_list->add(new_song);
+
+
 }
 
 void Media_Manager::first()
@@ -51,6 +53,11 @@ void Media_Manager::prev()
 }
 
 void Media_Manager::next()
+{
+
+}
+
+void Media_Manager::add_to_playlist()
 {
 
 }

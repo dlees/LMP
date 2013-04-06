@@ -32,6 +32,7 @@ class Playlist;
  */
 
 
+
 class Media_Manager : public QObject
 {
     Q_OBJECT
@@ -53,6 +54,8 @@ public slots:
     void first();
     void next();
     void prev();
+
+    void add_to_playlist();
 
     void became_paused_slot() {emit became_paused();}
     void started_playing_slot() {emit started_playing();}

@@ -19,3 +19,10 @@ void Song::add_secs(int amt)
 {
     seconds += amt;
 }
+
+QLinkedList<Song*> Song::get_leaves()
+{
+    QLinkedList<Song*> list;
+    list.push_back(this);
+    return list;
+}
