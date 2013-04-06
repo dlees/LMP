@@ -16,10 +16,14 @@ public:
 public slots:
     void play();
     void open_and_play();
+    void quit();
 
 private:
+    void create_action();
     void create_menu();
 
+    QAction *exitAction;
+    QAction *addToPlaylist;
 };
 
 #endif // MAINWINDOW_H

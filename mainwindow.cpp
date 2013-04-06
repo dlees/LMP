@@ -43,12 +43,25 @@ MainWindow::MainWindow(QWidget *parent)
 
     widget->setLayout(mainLayout);
     this->setCentralWidget(widget);
+    create_action();
     create_menu();
+}
+
+void MainWindow::create_action()
+{
+    exitAction = new QAction(tr("&Exit"), this);
+    connect(exitAction, SIGNAL(triggered()),
+            this, SLOT(quit()));
+    addToPlaylist = new QAction(tr("Add current song to playlist"), this);
+    connect(addToPlaylist, SIGNAL(triggered()),
+            Media_Manager::get(), SLOT(add_to_playlist()));
 }
 
 void MainWindow::create_menu()
 {
     QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
+    fileMenu->addAction(addToPlaylist);
+    fileMenu->addAction(exitAction);
     QMenu *editMenu = menuBar()->addMenu(tr("&Edit"));
 }
 
@@ -65,4 +78,9 @@ void MainWindow::play()
 void MainWindow::open_and_play()
 {
     Media_Manager::get()->play_new("C:/Call Me Maybe");
+}
+
+void MainWindow::quit()
+{
+    QApplication::quit();
 }
