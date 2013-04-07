@@ -2,14 +2,20 @@
 
 #include <QDebug>
 
+Phonon::AudioOutput *curAudio;
+
 Music_Player::Music_Player()
 {
     curSong = new Phonon::MediaObject();
     curAudio = new Phonon::AudioOutput(Phonon::MusicCategory);
+    volumeSlider = new Phonon::VolumeSlider();
 
     Phonon::createPath(curSong, curAudio);
 
     curSong->setTickInterval(1000);
+    volumeSlider->setAudioOutput(curAudio);
+    volumeSlider->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+
 }
 
 // gets how many milliseconds are in the song

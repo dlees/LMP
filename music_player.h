@@ -47,7 +47,7 @@ public:
 
 private:
     Phonon::MediaObject *curSong;
-    Phonon::AudioOutput *curAudio;
+    Phonon::VolumeSlider *volumeSlider;
 };
 
 #endif // MUSIC_PLAYER_H
