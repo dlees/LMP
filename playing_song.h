@@ -25,7 +25,6 @@ public:
         return ps;
     }
 
-
     // changes the curSong to the song
     // does not play
     void replace_song(Song *song_);
@@ -35,8 +34,8 @@ public:
 
     void pause();
 
-
-
+    // throws error if past total duration
+    void change_position(int new_pos);
     void change_pos_relative(int relative_pos);
 
     // hotspots
@@ -66,6 +65,7 @@ public:
 signals:
     void became_paused();
     void started_playing();
+    void new_total_duration(int);
 
 private:
     Playing_Song();
@@ -86,9 +86,6 @@ private:
     bool song_exists();
 
     void set_song(Song *song_);
-public slots:
-    // throws error if past total duration
-    void change_position(int new_pos);
 };
 
 #endif
