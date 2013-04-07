@@ -7,6 +7,8 @@
  */
 
 #include <QString>
+#include <Phonon>
+#include <QCoreApplication>
 
 class Music_Player
 {
@@ -42,6 +44,10 @@ public:
     // gets how loud the player is playing at (0-100)
     //	0 = no sound, 100 = max loudness
     int get_volume_percent();
+
+private:
+    Phonon::MediaObject *curSong;
+    Phonon::AudioOutput *curAudio;
 };
 
 #endif // MUSIC_PLAYER_H
