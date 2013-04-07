@@ -96,3 +96,8 @@ int Music_Player::get_volume_percent()
 {
     return 100;
 }
+
+Phonon::MediaObject *::Music_Player:: get_media_object()
+{
+    return curSong;
+}

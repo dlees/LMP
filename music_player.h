@@ -45,6 +45,9 @@ public:
     //	0 = no sound, 100 = max loudness
     int get_volume_percent();
 
+    // returns a pointer to the MediaObject curSong
+    Phonon::MediaObject * get_media_object();
+
 private:
     Phonon::MediaObject *curSong;
     Phonon::VolumeSlider *volumeSlider;
