@@ -3,13 +3,16 @@
 #include "media_manager.h"
 
 Collection::Collection(const QString &name)
-    : Music_Item(name)
+    : Music_Item(name), tree_model(0)
 {
 }
 
 void Collection::add(Music_Item *item)
 {
     children.push_back(item);
+
+    if (tree_model)
+        tree_model->appendRow(item);
 }
 
 void Collection::remove(Music_Item *item)
