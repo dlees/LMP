@@ -19,11 +19,11 @@ public slots:
     void quit();
 
 private:
-    void create_action();
     void create_menu();
+    QAction *add_menu_item(char name[], bool enabled);
 
-    QAction *exitAction;
-    QAction *addToPlaylist;
+    QMenu *fileMenu;
+    QMenu *editMenu;
 };
 
 #endif // MAINWINDOW_H

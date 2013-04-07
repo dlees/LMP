@@ -14,11 +14,13 @@ MainWindow::MainWindow(QWidget *parent)
 {
     QWidget *widget = new QWidget;
 
-    QHBoxLayout *topLayout = new QHBoxLayout;
+    // displays title of center view, searchbar
+    QHBoxLayout *header_layout = new QHBoxLayout;
     QLabel *title = new QLabel("title");
-    topLayout->addWidget(title);
+    header_layout->addWidget(title);
     QLabel *search = new QLabel("searchbar");
-    topLayout->addWidget(search);
+    header_layout->addWidget(search);
+
 
     QHBoxLayout *centerLayout = new QHBoxLayout;
     QTreeView *tree = new QTreeView();
@@ -40,34 +42,37 @@ MainWindow::MainWindow(QWidget *parent)
     connect(butt2, SIGNAL(clicked())
             , this, SLOT(open_and_play()));
 
-    QVBoxLayout *mainLayout = new QVBoxLayout(widget);
-    mainLayout->addLayout(topLayout);
-    mainLayout->addLayout(centerLayout);
-    mainLayout->addWidget(play_controller);
-    mainLayout->addWidget(butt2);
+    // Add to main_layout
+    QVBoxLayout *main_layout = new QVBoxLayout(widget);
+    main_layout->addLayout(header_layout);
+    main_layout->addLayout(centerLayout);
+    main_layout->addWidget(play_controller);
+    main_layout->addWidget(butt2);
 
-    widget->setLayout(mainLayout);
+    widget->setLayout(main_layout);
     this->setCentralWidget(widget);
-    create_action();
-    create_menu();
-}
 
-void MainWindow::create_action()
-{
-    exitAction = new QAction(tr("&Exit"), this);
-    connect(exitAction, SIGNAL(triggered()),
-            this, SLOT(quit()));
-    addToPlaylist = new QAction(tr("Add current song to playlist"), this);
-    connect(addToPlaylist, SIGNAL(triggered()),
-            Media_Manager::get(), SLOT(add_cur_to_playlist()));
+    create_menu();
 }
 
 void MainWindow::create_menu()
 {
-    QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
-    fileMenu->addAction(addToPlaylist);
-    fileMenu->addAction(exitAction);
-    QMenu *editMenu = menuBar()->addMenu(tr("&Edit"));
+    fileMenu = menuBar()->addMenu(tr("&File"));
+    connect(add_menu_item((char*)"Add song to current playlist", true), SIGNAL(triggered()),
+            Media_Manager::get(), SLOT(add_cur_to_playlist()));
+    connect(add_menu_item((char*)"&Exit", true), SIGNAL(triggered()),
+            this, SLOT(quit()));
+
+    editMenu = menuBar()->addMenu(tr("&Edit"));
+}
+
+QAction *MainWindow::add_menu_item(char name[], bool enabled)
+{
+    QAction *newAct = new QAction(tr(name), this);
+    newAct->setEnabled(enabled);
+    fileMenu->addAction(newAct);
+
+    return newAct;
 }
 
 MainWindow::~MainWindow()
