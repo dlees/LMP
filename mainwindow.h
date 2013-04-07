@@ -16,6 +16,7 @@ public:
 public slots:
     void play();
     void open_and_play();
+    void add_files();
     void quit();
 
 private:

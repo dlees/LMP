@@ -38,8 +38,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     Play_Controller *play_controller = new Play_Controller();
     QPushButton *butt2 = new QPushButton("Call Me Maybe", widget);
-    connect(butt2, SIGNAL(clicked())
-            , this, SLOT(open_and_play()));
+    connect(butt2, SIGNAL(clicked()),
+            this, SLOT(open_and_play()));
 
     // Add all to main_layout
     QVBoxLayout *main_layout = new QVBoxLayout(widget);
@@ -58,6 +58,8 @@ void MainWindow::create_menu()
     fileMenu = menuBar()->addMenu(tr("&File"));
     connect(add_menu_item((char*)"Add song to current playlist", true), SIGNAL(triggered()),
             Media_Manager::get(), SLOT(add_cur_to_playlist()));
+    connect(add_menu_item((char*)"&Open song", true), SIGNAL(triggered()),
+            this, SLOT(add_files()));
     connect(add_menu_item((char*)"&Exit", true), SIGNAL(triggered()),
             this, SLOT(quit()));
 
@@ -86,6 +88,21 @@ void MainWindow::play()
 void MainWindow::open_and_play()
 {
     Media_Manager::get()->play_new("C:/Call Me Maybe");
+}
+
+void MainWindow::add_files()
+{
+    QStringList files = QFileDialog::getOpenFileNames(this, tr("Select Music Files"),
+        QDesktopServices::storageLocation(QDesktopServices::MusicLocation));
+
+    if (files.isEmpty())
+        return;
+
+    foreach (QString filename, files)
+    {
+        qDebug() << filename << endl;
+    }
+    Media_Manager::get()->play_new(files.at(0));
 }
 
 void MainWindow::quit()
