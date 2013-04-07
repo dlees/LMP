@@ -1,5 +1,7 @@
 #include "collection.h"
 
+#include "media_manager.h"
+
 Collection::Collection(const QString &name)
     : Music_Item(name)
 {
@@ -41,6 +43,11 @@ QLinkedList<Song*> Collection::get_leaves()
         leaves += item->get_leaves();
 
     return leaves;
+}
+
+void Collection::begin_playing()
+{
+    Media_Manager::get()->switch_playlist(this);
 }
 
 int Collection::rowCount(const QModelIndex &parent) const

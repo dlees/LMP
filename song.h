@@ -21,7 +21,10 @@ public:
         { return seconds; }
 
     virtual QLinkedList<Song *> get_leaves();
+    virtual void begin_playing();
 
+    void stop_playing()
+        {is_playing = false;}
 
 private:
     QString filename;
@@ -29,10 +32,13 @@ private:
     int rating; // rating out of 5
     QDateTime created;
 
+
     //    Artist *artist; //consider List
     //    Album *album; // consider list
     //    QList<Playlist *> playlists; //could be useful
 
+
+    bool is_playing;
 };
 
 #endif // SONG_H

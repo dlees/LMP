@@ -16,8 +16,6 @@ Media_Manager::Media_Manager()
     cur_list->add(new Song("Friday"));
     cur_list->add(new Song("Everyday"));
     cur_list->add(new Song("Both Days"));
-    cur_list->add(new Song("Everyday"));
-    cur_list->add(new Song("Both Days"));
     cur_list->add(new Song("Today"));
     play_new("C:\\Friday.mp3");
 }
@@ -39,11 +37,13 @@ void Media_Manager::play_new(QString filename)
 
 void Media_Manager::play_new(Song *new_song)
 {    
+
+    //playing.get_cur_song()->stop_playing();
+
     playing.replace_song(new_song);
     playing.play();
 
-    lib.add_song(new_song);
-    cur_list->add(new_song);
+//    lib.add_song(new_song);
 }
 
 void Media_Manager::first()
@@ -53,12 +53,12 @@ void Media_Manager::first()
 
 void Media_Manager::prev()
 {
-
+    cur_list->prev();
 }
 
 void Media_Manager::next()
 {
-
+    cur_list->next();
 }
 
 void Media_Manager::add_cur_to_playlist()
@@ -70,6 +70,16 @@ void Media_Manager::add_to_playlist(Song *song)
 {
     cur_list->add(song);
     emit playlist_updated();
+}
+
+void Media_Manager::switch_playlist(Collection *col)
+{
+    switch_playlist(new Playlist(col));
+}
+
+void Media_Manager::switch_playlist(Playlist *playlist)
+{
+    cur_list = playlist;
 }
 
 QStandardItemModel *Media_Manager::get_playlist()

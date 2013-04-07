@@ -15,6 +15,8 @@ public:
     virtual void add(Music_Item *);
     void remove(Music_Item *);
     const QList<Music_Item *> &get_children() const;
+    int count()
+        {return children.size();}
 
     virtual int total_secs() const;
     virtual QLinkedList<Song*> get_leaves();
@@ -26,7 +28,7 @@ public:
     // ListModel functions
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
     virtual QVariant data(const QModelIndex &index, int role) const;
-
+    virtual void begin_playing();
 
 private:
     QList<Music_Item*> children;

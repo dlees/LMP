@@ -23,6 +23,9 @@ public:
     virtual int total_secs() const = 0;
     virtual QLinkedList<Song*> get_leaves() = 0;
 
+    // have Media Manager start playing this item
+    virtual void begin_playing() = 0;
+
 
 
     int type()

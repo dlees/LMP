@@ -2,6 +2,7 @@
 
 #include "collection.h"
 #include "song.h"
+#include "database.h"
 
 Library::Library()
     : Collection("Library"),
@@ -12,5 +13,6 @@ Library::Library()
 
 void Library::add_song(Song *song)
 {
+
     songs->add(song);
 }

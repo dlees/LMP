@@ -7,10 +7,15 @@ class Playlist : public Collection
 {
 public:
     Playlist();
+    Playlist(Collection *);
 
     void add(Music_Item *);
 
-    void set_cur(int i);
+    void next();
+    void prev();
+
+private:
+    int cur;
 };
 
 #endif // PLAYLIST_H

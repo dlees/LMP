@@ -14,7 +14,6 @@ Music_Item::~Music_Item()
 
 }
 
-
 QVariant Music_Item::data(int role) const
 {
     switch (role)

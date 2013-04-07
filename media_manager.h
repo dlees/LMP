@@ -58,6 +58,8 @@ public slots:
 
     void add_cur_to_playlist();
     void add_to_playlist(Song *);
+    void switch_playlist(Collection *);
+    void switch_playlist(Playlist *);
 
     QStandardItemModel *get_playlist();
     QStandardItemModel *get_library();
