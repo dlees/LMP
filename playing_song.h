@@ -36,8 +36,7 @@ public:
     void pause();
 
 
-    // throws error if past total duration
-    void change_position(int new_pos);
+
     void change_pos_relative(int relative_pos);
 
     // hotspots
@@ -87,6 +86,9 @@ private:
     bool song_exists();
 
     void set_song(Song *song_);
+public slots:
+    // throws error if past total duration
+    void change_position(int new_pos);
 };
 
 #endif

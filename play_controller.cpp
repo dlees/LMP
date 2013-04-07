@@ -26,11 +26,13 @@ Play_Controller::Play_Controller()
 
     connect(Playing_Song::get().get_media_object(), SIGNAL(tick(qint64)),
             this, SLOT(set_slider_position(qint64)));
+    connect(slider, SIGNAL(valueChanged(int)),
+            &Playing_Song::get(), SLOT(change_position(int)));
 }
 
 void Play_Controller::set_slider_position(qint64 value)
 {
-    value = (value)/1000;
+    value /= 1000;
     slider->setValue((int) value);
 }
 
