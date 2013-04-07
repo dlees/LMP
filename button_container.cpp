@@ -3,7 +3,7 @@
 
 Button_Container::Button_Container(int w, int h)
 {
-    setFixedSize(w, h);
+    //setFixedSize(w, h);
 
     playPause = new QToolButton(this);
     playPause->setIcon(QIcon(":/buttons/play.png"));
