@@ -20,33 +20,33 @@ MainWindow::MainWindow(QWidget *parent)
     QLineEdit *search = new QLineEdit("search");
     center_layout->addWidget(search, 0, 2);
 
+    splitter = new QSplitter(Qt::Horizontal);
+
     // Library Pane
     QTreeView *tree = new QTreeView();
     Pane *libraryPane = new Pane("Library", tree);
     tree->setModel(Media_Manager::get()->get_library());
-    center_layout->addWidget(libraryPane, 1, 0);
+    splitter->addWidget(libraryPane);
 
     // Center Table
-    QLabel *centerPane = new QLabel("table");
-    center_layout->addWidget(centerPane, 1, 1);
+    QTreeView *test = new QTreeView();
+    Pane *centerPane = new Pane("table", test);
+    splitter->addWidget(centerPane);
 
     // Playlist Pane
     QListView *list = new QListView();
     list->setModel(Media_Manager::get()->get_playlist());
     Pane *playlistPane = new Pane("Currently Playing", list);
-    center_layout->addWidget(playlistPane, 1, 2);
+    splitter->addWidget(playlistPane);
+
+    center_layout->addWidget(splitter, 1, 0, 1, -1);
 
     Play_Controller *play_controller = new Play_Controller();
-    QPushButton *butt2 = new QPushButton("Call Me Maybe", widget);
-    connect(butt2, SIGNAL(clicked()),
-            this, SLOT(open_and_play()));
 
     // Add all to main_layout
     QVBoxLayout *main_layout = new QVBoxLayout(widget);
     main_layout->addLayout(center_layout);
     main_layout->addWidget(play_controller);
-    main_layout->addWidget(butt2);
-
     widget->setLayout(main_layout);
     this->setCentralWidget(widget);
 

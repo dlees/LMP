@@ -23,6 +23,8 @@ private:
     void create_menu();
     QAction *add_menu_item(char name[], bool enabled);
 
+    QSplitter *splitter;
+
     QMenu *fileMenu;
     QMenu *editMenu;
 };
