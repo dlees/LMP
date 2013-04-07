@@ -2,6 +2,7 @@
 #define PLAY_CONTROLLER_H
 
 #include <QFrame>
+#include <QSlider>
 #include "button_container.h"
 
 class Play_Controller : public QFrame
@@ -14,7 +15,10 @@ public:
 
 private:
     Button_Container *button_container;
+    QSlider *slider;
 
+public slots:
+    void set_slider_position(qint64 value);
 };
 
 #endif // PLAY_CONTROLLER_H
