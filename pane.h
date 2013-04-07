@@ -2,13 +2,14 @@
 #define PANE_H
 
 #include <QAbstractItemView>
+#include <QDockWidget>
 
-class Pane : public QWidget
+class Pane : public QDockWidget
 {
     Q_OBJECT
 
 public:
-    Pane(QAbstractItemView *items_);
+    Pane(QString title, QAbstractItemView *items_);
 
 private:
     QAbstractItemView *items;

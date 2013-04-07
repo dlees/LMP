@@ -6,7 +6,6 @@
 #include "button_container.h"
 #include "play_controller.h"
 #include "pane.h"
-
 #include "collection.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -14,39 +13,37 @@ MainWindow::MainWindow(QWidget *parent)
 {
     QWidget *widget = new QWidget;
 
-    // displays title of center view, searchbar
-    QHBoxLayout *header_layout = new QHBoxLayout;
-    QLabel *title = new QLabel("title");
-    header_layout->addWidget(title);
-    QLabel *search = new QLabel("searchbar");
-    header_layout->addWidget(search);
+    // displays 2 rows of title, and panes
+    QGridLayout *center_layout = new QGridLayout;
+    QLabel *title = new QLabel("Playlist name");
+    center_layout->addWidget(title, 0, 1);
+    QLineEdit *search = new QLineEdit("search");
+    center_layout->addWidget(search, 0, 2);
 
-
-    QHBoxLayout *centerLayout = new QHBoxLayout;
+    // Library Pane
     QTreeView *tree = new QTreeView();
-    Pane *libraryPane = new Pane(tree);
+    Pane *libraryPane = new Pane("Library", tree);
     tree->setModel(Media_Manager::get()->get_library());
-    centerLayout->addWidget(libraryPane);
-    Pane *centerPane = new Pane(NULL);
-    centerLayout->addWidget(centerPane);
+    center_layout->addWidget(libraryPane, 1, 0);
 
+    // Center Table
+    QLabel *centerPane = new QLabel("table");
+    center_layout->addWidget(centerPane, 1, 1);
 
+    // Playlist Pane
     QListView *list = new QListView();
     list->setModel(Media_Manager::get()->get_playlist());
-    Pane *playlistPane = new Pane(list);
-    centerLayout->addWidget(playlistPane);
+    Pane *playlistPane = new Pane("Currently Playing", list);
+    center_layout->addWidget(playlistPane, 1, 2);
 
     Play_Controller *play_controller = new Play_Controller();
-
     QPushButton *butt2 = new QPushButton("Call Me Maybe", widget);
-
     connect(butt2, SIGNAL(clicked())
             , this, SLOT(open_and_play()));
 
-    // Add to main_layout
+    // Add all to main_layout
     QVBoxLayout *main_layout = new QVBoxLayout(widget);
-    main_layout->addLayout(header_layout);
-    main_layout->addLayout(centerLayout);
+    main_layout->addLayout(center_layout);
     main_layout->addWidget(play_controller);
     main_layout->addWidget(butt2);
 
