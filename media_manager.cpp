@@ -6,7 +6,8 @@
 #include "collection.h"
 
 Media_Manager::Media_Manager()
-    : cur_list(new Playlist())
+    : cur_list(new Playlist()),
+      playing(Playing_Song::get())
 {
     connect(&playing, SIGNAL(became_paused()),
             this, SLOT(became_paused_slot()));

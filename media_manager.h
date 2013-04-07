@@ -78,9 +78,9 @@ signals:
 private:
     Media_Manager();
 
-    Playing_Song playing;
-    Library lib;
     Playlist *cur_list;
+    Playing_Song &playing;
+    Library lib;
 
 };
 

@@ -18,7 +18,13 @@ class Playing_Song : public QObject
     Q_OBJECT
 
 public:
-    Playing_Song();
+
+    static Playing_Song &get()
+    {
+        static Playing_Song ps;
+        return ps;
+    }
+
 
     // changes the curSong to the song
     // does not play
@@ -60,6 +66,8 @@ signals:
     void started_playing();
 
 private:
+    Playing_Song();
+
     Song *cur_playing;
     bool paused;	// true if the song is paused
     int totalDuration; // total length of the song in millisecs
