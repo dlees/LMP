@@ -7,6 +7,8 @@
 #include "play_controller.h"
 #include "pane.h"
 
+#include "collection.h"
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -24,7 +26,10 @@ MainWindow::MainWindow(QWidget *parent)
     centerLayout->addWidget(libraryPane);
     Pane *centerPane = new Pane(NULL);
     centerLayout->addWidget(centerPane);
+
+
     QListView *list = new QListView();
+    list->setModel(Media_Manager::get()->get_playlist());
     Pane *playlistPane = new Pane(list);
     centerLayout->addWidget(playlistPane);
 
@@ -54,7 +59,7 @@ void MainWindow::create_action()
             this, SLOT(quit()));
     addToPlaylist = new QAction(tr("Add current song to playlist"), this);
     connect(addToPlaylist, SIGNAL(triggered()),
-            Media_Manager::get(), SLOT(add_to_playlist()));
+            Media_Manager::get(), SLOT(add_cur_to_playlist()));
 }
 
 void MainWindow::create_menu()

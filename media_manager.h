@@ -10,6 +10,7 @@
 
 class Song;
 class Playlist;
+class Collection;
 
 /* This class is the main "Model" for the music player.
  *  MainWindow is the "View/Controller" for it.
@@ -55,7 +56,10 @@ public slots:
     void next();
     void prev();
 
-    void add_to_playlist();
+    void add_cur_to_playlist();
+    void add_to_playlist(Song *);
+
+    Collection *get_playlist();
 
     void became_paused_slot() {emit became_paused();}
     void started_playing_slot() {emit started_playing();}
@@ -64,12 +68,17 @@ signals:
     void became_paused();
     void started_playing();
 
+    void playlist_updated();
+    void library_updated();
+    void current_position(int);
+
 private:
     Media_Manager();
 
     Playing_Song playing;
     Library lib;
     Playlist *cur_list;
+
 };
 
 #endif // MEDIA_MANAGER_H

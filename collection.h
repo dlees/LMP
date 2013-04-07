@@ -3,9 +3,10 @@
 
 #include "music_item.h"
 
-#include <QSet>
+#include <QList>
+#include <QtGui>
 
-class Collection : public Music_Item
+class Collection : public Music_Item, public QAbstractListModel
 {
 public:
     Collection(const QString &);
@@ -13,14 +14,18 @@ public:
 public:
     virtual void add(Music_Item *);
     void remove(Music_Item *);
-    const QSet<Music_Item*> &get_children();
+    const QList<Music_Item *> &get_children();
 
     virtual int total_secs();
-
     virtual QLinkedList<Song*> get_leaves();
 
+
+    // ListModel functions
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    virtual QVariant data(const QModelIndex &index, int role) const;
+
 private:
-    QSet<Music_Item*> children;
+    QList<Music_Item*> children;
 
     // could sort by name? or own sorting Function*?
 

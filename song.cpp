@@ -3,8 +3,8 @@
 #include "database.h"
 
 
-Song::Song(const QString &filename_, const QString &name)
-    : Music_Item(name),
+Song::Song(const QString &filename_)
+    : Music_Item(filename_),
       filename(filename_),
       seconds(0),
       rating(3),
@@ -13,7 +13,6 @@ Song::Song(const QString &filename_, const QString &name)
 {
     Database::get()->add_song(get_id(), filename, get_name(), created);
 }
-
 
 void Song::add_secs(int amt)
 {

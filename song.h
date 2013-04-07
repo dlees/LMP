@@ -10,7 +10,7 @@
 class Song : public Music_Item
 {
 public:
-    Song(const QString &filename_, const QString &name = "new song");
+    Song(const QString &filename_);
 
     QString get_filename()
         { return filename;}

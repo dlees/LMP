@@ -7,15 +7,15 @@ Collection::Collection(const QString &name)
 
 void Collection::add(Music_Item *item)
 {
-    children.insert(item);
+    children.push_back(item);
 }
 
 void Collection::remove(Music_Item *item)
 {
-    children.remove(item);
+    children.removeOne(item);
 }
 
-const QSet<Music_Item *> &Collection::get_children()
+const QList<Music_Item *> &Collection::get_children()
 {
     return children;
 }
@@ -42,3 +42,28 @@ QLinkedList<Song*> Collection::get_leaves()
 
     return leaves;
 }
+
+int Collection::rowCount(const QModelIndex &parent) const
+{
+    Q_UNUSED(parent);
+    return children.count();
+}
+
+QVariant Collection::data(const QModelIndex &index, int role) const
+{
+    if (index.row() >= rowCount() || index.row() < 0)
+        { return QVariant(); }
+
+    Music_Item *element = children.at(index.row());
+
+    switch (role)
+    {
+        case Qt::DisplayRole:
+            return element->get_name();
+
+        default:
+            return QVariant();
+    }
+}
+
+
