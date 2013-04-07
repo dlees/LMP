@@ -26,14 +26,27 @@ Play_Controller::Play_Controller()
 
     connect(Playing_Song::get().get_media_object(), SIGNAL(tick(qint64)),
             this, SLOT(set_slider_position(qint64)));
-    connect(slider, SIGNAL(valueChanged(int)),
-            &Playing_Song::get(), SLOT(change_position(int)));
+    connect(slider, SIGNAL(sliderReleased()),
+            this, SLOT(send_new_position()));
+    connect(&Playing_Song::get(), SIGNAL(new_total_duration(int)),
+            this, SLOT(set_total_value(int)));
+
 }
 
 void Play_Controller::set_slider_position(qint64 value)
 {
-    value /= 1000;
+
     slider->setValue((int) value);
+}
+
+void Play_Controller::send_new_position()
+{
+    Playing_Song::get().change_position(slider->value());
+}
+
+void Play_Controller::set_total_value(int time)
+{
+    slider->setMaximum(time);
 }
 
 Play_Controller::~Play_Controller()

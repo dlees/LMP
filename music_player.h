@@ -48,6 +48,8 @@ public:
     // returns a pointer to the MediaObject curSong
     Phonon::MediaObject * get_media_object();
 
+    ~Music_Player();
+
 private:
     Phonon::MediaObject *curSong;
     Phonon::VolumeSlider *volumeSlider;

@@ -101,3 +101,11 @@ Phonon::MediaObject *::Music_Player:: get_media_object()
 {
     return curSong;
 }
+
+
+Music_Player::~Music_Player()
+{
+    delete curSong;
+    delete curAudio;
+    delete volumeSlider;
+}
