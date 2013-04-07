@@ -32,6 +32,8 @@ void Media_Manager::play_new(QString filename)
 {
     Song *new_song = new Song(filename);
 
+    lib.add_song(new_song);
+
     play_new(new_song);
 }
 
@@ -43,7 +45,6 @@ void Media_Manager::play_new(Song *new_song)
     playing.replace_song(new_song);
     playing.play();
 
-//    lib.add_song(new_song);
 }
 
 void Media_Manager::first()
@@ -84,7 +85,7 @@ void Media_Manager::switch_playlist(Playlist *playlist)
 
 QStandardItemModel *Media_Manager::get_playlist()
 {
-    return cur_list->get_list();
+    return cur_list->get_tree();
 }
 
 QStandardItemModel *Media_Manager::get_library()

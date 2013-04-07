@@ -29,6 +29,7 @@ public:
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
     virtual QVariant data(const QModelIndex &index, int role) const;
     virtual void begin_playing();
+    virtual void add_child(QStandardItem *);
 
 private:
     QList<Music_Item*> children;

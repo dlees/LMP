@@ -77,19 +77,33 @@ QStandardItemModel *Collection::get_tree()
 {
     Music_Item *item;
 
-    tree_model = new QStandardItemModel(children.size(),1);
+    tree_model = new QStandardItemModel();
 
     foreach (item, children)
+    {
         tree_model->appendRow(item);
+        item->add_child(item);
+    }
 
     return tree_model;
+}
+
+void Collection::add_child(QStandardItem *parent)
+{
+    Music_Item *item;
+
+    foreach (item, children)
+    {
+        parent->appendRow(item);
+        item->add_child(item);
+    }
 }
 
 QStandardItemModel *Collection::get_list()
 {
     Music_Item *item;
 
-    list_model = new QStandardItemModel(children.size(),1);
+    list_model = new QStandardItemModel();
 
     foreach (item, children)
         list_model->appendRow(item);

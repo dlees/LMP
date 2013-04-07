@@ -20,6 +20,11 @@ void Song::add_secs(int amt)
     seconds += amt;
 }
 
+void Song::add_child(QStandardItem *)
+{
+    return;
+}
+
 QLinkedList<Song*> Song::get_leaves()
 {
     QLinkedList<Song*> list;

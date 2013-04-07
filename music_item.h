@@ -26,7 +26,7 @@ public:
     // have Media Manager start playing this item
     virtual void begin_playing() = 0;
 
-
+    virtual void add_child(QStandardItem *) = 0;
 
     int type()
        {return UserType;}

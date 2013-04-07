@@ -23,6 +23,8 @@ public:
     virtual QLinkedList<Song *> get_leaves();
     virtual void begin_playing();
 
+    virtual void add_child(QStandardItem *);
+
     void stop_playing()
         {is_playing = false;}
 
