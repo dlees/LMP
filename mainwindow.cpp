@@ -25,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent)
     QHBoxLayout *centerLayout = new QHBoxLayout;
     QTreeView *tree = new QTreeView();
     Pane *libraryPane = new Pane(tree);
+    tree->setModel(Media_Manager::get()->get_library());
     centerLayout->addWidget(libraryPane);
     Pane *centerPane = new Pane(NULL);
     centerLayout->addWidget(centerPane);

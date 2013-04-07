@@ -59,7 +59,8 @@ public slots:
     void add_cur_to_playlist();
     void add_to_playlist(Song *);
 
-    Collection *get_playlist();
+    QStandardItemModel *get_playlist();
+    QStandardItemModel *get_library();
 
     void became_paused_slot() {emit became_paused();}
     void started_playing_slot() {emit started_playing();}

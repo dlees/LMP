@@ -13,3 +13,17 @@ Music_Item::~Music_Item()
 {
 
 }
+
+
+QVariant Music_Item::data(int role) const
+{
+    switch (role)
+    {
+        case Qt::DisplayRole:
+            qDebug() << get_name();
+            return get_name();
+
+        default:
+            return QVariant();
+    }
+}

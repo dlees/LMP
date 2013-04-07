@@ -16,6 +16,8 @@ Media_Manager::Media_Manager()
     cur_list->add(new Song("Friday"));
     cur_list->add(new Song("Everyday"));
     cur_list->add(new Song("Both Days"));
+    cur_list->add(new Song("Everyday"));
+    cur_list->add(new Song("Both Days"));
     cur_list->add(new Song("Today"));
     play_new("C:\\Friday.mp3");
 }
@@ -70,8 +72,12 @@ void Media_Manager::add_to_playlist(Song *song)
     emit playlist_updated();
 }
 
-
-Collection *Media_Manager::get_playlist()
+QStandardItemModel *Media_Manager::get_playlist()
 {
-    return cur_list;
+    return cur_list->get_list();
+}
+
+QStandardItemModel *Media_Manager::get_library()
+{
+    return lib.get_tree();
 }

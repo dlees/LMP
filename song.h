@@ -12,14 +12,13 @@ class Song : public Music_Item
 public:
     Song(const QString &filename_);
 
-    QString get_filename()
+    QString get_filename() const
         { return filename;}
 
     void add_secs(int amt);
 
-    virtual int total_secs()
+    virtual int total_secs() const
         { return seconds; }
-
 
     virtual QLinkedList<Song *> get_leaves();
 
