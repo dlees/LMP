@@ -6,7 +6,7 @@ Button_Container::Button_Container(int w, int h)
     //setFixedSize(w, h);
 
     playPause = new QToolButton(this);
-    playPause->setIcon(QIcon(":/buttons/play.png"));
+    playPause->setIcon(QIcon(":/buttons/pause.png"));
     playPause->setGeometry(0, 0, 10, 20);
     connect(playPause, SIGNAL(clicked()),
             Media_Manager::get(), SLOT(play_cur()));
@@ -22,6 +22,11 @@ Button_Container::Button_Container(int w, int h)
     next->setGeometry(0, 0, 10, 20);
     connect(next, SIGNAL(clicked()),
             Media_Manager::get(), SLOT(next()));
+
+    connect(Media_Manager::get(), SIGNAL(became_paused()),
+             this, SLOT(set_icon_play()));
+    connect(Media_Manager::get(), SIGNAL(started_playing()),
+             this, SLOT(set_icon_pause()));
 
     addWidget(previous);
     addWidget(playPause);
