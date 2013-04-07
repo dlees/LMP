@@ -61,6 +61,9 @@ public:
     Song *get_cur_song()
         { return cur_playing; }
 
+    Phonon::MediaObject *get_media_object()
+        {return mp.get_media_object();}
+
 signals:
     void became_paused();
     void started_playing();
