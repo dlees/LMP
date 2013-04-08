@@ -4,6 +4,8 @@
 #include <QDebug>
 #include <fstream>
 #include <ctime>
+#include <iostream>
+#include <sys/stat.h>
 #include "XML/xpath_static.h"
 
 using namespace std;
@@ -11,77 +13,124 @@ using namespace std;
 Database::Database(){
     //load or create all files/tables
 
+    ofstream temp;
+
+    //XX TODO change for windows
+    mkdir("database", S_IRWXU | S_IRWXG);
+
     //Song
     ifstream songStream("database/song.xml");
     if(!songStream){
-        //create file
-        ofstream temp("database/song.xml");
+        temp.open("database/song.xml");
+        temp.close();
     }
     //load file
     song.LoadFile("database/song.xml");
+    if(!songStream){
+        TiXmlElement *songRoot = new TiXmlElement("songRoot");
+        song.LinkEndChild(songRoot);
+        song.SaveFile();
+    }
 
     //Playlist
     ifstream playlistStream("database/playlist.xml");
     if(!playlistStream){
         //create file
-        ofstream temp("database/playlist.xml");
+        temp.open("database/playlist.xml");
+        temp.close();
     }
     //load file
     playlist.LoadFile("databse/playlist.xml");
+    if(!playlistStream){
+        TiXmlElement *playRoot = new TiXmlElement("playlistRoot");
+        playlist.LinkEndChild(playRoot);
+        playlist.SaveFile();
+    }
 
     //Album
     ifstream albumStream("database/album.xml");
     if(!albumStream){
         //create file
-        ofstream temp("database/album.xml");
+        temp.open("database/album.xml");
+        temp.close();
     }
     //load file
     album.LoadFile("database/album.xml");
+    if(!albumStream){
+        TiXmlElement *albumRoot = new TiXmlElement("albumRoot");
+        album.LinkEndChild(albumRoot);
+        album.SaveFile();
+    }
 
     //Artist
     ifstream artistStream("database/artist.xml");
     if(!artistStream){
-        //create file
-        ofstream temp("database/artist.xml");
+        temp.open("database/artist.xml");
+        temp.close();
     }
     //load file
     artist.LoadFile("database/artist.xml");
+    if(!artistStream){
+        TiXmlElement *artistRoot = new TiXmlElement("artistRoot");
+        artist.LinkEndChild(artistRoot);
+        artist.SaveFile();
+    }
 
     //SecCount
     ifstream secStream("database/secCount.xml");
     if(!secStream){
-        //create file
-        ofstream temp("database/secCount.xml");
+        temp.open("database/secCount.xml");
+        temp.close();
     }
     //load file
     secCount.LoadFile("database/secCount.xml");
+    if(!secStream){
+        TiXmlElement *secRoot = new TiXmlElement("secRoot");
+        secCount.LinkEndChild(secRoot);
+        secCount.SaveFile();
+    }
 
     //SongsInPlaylist
     ifstream SIPStream("database/songsInPlaylist.xml");
     if(!SIPStream){
-        //create file
-        ofstream temp("database/songsInPlaylist.xml");
+        temp.open("database/songsInPlaylist.xml");
+        temp.close();
     }
     //load file
     songsInPlaylist.LoadFile("database/songsInPlaylist.xml");
+    if(!SIPStream){
+        TiXmlElement *SIPRoot = new TiXmlElement("SIPRoot");
+        songsInPlaylist.LinkEndChild(SIPRoot);
+        songsInPlaylist.SaveFile();
+    }
 
     //SongsOnAlbum
     ifstream SOAStream("database/songsOnAlbum.xml");
     if(!SOAStream){
-        //create file
-        ofstream temp("database/songsOnAlbum.xml");
+        temp.open("database/songsOnAlbum.xml");
+        temp.close();
     }
     //load file
     songsOnAlbum.LoadFile("database/songsOnAlbum.xml");
+    if(!SOAStream){
+        TiXmlElement *SOARoot = new TiXmlElement("SOARoot");
+        songsOnAlbum.LinkEndChild(SOARoot);
+        songsOnAlbum.SaveFile();
+    }
 
     //AlbumsByArtist
     ifstream ABAStream("database/albumsByArtist.xml");
     if(!ABAStream){
-        //create file
-        ofstream temp("database/albumsByArtist.xml");
+        temp.open("database/albumsByArtist.xml");
+        temp.close();
     }
     //load file
     albumsByArtist.LoadFile("database/albumsByArtist.xml");
+    if(!ABAStream){
+        TiXmlElement *ABARoot = new TiXmlElement("ABARoot");
+        albumsByArtist.LinkEndChild(ABARoot);
+        albumsByArtist.SaveFile();
+    }
 
 
     //any other initialization goes here
@@ -108,7 +157,7 @@ void Database::save_sec_count(int ID, qint64 start, qint64 end)
     char temp[32];  //for fake itoa
 
     TiXmlElement *secCountE = new TiXmlElement("secCount");
-    secCount.LinkEndChild(secCountE);
+    secCount.FirstChild()->LinkEndChild(secCountE);
 
     TiXmlElement *idE = new TiXmlElement("ID");
     sprintf(temp, "%d", ID);
@@ -145,19 +194,22 @@ void Database::add_song(int songID, const QString &filename,
 {
     qDebug() << "At" << created << filename << "added to DB with ID =" << songID ;
 
-    char temp[32];
+    char temp[64];
 
     //temp data until real stuff gets put in
     QString artistName = "XTC";
     QString albumName = "Apple Venus Volume One";
     int albumID = 56345;
     int artistID = 98734;
+    int ret = 0;
 
-    if(true/*TODO if song not already in database*/){
-
+    sprintf(temp, "//ID", songID);
+    TinyXPath::o_xpath_int(song.FirstChild(), temp, ret);
+    if(ret!=songID){
+        cout << ret << " " << songID <<  endl;
         //Song
         TiXmlElement *songE = new TiXmlElement("song");
-        song.LinkEndChild(songE);
+        song.FirstChild()->LinkEndChild(songE);
 
         TiXmlElement *IDE = new TiXmlElement("ID");
         sprintf(temp, "%d", songID);
@@ -184,7 +236,7 @@ void Database::add_song(int songID, const QString &filename,
 
         //songOnAlbum
         TiXmlElement *onAlbumE = new TiXmlElement("songOnAlbum");
-        songsOnAlbum.LinkEndChild(onAlbumE);
+        songsOnAlbum.FirstChild()->LinkEndChild(onAlbumE);
 
         TiXmlElement *songIDE = new TiXmlElement("songID");
         sprintf(temp, "%d", songID);
@@ -200,11 +252,13 @@ void Database::add_song(int songID, const QString &filename,
 
         songsOnAlbum.SaveFile();
     }
-    if(true /*album not already in database*/){
-
+    sprintf(temp, "//ID/", albumID);
+    TinyXPath::o_xpath_int(album.FirstChild(), temp, ret);
+    if(ret!=albumID){
+        cout << ret << " " << albumID << endl;
         //album
         TiXmlElement *albumE = new TiXmlElement("album");
-        album.LinkEndChild(albumE);
+        album.FirstChild()->LinkEndChild(albumE);
 
         TiXmlElement *nameE = new TiXmlElement("name");
         TiXmlText *nameT = new TiXmlText(albumName.toStdString().c_str());
@@ -221,7 +275,7 @@ void Database::add_song(int songID, const QString &filename,
 
         //AlbumByArtist
         TiXmlElement *byArtistE = new TiXmlElement("albumByArtist");
-        albumsByArtist.LinkEndChild(byArtistE);
+        albumsByArtist.FirstChild()->LinkEndChild(byArtistE);
 
         TiXmlElement *albumIDE = new TiXmlElement("albumID");
         sprintf(temp, "%d", albumID);
@@ -237,10 +291,12 @@ void Database::add_song(int songID, const QString &filename,
 
         albumsByArtist.SaveFile();
     }
-    if(true /*artist not already in database*/){
+    sprintf(temp, "//ID/", artistID);
+    TinyXPath::o_xpath_int(artist.FirstChild(), temp, ret);
+    if(ret!=artistID){
         //artist
         TiXmlElement *artistE = new TiXmlElement("artist");
-        artist.LinkEndChild(artistE);
+        artist.FirstChild()->LinkEndChild(artistE);
 
         TiXmlElement *nameE = new TiXmlElement("name");
         TiXmlText *nameT = new TiXmlText(artistName.toStdString().c_str());
@@ -255,4 +311,31 @@ void Database::add_song(int songID, const QString &filename,
 
         artist.SaveFile();
     }
+}
+
+
+void delete_song(int ID){
+
+}
+
+int find_filename(const QString &filename){
+    // returns the ID of a song that has filename as its filename
+    // -1 if filename doesn't exit
+}
+
+QList<int> find(const QString &str){
+    // returns all the id's of anything in the database
+    // that has str in it (Songs, Artists, Albums, Playlists)
+}
+
+void newPlaylist(const QString &name){
+
+}
+
+void add_to_playlist(int songID, int listID){
+
+}
+
+void delete_from_playlist(int songID, int listID){
+
 }
