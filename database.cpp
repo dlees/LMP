@@ -16,7 +16,7 @@ Database::Database(){
     ofstream temp;
 
     //XX TODO change for windows
-    mkdir("database", S_IRWXU | S_IRWXG);
+    //mkdir("database", S_IRWXU | S_IRWXG);
 
     //Song
     ifstream songStream("database/song.xml");
@@ -321,11 +321,13 @@ void delete_song(int ID){
 int find_filename(const QString &filename){
     // returns the ID of a song that has filename as its filename
     // -1 if filename doesn't exit
+    return 0;
 }
 
 QList<int> find(const QString &str){
     // returns all the id's of anything in the database
     // that has str in it (Songs, Artists, Albums, Playlists)
+    return QList<int>();
 }
 
 void newPlaylist(const QString &name){
