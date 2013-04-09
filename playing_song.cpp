@@ -14,6 +14,7 @@ Playing_Song::Playing_Song()
       totalDuration(0),
       position(0)
 {
+    connect(&mp, SIGNAL(almost_done()), this, SLOT(almostdone_playsong()));
 
 }
 
@@ -166,6 +167,13 @@ void Playing_Song::set_volume_percent(int percent)
 int Playing_Song::get_volume_percent()
 {
     return mp.get_volume_percent();
+}
+
+
+void Playing_Song::almostdone_playsong()
+{
+    emit AlmostDone_PlaySong();
+    qDebug() << "Playing_Song: Almost Done" ;
 }
 
 void Playing_Song::close(){}

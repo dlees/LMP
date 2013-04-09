@@ -6,18 +6,21 @@
  *
  */
 
-#include <QString>/*
+#include <QString>
+#include <QObject>
 #ifdef __linux__
     #include <phonon/mediaobject.h>
     #include <phonon/audiooutput.h>
     #include <Phonon/VolumeSlider>
-#else*/
+#else
     #include <Phonon>
-//#endif
+#endif
 #include <QCoreApplication>
 
-class Music_Player
+class Music_Player : public QObject
 {
+    Q_OBJECT
+
 public:
     Music_Player();
 
@@ -55,6 +58,12 @@ public:
     Phonon::MediaObject * get_media_object();
 
     ~Music_Player();
+
+public slots:
+    void almostDone();
+
+signals:
+    void almost_done();
 
 private:
     Phonon::MediaObject *curSong;

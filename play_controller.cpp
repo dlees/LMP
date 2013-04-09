@@ -47,6 +47,8 @@ void Play_Controller::set_slider_position(qint64 value)
 {
 
     slider->setValue((int) value);
+
+    qDebug() << value ;
 }
 
 void Play_Controller::send_new_position()

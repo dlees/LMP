@@ -13,6 +13,8 @@ Media_Manager::Media_Manager()
             this, SLOT(became_paused_slot()));
     connect(&playing, SIGNAL(started_playing()),
             this, SLOT(started_playing_slot()));
+    connect(&playing, SIGNAL(AlmostDone_PlaySong()),
+            this, SLOT(next()));
 
     Song *new_song;
 
@@ -97,10 +99,10 @@ void Media_Manager::switch_playlist(Playlist *playlist)
 
 QStandardItemModel *Media_Manager::get_playlist()
 {
-    return cur_list->get_tree();
+    return cur_list->get_model();
 }
 
 QStandardItemModel *Media_Manager::get_library()
 {
-    return lib.get_tree();
+    return lib.get_model();
 }
