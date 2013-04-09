@@ -25,11 +25,20 @@ public:
     QStandardItemModel *get_list();
     QStandardItemModel *get_table();
 
-    // ListModel functions
+     virtual void begin_playing();
+
+    virtual void add_child(QStandardItem *);
+
+    // gets the appropriate headers for this music item
+    virtual QStringList get_headers() const;
+
+    virtual QList<QStandardItem*> get_column_data() const;
+
+
+
+// ListModel functions
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
     virtual QVariant data(const QModelIndex &index, int role) const;
-    virtual void begin_playing();
-    virtual void add_child(QStandardItem *);
 
 private:
     QList<Music_Item*> children;

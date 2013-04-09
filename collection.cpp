@@ -82,10 +82,16 @@ QStandardItemModel *Collection::get_tree()
 
     tree_model = new QStandardItemModel();
 
+    if (children.size())
+        tree_model->setHorizontalHeaderLabels(children.at(0)->get_headers());
+
     foreach (item, children)
     {
-        tree_model->appendRow(item);
-        item->add_child(item);
+        QList<QStandardItem*> columns(item->get_column_data());
+
+        tree_model->appendRow(columns);
+
+        item->add_child(columns.at(0));
     }
 
     return tree_model;
@@ -97,8 +103,11 @@ void Collection::add_child(QStandardItem *parent)
 
     foreach (item, children)
     {
-        parent->appendRow(item);
-        item->add_child(item);
+        QList<QStandardItem*> columns(item->get_column_data());
+
+        parent->appendRow(columns);
+
+        item->add_child(columns.at(0));
     }
 }
 
@@ -119,3 +128,16 @@ QStandardItemModel *Collection::get_table()
     return 0;
 }
 
+QStringList Collection::get_headers() const
+{
+    return Music_Item::get_headers()
+            << "Nothing"
+               ;
+}
+
+QList<QStandardItem*> Collection::get_column_data() const
+{
+    return Music_Item::get_column_data()
+            << new QStandardItem("No Data")
+               ;
+}

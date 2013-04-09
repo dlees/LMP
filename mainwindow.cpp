@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
     QLabel *title = new QLabel("Playlist name");
     center_layout->addWidget(title, 0, 1);
     QLineEdit *search = new QLineEdit("search");
+    search->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
     center_layout->addWidget(search, 0, 2);
 
     splitter = new QSplitter(Qt::Horizontal);
@@ -26,10 +27,16 @@ MainWindow::MainWindow(QWidget *parent)
     QTreeView *tree = new QTreeView();
     Pane *libraryPane = new Pane("Library", tree);
     tree->setModel(Media_Manager::get()->get_library());
+    for (int i = 1; i < Media_Manager::get()->get_library()->columnCount(); i++)
+    {
+        // Show only the first column for libarary
+        tree->hideColumn(i);
+    }
     splitter->addWidget(libraryPane);
 
     // Center Table
     QTreeView *test = new QTreeView();
+    test->setModel(Media_Manager::get()->get_library());
     Pane *centerPane = new Pane("table", test);
     splitter->addWidget(centerPane);
 

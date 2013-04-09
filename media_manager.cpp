@@ -14,11 +14,22 @@ Media_Manager::Media_Manager()
     connect(&playing, SIGNAL(started_playing()),
             this, SLOT(started_playing_slot()));
 
-    cur_list->add(new Song("Friday"));
-    cur_list->add(new Song("Everyday"));
-    cur_list->add(new Song("Both Days"));
-    cur_list->add(new Song("Today"));
-    play_new("C:\\Friday.mp3");
+    Song *new_song;
+
+    cur_list->add(new_song = new Song("Friday"));
+    lib.add_song(new_song);
+
+    cur_list->add(new_song = new Song("Everyday"));
+    lib.add_song(new_song);
+
+    cur_list->add(new_song = new Song("Both Days"));
+    lib.add_song(new_song);
+
+    cur_list->add(new_song = new Song("Today"));
+    lib.add_song(new_song);
+
+    lib.add_playlist(cur_list);
+    play_new(new_song);
 }
 
 void Media_Manager::play_cur()

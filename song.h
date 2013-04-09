@@ -25,8 +25,14 @@ public:
 
     virtual void add_child(QStandardItem *);
 
+    // gets the appropriate headers for this music item
+    virtual QStringList get_headers() const;
+
+    virtual QList<QStandardItem*> get_column_data() const;
+
     void stop_playing()
         {is_playing = false;}
+
 
 private:
     QString filename;
