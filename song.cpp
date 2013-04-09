@@ -6,7 +6,7 @@
 Song::Song(const QString &filename_)
     : Music_Item(filename_),
       filename(filename_),
-      seconds(0),
+      seconds(10),
       rating(3),
       created(QDateTime::currentDateTime()),
       is_playing(false)
@@ -36,4 +36,17 @@ void Song::begin_playing()
 {
     Media_Manager::get()->play_new(this);
     is_playing = true;
+}
+
+QStringList Song::get_headers() const
+{
+    return Music_Item::get_headers()
+            << "Artist";
+}
+
+QList<QStandardItem*> Song::get_column_data() const
+{
+    return Music_Item::get_column_data()
+            << new QStandardItem("Avril")
+               ;
 }

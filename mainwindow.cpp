@@ -30,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Center Table
     QTreeView *test = new QTreeView();
+    test->setModel(Media_Manager::get()->get_library());
     Pane *centerPane = new Pane("table", test);
     splitter->addWidget(centerPane);
 
