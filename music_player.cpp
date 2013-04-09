@@ -38,9 +38,27 @@ void Music_Player::play_song()
 bool Music_Player::cant_play()
 {
 
+    qDebug() << curSong->totalTime();
+
+    if (curSong->totalTime() < 5000)
+    {
+        qDebug() << "TOTAL TIME LESS THAN 5 SECONDS" ;
+        //return true;
+    }
+
     if (curSong->currentSource().type() == -1)
     {
-        return true;
+        qDebug() << "NOT GOOD FILE" ;
+        //return true;
+    }
+    if (curSong->isSeekable() == false)
+    {
+        qDebug() << "NOT SEEKABLE" ;
+        //return true;
+    }
+    if (curSong->hasVideo() == true)
+    {
+        qDebug() << "HAS VIDEO" ;
     }
     return false;
 }
