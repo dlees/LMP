@@ -3,7 +3,7 @@
 
 #include <QDateTime>
 #include <QList>
-#include "XML/tinyxml.h"
+#include <QtXml/QtXml>
 
 class Database
 {
@@ -38,16 +38,17 @@ public:
     void delete_from_playlist(int songID, int listID);
 
 private:
-    TiXmlDocument song;
-    TiXmlDocument playlist;
-    TiXmlDocument album;
-    TiXmlDocument artist;
-    TiXmlDocument secCount;
-    TiXmlDocument songsInPlaylist;
-    TiXmlDocument songsOnAlbum;
-    TiXmlDocument albumsByArtist;
+    QDomDocument song;
+    QDomDocument playlist;
+    QDomDocument album;
+    QDomDocument artist;
+    QDomDocument secCount;
+    QDomDocument songsInPlaylist;
+    QDomDocument songsOnAlbum;
+    QDomDocument albumsByArtist;
 
     Database();
+    void saveFile(QDomDocument, QString);
 };
 
 #endif // DATABASE_H

@@ -6,6 +6,7 @@
 #include <ctime>
 #include <iostream>
 #include <sys/stat.h>
+#include <boost/filesystem.hpp>
 #include "XML/xpath_static.h"
 
 using namespace std;
@@ -14,9 +15,7 @@ Database::Database(){
     //load or create all files/tables
 
     ofstream temp;
-
-    //XX TODO change for windows
-    //mkdir("database", S_IRWXU | S_IRWXG);
+    boost::filesystem::create_directories("database");
 
     //Song
     ifstream songStream("database/song.xml");
@@ -203,8 +202,12 @@ void Database::add_song(int songID, const QString &filename,
     int artistID = 98734;
     int ret = 0;
 
-    sprintf(temp, "//ID", songID);
-    TinyXPath::o_xpath_int(song.FirstChild(), temp, ret);
+    sprintf(temp, "/songRoot/song[ID=%d]/ID", songID);
+    cout << temp << endl;
+    bool check = TinyXPath::o_xpath_int(song.FirstChild(), temp, ret);
+    if(check==false){
+        cout << "FAILURE" << endl;
+    }
     if(ret!=songID){
         cout << ret << " " << songID <<  endl;
         //Song
@@ -252,7 +255,7 @@ void Database::add_song(int songID, const QString &filename,
 
         songsOnAlbum.SaveFile();
     }
-    sprintf(temp, "//ID/", albumID);
+    sprintf(temp, "/albumRoot/album[ID=%d]/ID/", albumID);
     TinyXPath::o_xpath_int(album.FirstChild(), temp, ret);
     if(ret!=albumID){
         cout << ret << " " << albumID << endl;
@@ -291,7 +294,7 @@ void Database::add_song(int songID, const QString &filename,
 
         albumsByArtist.SaveFile();
     }
-    sprintf(temp, "//ID/", artistID);
+    sprintf(temp, "/artistRoot/artist[ID=%d]/ID/", artistID);
     TinyXPath::o_xpath_int(artist.FirstChild(), temp, ret);
     if(ret!=artistID){
         //artist
