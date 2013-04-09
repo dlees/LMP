@@ -76,7 +76,7 @@ QVariant Collection::data(const QModelIndex &index, int role) const
     }
 }
 
-QStandardItemModel *Collection::get_tree()
+QStandardItemModel *Collection::get_model()
 {
     Music_Item *item;
 
@@ -109,23 +109,6 @@ void Collection::add_child(QStandardItem *parent)
 
         item->add_child(columns.at(0));
     }
-}
-
-QStandardItemModel *Collection::get_list()
-{
-    Music_Item *item;
-
-    list_model = new QStandardItemModel();
-
-    foreach (item, children)
-        list_model->appendRow(item);
-
-    return list_model;
-}
-
-QStandardItemModel *Collection::get_table()
-{
-    return 0;
 }
 
 QStringList Collection::get_headers() const

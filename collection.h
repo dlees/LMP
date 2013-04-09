@@ -21,9 +21,7 @@ public:
     virtual int total_secs() const;
     virtual QLinkedList<Song*> get_leaves();
 
-    QStandardItemModel *get_tree();
-    QStandardItemModel *get_list();
-    QStandardItemModel *get_table();
+    QStandardItemModel *get_model();
 
      virtual void begin_playing();
 

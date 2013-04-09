@@ -97,10 +97,10 @@ void Media_Manager::switch_playlist(Playlist *playlist)
 
 QStandardItemModel *Media_Manager::get_playlist()
 {
-    return cur_list->get_tree();
+    return cur_list->get_model();
 }
 
 QStandardItemModel *Media_Manager::get_library()
 {
-    return lib.get_tree();
+    return lib.get_model();
 }
