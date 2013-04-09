@@ -12,7 +12,7 @@ void Collection::add(Music_Item *item)
     children.push_back(item);
 
     if (tree_model)
-        tree_model->appendRow(item);
+        tree_model->appendRow(item->get_column_data());
 }
 
 void Collection::remove(Music_Item *item)
