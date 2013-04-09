@@ -7,7 +7,13 @@
  */
 
 #include <QString>
-#include <Phonon>
+#ifdef __linux__
+    #include <phonon/mediaobject.h>
+    #include <phonon/audiooutput.h>
+    #include <Phonon/VolumeSlider>
+#else
+    #include <Phonon>
+#endif
 #include <QCoreApplication>
 
 class Music_Player
