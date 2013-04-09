@@ -13,8 +13,11 @@ Music_Player::Music_Player()
     Phonon::createPath(curSong, curAudio);
 
     curSong->setTickInterval(1000);
+    curSong->setPrefinishMark(1);
     volumeSlider->setAudioOutput(curAudio);
     volumeSlider->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+
+    connect(curSong, SIGNAL(prefinishMarkReached(qint32)), this, SLOT(almostDone()));
 
 }
 
@@ -120,6 +123,10 @@ Phonon::MediaObject *::Music_Player:: get_media_object()
     return curSong;
 }
 
+void Music_Player::almostDone()
+{
+    emit almost_done();
+}
 
 Music_Player::~Music_Player()
 {

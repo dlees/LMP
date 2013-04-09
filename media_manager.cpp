@@ -13,6 +13,8 @@ Media_Manager::Media_Manager()
             this, SLOT(became_paused_slot()));
     connect(&playing, SIGNAL(started_playing()),
             this, SLOT(started_playing_slot()));
+    connect(&playing, SIGNAL(AlmostDone_PlaySong()),
+            this, SLOT(next()));
 
     Song *new_song;
 

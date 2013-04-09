@@ -62,10 +62,14 @@ public:
     Phonon::MediaObject *get_media_object()
         {return mp.get_media_object();}
 
+public slots:
+    void almostdone_playsong();
+
 signals:
     void became_paused();
     void started_playing();
     void new_total_duration(int);
+    void AlmostDone_PlaySong();
 
 private:
     Playing_Song();
