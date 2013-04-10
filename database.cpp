@@ -341,17 +341,22 @@ void Database::add_song(int songID, const QString &filename,
     }
 }
 
-void delete_song(int ID){
+void Database::delete_song(int ID){
 
+
+    //if it was the only song on an album
+    //  delete the album
+    //if that album was the only album by an artist
+    //  delete the artist
 }
 
-int find_filename(const QString &filename){
-    // returns the ID of a song that has filename as its filename
-    // -1 if filename doesn't exit
+int Database::find_filename(const QString &name){
+    // returns the ID of a song that has name as its name
+    // -1 if name doesn't exit
 
     QXmlQuery query;
     QString output = "-1";
-    QString input = "doc('database/song.xml')/songRoot/song[filepath=" + filename + "]/ID/text()";
+    QString input = "doc('database/song.xml')/songRoot/song[name=" + name + "]/ID/text()";
     query.setQuery(input);
     query.evaluateTo(&output);
     if(output.toDouble()!=-1){
@@ -360,20 +365,127 @@ int find_filename(const QString &filename){
     return -1;
 }
 
-QList<int> find(const QString &str){
+int Database::find_filepath(const QString &filepath){
+    // returns the ID of a song that has filepath as its filepath
+    // -1 if filepath doesn't exit
+
+    QXmlQuery query;
+    QString output = "-1";
+    QString input = "doc('database/song.xml')/songRoot/song[filepath=" + filepath + "]/ID/text()";
+    query.setQuery(input);
+    query.evaluateTo(&output);
+    if(output.toDouble()!=-1){
+        return output.toDouble();
+    }
+    return -1;
+}
+
+QList<int> Database::find(const QString &str){
     // returns all the id's of anything in the database
     // that has str in it (Songs, Artists, Albums, Playlists)
-    return QList<int>();
+
+    QList<int> IDs;
+    QXmlQuery query;
+    QString input;
+    QString output;
+
+    //check songs
+    output = "-1";
+    input = "doc('database/song.xml')/songRoot/song[name=" + str + "]/ID/text()";
+    query.setQuery(input);
+    query.evaluateTo(&output);
+    if(output.toDouble()!=-1){
+        IDs.append(output.toDouble());
+    }
+
+    //check artists
+    output = "-1";
+    input = "doc('database/artist.xml')/artistRoot/artist[name=" + str + "]/ID/text()";
+    query.setQuery(input);
+    query.evaluateTo(&output);
+    if(output.toDouble()!=-1){
+        IDs.append(output.toDouble());
+    }
+
+    //check albums
+    output = "-1";
+    input = "doc('database/album.xml')/albumRoot/album[name=" + str + "]/ID/text()";
+    query.setQuery(input);
+    query.evaluateTo(&output);
+    if(output.toDouble()!=-1){
+        IDs.append(output.toDouble());
+    }
+
+    //check playlists
+    output = "-1";
+    input = "doc('database/playlist.xml')/playlistRoot/playlist[name=" + str + "]/ID/text()";
+    query.setQuery(input);
+    query.evaluateTo(&output);
+    if(output.toDouble()!=-1){
+        IDs.append(output.toDouble());
+    }
+
+    return IDs;
 }
 
-void newPlaylist(const QString &name, int ID){
+void Database::new_playlist(const QString &name, int ID){
 
+    char temp[256];
+    QXmlQuery query;
+    QString output = "-1";
+    sprintf(temp, "doc('database/playlist.xml')/playlistRoot/playlist[ID=%d]/ID/text()", ID);
+    query.setQuery(temp);
+    query.evaluateTo(&output);
+    if(output.toDouble()!=ID){
+
+        QDomElement playlistE = playlist.createElement("playlist");
+        playlist.elementsByTagName("playlistRoot").at(0).appendChild(playlistE);
+
+        QDomElement IDE = playlist.createElement("ID");
+        sprintf(temp, "%d", ID);
+        QDomText IDT = playlist.createTextNode(temp);
+        IDE.appendChild(IDT);
+        playlistE.appendChild(IDE);
+
+        QDomElement nameE = playlist.createElement("name");
+        QDomText nameT = playlist.createTextNode(name);
+        nameE.appendChild(nameT);
+        playlistE.appendChild(nameE);
+
+        saveFile(playlist, "database/playlist.xml");
+    }
 }
 
-void add_to_playlist(int songID, int listID){
+void Database::add_to_playlist(int songID, int listID){
 
+    char temp[256];
+    QXmlQuery query;
+    QString output = "-1";
+    sprintf(temp, "doc('database/songInPlaylist.xml')/SIPRoot/songInPlaylist[songID=%d][playlistID=%d]/ID/text()", songID, listID);
+    query.setQuery(temp);
+    query.evaluateTo(&output);
+    if(output.toDouble()==-1){
+
+        QDomElement SIPE = songsInPlaylist.createElement("songInPlaylist");
+        songsInPlaylist.elementsByTagName("SIPRoot").at(0).appendChild(SIPE);
+
+        QDomElement SIDE = songsInPlaylist.createElement("songID");
+        sprintf(temp, "%d", songID);
+        QDomText SIDT = songsInPlaylist.createTextNode(temp);
+        SIDE.appendChild(SIDT);
+        SIPE.appendChild(SIDE);
+
+        QDomElement LIDE = songsInPlaylist.createElement("playlistID");
+        sprintf(temp, "%d", listID);
+        QDomText LIDT = songsInPlaylist.createTextNode(temp);
+        LIDE.appendChild(LIDT);
+        SIPE.appendChild(LIDE);
+
+        saveFile(songsInPlaylist, "database/songsInPlaylist.xml");
+    }
 }
 
-void delete_from_playlist(int songID, int listID){
-
+void Database::delete_from_playlist(int songID, int listID){
+    //if it was the only thing on the playlist
+    //  delete the playlist
 }
