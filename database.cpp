@@ -2,14 +2,24 @@
 
 #include <QDateTime>
 #include <QDebug>
-#include <fstream>
+#include <QTextStream>
+#include <QFile>
 #include <ctime>
 #include <iostream>
-#include <sys/stat.h>
+#include <fstream>
 #include <boost/filesystem.hpp>
-//#include "XML/xpath_static.h"
 
 using namespace std;
+
+void Database::saveFile(QDomDocument document, QString filename){
+
+    QFile outFile(filename);
+    outFile.open(QIODevice::WriteOnly|QIODevice::Text);
+    QTextStream stream( &outFile );
+    stream << document.toString();
+
+    outFile.close();
+}
 
 Database::Database(){
     //load or create all files/tables
@@ -24,12 +34,12 @@ Database::Database(){
         temp.close();
     }
     //load file
-    /*
-    song.LoadFile("database/song.xml");
+    QFile songFile("database/song.xml");
+    song.setContent(&songFile);
     if(!songStream){
-        TiXmlElement *songRoot = new TiXmlElement("songRoot");
-        song.LinkEndChild(songRoot);
-        song.SaveFile();
+        QDomElement root = song.createElement("songRoot");
+        song.appendChild(root);
+        saveFile(song, "database/song.xml");
     }
 
     //Playlist
@@ -40,11 +50,12 @@ Database::Database(){
         temp.close();
     }
     //load file
-    playlist.LoadFile("databse/playlist.xml");
+    QFile playlistFile("database/playlist.xml");
+    playlist.setContent(&playlistFile);
     if(!playlistStream){
-        TiXmlElement *playRoot = new TiXmlElement("playlistRoot");
-        playlist.LinkEndChild(playRoot);
-        playlist.SaveFile();
+        QDomElement root = song.createElement("playlistRoot");
+        playlist.appendChild(root);
+        saveFile(playlist, "database/playlist.xml");
     }
 
     //Album
@@ -55,11 +66,12 @@ Database::Database(){
         temp.close();
     }
     //load file
-    album.LoadFile("database/album.xml");
+    QFile albumFile("database/album.xml");
+    song.setContent(&albumFile);
     if(!albumStream){
-        TiXmlElement *albumRoot = new TiXmlElement("albumRoot");
-        album.LinkEndChild(albumRoot);
-        album.SaveFile();
+        QDomElement root = album.createElement("albumRoot");
+        album.appendChild(root);
+        saveFile(album, "database/album.xml");
     }
 
     //Artist
@@ -69,11 +81,12 @@ Database::Database(){
         temp.close();
     }
     //load file
-    artist.LoadFile("database/artist.xml");
+    QFile artistFile("database/artist.xml");
+    artist.setContent(&artistFile);
     if(!artistStream){
-        TiXmlElement *artistRoot = new TiXmlElement("artistRoot");
-        artist.LinkEndChild(artistRoot);
-        artist.SaveFile();
+        QDomElement root = artist.createElement("artistRoot");
+        artist.appendChild(root);
+        saveFile(artist, "database/artist.xml");
     }
 
     //SecCount
@@ -83,11 +96,12 @@ Database::Database(){
         temp.close();
     }
     //load file
-    secCount.LoadFile("database/secCount.xml");
+    QFile secFile("database/secCount.xml");
+    secCount.setContent(&secFile);
     if(!secStream){
-        TiXmlElement *secRoot = new TiXmlElement("secRoot");
-        secCount.LinkEndChild(secRoot);
-        secCount.SaveFile();
+        QDomElement root = secCount.createElement("secRoot");
+        secCount.appendChild(root);
+        saveFile(secCount, "database/secCount.xml");
     }
 
     //SongsInPlaylist
@@ -97,11 +111,12 @@ Database::Database(){
         temp.close();
     }
     //load file
-    songsInPlaylist.LoadFile("database/songsInPlaylist.xml");
+    QFile SIPFile("database/songsInPlaylist.xml");
+    songsInPlaylist.setContent(&SIPFile);
     if(!SIPStream){
-        TiXmlElement *SIPRoot = new TiXmlElement("SIPRoot");
-        songsInPlaylist.LinkEndChild(SIPRoot);
-        songsInPlaylist.SaveFile();
+        QDomElement root = songsInPlaylist.createElement("SIPRoot");
+        songsInPlaylist.appendChild(root);
+        saveFile(songsInPlaylist, "database/songsInPlaylist.xml");
     }
 
     //SongsOnAlbum
@@ -111,11 +126,12 @@ Database::Database(){
         temp.close();
     }
     //load file
-    songsOnAlbum.LoadFile("database/songsOnAlbum.xml");
+    QFile SOAFile("database/songsOnAlbum.xml");
+    songsOnAlbum.setContent(&SOAFile);
     if(!SOAStream){
-        TiXmlElement *SOARoot = new TiXmlElement("SOARoot");
-        songsOnAlbum.LinkEndChild(SOARoot);
-        songsOnAlbum.SaveFile();
+        QDomElement root = songsOnAlbum.createElement("SOARoot");
+        songsOnAlbum.appendChild(root);
+        saveFile(songsOnAlbum, "database/songsOnAlbum.xml");
     }
 
     //AlbumsByArtist
@@ -125,13 +141,14 @@ Database::Database(){
         temp.close();
     }
     //load file
-    albumsByArtist.LoadFile("database/albumsByArtist.xml");
+    QFile ABAFile("database/albumsByArtist.xml");
+    albumsByArtist.setContent(&ABAFile);
     if(!ABAStream){
-        TiXmlElement *ABARoot = new TiXmlElement("ABARoot");
-        albumsByArtist.LinkEndChild(ABARoot);
-        albumsByArtist.SaveFile();
+        QDomElement root = albumsByArtist.createElement("ABARoot");
+        albumsByArtist.appendChild(root);
+        saveFile(albumsByArtist, "database/albumsByArtist.xml");
     }
-*/
+
 
     //any other initialization goes here
 }
@@ -153,41 +170,40 @@ void Database::save_sec_count(int ID, qint64 start, qint64 end)
      * 	|~|
      */
 
-/*
     char temp[32];  //for fake itoa
 
-    TiXmlElement *secCountE = new TiXmlElement("secCount");
-    secCount.FirstChild()->LinkEndChild(secCountE);
+    QDomElement root = secCount.documentElement();
+    QDomElement secCountE = secCount.createElement("secCount");
+    root.appendChild(secCountE);
 
-    TiXmlElement *idE = new TiXmlElement("ID");
+    QDomElement idE = secCount.createElement("ID");
     sprintf(temp, "%d", ID);
-    TiXmlText *idT = new TiXmlText(temp);
-    idE->LinkEndChild(idT);
-    secCountE->LinkEndChild(idE);
+    QDomText idT = secCount.createTextNode(temp);
+    idE.appendChild(idT);
+    secCountE.appendChild(idE);
 
-    TiXmlElement *startE = new TiXmlElement("startTime");
+    QDomElement startE = secCount.createElement("startTime");
     sprintf(temp, "%d", start);
-    TiXmlText *startT = new TiXmlText(temp);
-    startE->LinkEndChild(startT);
-    secCountE->LinkEndChild(startE);
+    QDomText startT = secCount.createTextNode(temp);
+    startE.appendChild(startT);
+    secCountE.appendChild(startE);
 
-    TiXmlElement *endE = new TiXmlElement("endTime");
+    QDomElement endE = secCount.createElement("endTime");
     sprintf(temp, "%d", end);
-    TiXmlText *endT = new TiXmlText(temp);
-    endE->LinkEndChild(endT);
-    secCountE->LinkEndChild(endE);
+    QDomText endT = secCount.createTextNode(temp);
+    endE.appendChild(endT);
+    secCountE.appendChild(endE);
 
     time_t rawTime;
     struct tm * timeinfo;
     time(&rawTime);
-    TiXmlElement *timeE = new TiXmlElement("timestamp");
+    QDomElement timeE = secCount.createElement("timestamp");
     timeinfo = localtime(&rawTime);
-    TiXmlText *timeT = new TiXmlText(asctime(timeinfo));
-    timeE->LinkEndChild(timeT);
-    secCountE->LinkEndChild(timeE);
+    QDomText timeT = secCount.createTextNode(asctime(timeinfo));
+    timeE.appendChild(timeT);
+    secCountE.appendChild(timeE);
 
-    secCount.SaveFile();
-    */
+    saveFile(secCount, "database/secCount.xml");
 }
 
 void Database::add_song(int songID, const QString &filename,
@@ -202,124 +218,109 @@ void Database::add_song(int songID, const QString &filename,
     QString albumName = "Apple Venus Volume One";
     int albumID = 56345;
     int artistID = 98734;
-    int ret = 0;
 
-    sprintf(temp, "/songRoot/song[ID=%d]/ID", songID);
-    cout << temp << endl;
-    /*
-    bool check = TinyXPath::o_xpath_int(song.FirstChild(), temp, ret);
-    if(check==false){
-        cout << "FAILURE" << endl;
-    }
-    if(ret!=songID){
-        cout << ret << " " << songID <<  endl;
+    if(true/*TODO*/){
         //Song
-        TiXmlElement *songE = new TiXmlElement("song");
-        song.FirstChild()->LinkEndChild(songE);
+        QDomElement songE = song.createElement("song");
+        QDomElement root = song.documentElement();
+        root.appendChild(songE);
 
-        TiXmlElement *IDE = new TiXmlElement("ID");
+        QDomElement IDE = song.createElement("ID");
         sprintf(temp, "%d", songID);
-        TiXmlText *IDT = new TiXmlText(temp);
-        IDE->LinkEndChild(IDT);
-        songE->LinkEndChild(IDE);
+        QDomText IDT = song.createTextNode(temp);
+        IDE.appendChild(IDT);
+        songE.appendChild(IDE);
 
-        TiXmlElement *nameE = new TiXmlElement("name");
-        TiXmlText *nameT = new TiXmlText(name.toStdString().c_str());
-        nameE->LinkEndChild(nameT);
-        songE->LinkEndChild(nameE);
+        QDomElement nameE = song.createElement("name");
+        QDomText nameT = song.createTextNode(name);
+        nameE.appendChild(nameT);
+        song.appendChild(nameE);
 
-        TiXmlElement *pathE = new TiXmlElement("filepath");
-        TiXmlText *pathT = new TiXmlText(filename.toStdString().c_str());
-        pathE->LinkEndChild(pathT);
-        songE->LinkEndChild(pathE);
+        QDomElement pathE = song.createElement("filepath");
+        QDomText pathT = song.createTextNode(filename);
+        pathE.appendChild(pathT);
+        songE.appendChild(pathE);
 
-        TiXmlElement *createdE = new TiXmlElement("created");
-        TiXmlText *createdT = new TiXmlText(created.toString().toStdString().c_str());
-        createdE->LinkEndChild(createdT);
-        songE->LinkEndChild(createdE);
+        QDomElement createdE = song.createElement("created");
+        QDomElement createdT = song.createElement(created.toString());
+        createdE.appendChild(createdT);
+        songE.appendChild(createdE);
 
-        song.SaveFile();
+        saveFile(song, "database/song.xml");
 
         //songOnAlbum
-        TiXmlElement *onAlbumE = new TiXmlElement("songOnAlbum");
-        songsOnAlbum.FirstChild()->LinkEndChild(onAlbumE);
+        QDomElement onAlbumE = songsOnAlbum.createElement("songOnAlbum");
+        songsOnAlbum.documentElement().appendChild(onAlbumE);
 
-        TiXmlElement *songIDE = new TiXmlElement("songID");
+        QDomElement songIDE = songsOnAlbum.createElement("songID");
         sprintf(temp, "%d", songID);
-        TiXmlText *songIDT = new TiXmlText(temp);
-        songIDE->LinkEndChild(songIDT);
-        onAlbumE->LinkEndChild(songIDE);
+        QDomText songIDT = songsOnAlbum.createTextNode(temp);
+        songIDE.appendChild(songIDT);
+        onAlbumE.appendChild(songIDE);
 
-        TiXmlElement *albumIDE = new TiXmlElement("albumID");
+        QDomElement albumIDE = songsOnAlbum.createElement("albumID");
         sprintf(temp, "%d", albumID);
-        TiXmlText *albumIDT = new TiXmlText(temp);
-        albumIDE->LinkEndChild(albumIDT);
-        onAlbumE->LinkEndChild(albumIDE);
+        QDomText albumIDT = songsOnAlbum.createTextNode(temp);
+        albumIDE.appendChild(albumIDT);
+        onAlbumE.appendChild(albumIDE);
 
-        songsOnAlbum.SaveFile();
+        saveFile(songsOnAlbum, "database/songsOnAlbum.xml");
     }
-    sprintf(temp, "/albumRoot/album[ID=%d]/ID/", albumID);
-    TinyXPath::o_xpath_int(album.FirstChild(), temp, ret);
-    if(ret!=albumID){
-        cout << ret << " " << albumID << endl;
+    if(true/*TODO*/){
         //album
-        TiXmlElement *albumE = new TiXmlElement("album");
-        album.FirstChild()->LinkEndChild(albumE);
+        QDomElement albumE = album.createElement("album");
+        album.documentElement().appendChild(albumE);
 
-        TiXmlElement *nameE = new TiXmlElement("name");
-        TiXmlText *nameT = new TiXmlText(albumName.toStdString().c_str());
-        nameE->LinkEndChild(nameT);
-        albumE->LinkEndChild(nameE);
+        QDomElement nameE = album.createElement("name");
+        QDomText nameT = album.createTextNode(albumName);
+        nameE.appendChild(nameT);
+        albumE.appendChild(nameE);
 
-        TiXmlElement *IDE = new TiXmlElement("ID");
+        QDomElement IDE = album.createElement("ID");
         sprintf(temp, "%d", albumID);
-        TiXmlText *IDT = new TiXmlText(temp);
-        IDE->LinkEndChild(IDT);
-        albumE->LinkEndChild(IDE);
+        QDomText IDT = album.createTextNode(temp);
+        IDE.appendChild(IDT);
+        albumE.appendChild(IDE);
 
-        album.SaveFile();
+        saveFile(album, "database/album.xml");
 
         //AlbumByArtist
-        TiXmlElement *byArtistE = new TiXmlElement("albumByArtist");
-        albumsByArtist.FirstChild()->LinkEndChild(byArtistE);
+        QDomElement byArtistE = albumsByArtist.createElement("albumByArtist");
+        albumsByArtist.documentElement().appendChild(byArtistE);
 
-        TiXmlElement *albumIDE = new TiXmlElement("albumID");
+        QDomElement albumIDE = albumsByArtist.createElement("albumID");
         sprintf(temp, "%d", albumID);
-        TiXmlText *albumIDT = new TiXmlText(temp);
-        albumIDE->LinkEndChild(albumIDT);
-        byArtistE->LinkEndChild(albumIDE);
+        QDomText albumIDT = albumsByArtist.createTextNode(temp);
+        albumIDE.appendChild(albumIDT);
+        byArtistE.appendChild(albumIDE);
 
-        TiXmlElement *artistIDE = new TiXmlElement("artistID");
+        QDomElement artistIDE = albumsByArtist.createElement("artistID");
         sprintf(temp, "%d", artistID);
-        TiXmlText *artistIDT = new TiXmlText(temp);
-        artistIDE->LinkEndChild(artistIDT);
-        byArtistE->LinkEndChild(artistIDE);
+        QDomText artistIDT = albumsByArtist.createTextNode(temp);
+        artistIDE.appendChild(artistIDT);
+        byArtistE.appendChild(artistIDE);
 
-        albumsByArtist.SaveFile();
+        saveFile(albumsByArtist, "database/albumsByArtist.xml");
     }
-    sprintf(temp, "/artistRoot/artist[ID=%d]/ID/", artistID);
-    TinyXPath::o_xpath_int(artist.FirstChild(), temp, ret);
-    if(ret!=artistID){
+    if(true/*TODO*/){
         //artist
-        TiXmlElement *artistE = new TiXmlElement("artist");
-        artist.FirstChild()->LinkEndChild(artistE);
+        QDomElement artistE = artist.createElement("artist");
+        artist.documentElement().appendChild(artistE);
 
-        TiXmlElement *nameE = new TiXmlElement("name");
-        TiXmlText *nameT = new TiXmlText(artistName.toStdString().c_str());
-        nameE->LinkEndChild(nameT);
-        artistE->LinkEndChild(nameE);
+        QDomElement nameE = artist.createElement("name");
+        QDomText nameT = artist.createTextNode(artistName);
+        nameE.appendChild(nameT);
+        artistE.appendChild(nameE);
 
-        TiXmlElement *IDE = new TiXmlElement("ID");
+        QDomElement IDE = artist.createElement("ID");
         sprintf(temp, "%d", artistID);
-        TiXmlText *IDT = new TiXmlText(temp);
-        IDE->LinkEndChild(IDT);
-        artistE->LinkEndChild(IDE);
+        QDomText IDT = artist.createTextNode(temp);
+        IDE.appendChild(IDT);
+        artistE.appendChild(IDE);
 
-        artist.SaveFile();
-
-    }*/
+        saveFile(artist, "database/artist.xml");
+    }
 }
-
 
 void delete_song(int ID){
 
