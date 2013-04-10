@@ -41,7 +41,7 @@ void Music_Player::play_song()
 bool Music_Player::cant_play()
 {
 
-    qDebug() << curSong->totalTime();
+    qDebug() << "cant_play" << curSong->totalTime();
 
     if (curSong->totalTime() < 5000)
     {

@@ -82,7 +82,12 @@ void Playing_Song::replace_song(Song *song_)
     }
 
     set_song(song_);
-    emit new_total_duration(mp.get_duration());
+
+    int temp = mp.get_duration();
+
+    emit new_total_duration(temp);
+
+    qDebug() << "Playing_Song::replace_song()" << temp;
 }
 
 bool Playing_Song::song_exists()

@@ -18,16 +18,16 @@ Media_Manager::Media_Manager()
 
     Song *new_song;
 
-    cur_list->add(new_song = new Song("Friday"));
+    cur_list->add(new_song = new Song("/Users/arikk/Music/80's - Billy Joel - We Didn't Start the Fire.mp3"));
     lib.add_song(new_song);
 
-    cur_list->add(new_song = new Song("Everyday"));
+    cur_list->add(new_song = new Song("/Users/arikk/Music/E-40 - Tell Me When To Go (Trackademics remix).mp3"));
     lib.add_song(new_song);
 
-    cur_list->add(new_song = new Song("Both Days"));
+    cur_list->add(new_song = new Song("/Users/arikk/Music/Eagle Eyed Cherry - Save Tonight.mp3"));
     lib.add_song(new_song);
 
-    cur_list->add(new_song = new Song("Today"));
+    cur_list->add(new_song = new Song("/Users/arikk/Music/Guns N' Roses -  Sweet Child Of Mine.mp3"));
     lib.add_song(new_song);
 
     lib.add_playlist(cur_list);

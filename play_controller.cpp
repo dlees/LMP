@@ -59,6 +59,7 @@ void Play_Controller::send_new_position()
 void Play_Controller::set_total_value(int time)
 {
     slider->setMaximum(time);
+    qDebug() << "TIME: " << time;
 }
 
 Play_Controller::~Play_Controller()
