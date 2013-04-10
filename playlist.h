@@ -14,6 +14,8 @@ public:
     void next();
     void prev();
 
+    void set_cur(int index);
+
 private:
     int cur;
 };

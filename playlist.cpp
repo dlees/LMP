@@ -15,7 +15,6 @@ Playlist::Playlist(Collection *col)
    foreach (item, col->get_children())
        add(item);
 
-
 }
 
 void Playlist::add(Music_Item *item)
@@ -27,6 +26,8 @@ void Playlist::add(Music_Item *item)
     {
         Collection::add(song);
     }
+
+    cur = Collection::count() - 1;
 }
 
 void Playlist::prev()
@@ -37,4 +38,9 @@ void Playlist::prev()
 void Playlist::next()
 {
     get_children().at(cur = (cur+1)%count())->begin_playing();
+}
+
+void Playlist::set_cur(int index)
+{
+    cur = index;
 }

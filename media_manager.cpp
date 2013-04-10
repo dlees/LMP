@@ -43,6 +43,8 @@ void Media_Manager::start_up()
     cur_list->add(new_song = new Song("/Users/arikk/Music/Guns N' Roses -  Sweet Child Of Mine.mp3"));
     lib.add_song(new_song);
 
+    cur_list->set_cur(0);
+
     lib.add_playlist(cur_list);
 }
 
