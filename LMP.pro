@@ -4,14 +4,14 @@
 #
 #-------------------------------------------------
 
-QT       += core gui += phonon +=xml
+QT       += core gui phonon xml xmlpatterns
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = LMP
 TEMPLATE = app
 
-LIBS += -L/usr/lib -lboost_filesystem -lboost_system
+LIBS += -L/usr/lib
 
 SOURCES += main.cpp\
         mainwindow.cpp \

@@ -4,10 +4,12 @@
 #include <QDebug>
 #include <QTextStream>
 #include <QFile>
+#include <QDir>
+#include <QtXmlPatterns/QXmlQuery>
+#include <QtXmlPatterns/qxmlquery.h>
 #include <ctime>
 #include <iostream>
 #include <fstream>
-#include <boost/filesystem.hpp>
 
 using namespace std;
 
@@ -19,13 +21,17 @@ void Database::saveFile(QDomDocument document, QString filename){
     stream << document.toString();
 
     outFile.close();
+    outFile.open(QIODevice::ReadOnly|QIODevice::Text);
+    document.setContent(&outFile);
 }
 
 Database::Database(){
     //load or create all files/tables
 
     ofstream temp;
-    boost::filesystem::create_directories("database");
+    if(!QDir("database").exists()){
+        QDir().mkdir("database");
+    }
 
     //Song
     ifstream songStream("database/song.xml");
@@ -39,6 +45,8 @@ Database::Database(){
     if(!songStream){
         QDomElement root = song.createElement("songRoot");
         song.appendChild(root);
+        QDomText text = song.createTextNode(" ");
+        root.appendChild(text);
         saveFile(song, "database/song.xml");
     }
 
@@ -172,9 +180,8 @@ void Database::save_sec_count(int ID, qint64 start, qint64 end)
 
     char temp[32];  //for fake itoa
 
-    QDomElement root = secCount.documentElement();
     QDomElement secCountE = secCount.createElement("secCount");
-    root.appendChild(secCountE);
+    secCount.elementsByTagName("secRoot").at(0).appendChild(secCountE);
 
     QDomElement idE = secCount.createElement("ID");
     sprintf(temp, "%d", ID);
@@ -219,10 +226,21 @@ void Database::add_song(int songID, const QString &filename,
     int albumID = 56345;
     int artistID = 98734;
 
-    if(true/*TODO*/){
+    //QXmlQuery query;
+    //QString output = "notRight";
+    //sprintf(temp, "doc('database/song.xml')/songRoot/song[ID=%d]/ID", songID);
+    //query.setQuery(temp);
+    //query.evaluateTo(&output);
+    if(/*!(output==QString::number(songID))*/true){
         //Song
+        QFile file;
+
+        song.setContent("database/song.xml");
         QDomElement songE = song.createElement("song");
-        QDomElement root = song.documentElement();
+        QDomElement root = song.documentElement().elementsByTagName("songRoot").at(0).toElement();
+        if(root.isNull()){
+            cout << "null null null" << endl;
+        }
         root.appendChild(songE);
 
         QDomElement IDE = song.createElement("ID");
@@ -250,7 +268,7 @@ void Database::add_song(int songID, const QString &filename,
 
         //songOnAlbum
         QDomElement onAlbumE = songsOnAlbum.createElement("songOnAlbum");
-        songsOnAlbum.documentElement().appendChild(onAlbumE);
+        songsOnAlbum.elementsByTagName("SOARoot").at(0).appendChild(onAlbumE);
 
         QDomElement songIDE = songsOnAlbum.createElement("songID");
         sprintf(temp, "%d", songID);
@@ -266,10 +284,14 @@ void Database::add_song(int songID, const QString &filename,
 
         saveFile(songsOnAlbum, "database/songsOnAlbum.xml");
     }
-    if(true/*TODO*/){
+    //sprintf(temp, "doc('database/album.xml')/albumRoot/album[ID=%d]/ID", artistID);
+    //query.setQuery(temp);
+    //output = "wrong";
+    //query.evaluateTo(&output);
+    if(/*!(output==QString::number(albumID))*/true){
         //album
         QDomElement albumE = album.createElement("album");
-        album.documentElement().appendChild(albumE);
+        album.elementsByTagName("albumRoot").at(0).appendChild(albumE);
 
         QDomElement nameE = album.createElement("name");
         QDomText nameT = album.createTextNode(albumName);
@@ -286,7 +308,7 @@ void Database::add_song(int songID, const QString &filename,
 
         //AlbumByArtist
         QDomElement byArtistE = albumsByArtist.createElement("albumByArtist");
-        albumsByArtist.documentElement().appendChild(byArtistE);
+        albumsByArtist.elementsByTagName("ABARoot").at(0).appendChild(byArtistE);
 
         QDomElement albumIDE = albumsByArtist.createElement("albumID");
         sprintf(temp, "%d", albumID);
@@ -302,10 +324,14 @@ void Database::add_song(int songID, const QString &filename,
 
         saveFile(albumsByArtist, "database/albumsByArtist.xml");
     }
-    if(true/*TODO*/){
+    //sprintf(temp, "doc('database/artist.xml')/artistRoot/artist[ID=%d]/ID", artistID);
+    //query.setQuery(temp);
+    //output = "incorrect";
+    //query.evaluateTo(&output);
+    if(/*!(output==QString::number(artistID))*/true){
         //artist
         QDomElement artistE = artist.createElement("artist");
-        artist.documentElement().appendChild(artistE);
+        artist.elementsByTagName("artistRoot").at(0).appendChild(artistE);
 
         QDomElement nameE = artist.createElement("name");
         QDomText nameT = artist.createTextNode(artistName);
