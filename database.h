@@ -31,7 +31,7 @@ public:
     // **NOTE: All Music Items have unique ID's, so there won't be conflictions
     QList<int> find(const QString &str);
 
-    void newPlaylist(const QString &name);
+    void newPlaylist(const QString &name, int ID);
 
     void add_to_playlist(int songID, int listID);
 
