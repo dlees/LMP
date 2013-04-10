@@ -16,10 +16,25 @@ Media_Manager::Media_Manager()
     connect(&playing, SIGNAL(AlmostDone_PlaySong()),
             this, SLOT(next()));
 
+
+    //play_new(new_song);
+}
+
+void Media_Manager::play_cur()
+{
+    if (playing.is_paused())
+        playing.play();
+    else
+        playing.pause();
+}
+
+void Media_Manager::start_up()
+{
     Song *new_song;
 
     cur_list->add(new_song = new Song("/Users/arikk/Music/80's - Billy Joel - We Didn't Start the Fire.mp3"));
     lib.add_song(new_song);
+    playing.replace_song(new_song);
 
     cur_list->add(new_song = new Song("/Users/arikk/Music/E-40 - Tell Me When To Go (Trackademics remix).mp3"));
     lib.add_song(new_song);
@@ -31,15 +46,6 @@ Media_Manager::Media_Manager()
     lib.add_song(new_song);
 
     lib.add_playlist(cur_list);
-    play_new(new_song);
-}
-
-void Media_Manager::play_cur()
-{
-    if (playing.is_paused())
-        playing.play();
-    else
-        playing.pause();
 }
 
 void Media_Manager::play_new(QString filename)

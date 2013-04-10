@@ -49,6 +49,8 @@ public slots:
     // plays the current song
     void play_cur();
 
+    void start_up();
+
     void play_new(QString filename);
     void play_new(Song *song);
 

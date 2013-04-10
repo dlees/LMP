@@ -13,6 +13,10 @@ MainWindow::MainWindow(QWidget *parent)
 {
     QWidget *widget = new QWidget;
 
+    qDebug() << "MAINWINDOW CONSTRUCTOR";
+
+    Play_Controller *play_controller = new Play_Controller();
+
     // displays 2 rows of title, and panes
     QGridLayout *center_layout = new QGridLayout;
     QLabel *title = new QLabel("Playlist name");
@@ -48,7 +52,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     center_layout->addWidget(splitter, 1, 0, 1, -1);
 
-    Play_Controller *play_controller = new Play_Controller();
+
 
     // Add all to main_layout
     QVBoxLayout *main_layout = new QVBoxLayout(widget);
@@ -58,6 +62,8 @@ MainWindow::MainWindow(QWidget *parent)
     this->setCentralWidget(widget);
 
     create_menu();
+
+    Media_Manager::get()->start_up();
 }
 
 void MainWindow::create_menu()

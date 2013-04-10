@@ -8,7 +8,8 @@ Button_Container::Button_Container(int w, int h)
 
     playPause = new QToolButton(this);
     //playPause->setIcon(QIcon(":/buttons/pause.png"));
-    playPause->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
+    //playPause->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
+    set_icon_play();
     playPause->setGeometry(0, 0, 10, 20);
     connect(playPause, SIGNAL(clicked()),
             Media_Manager::get(), SLOT(play_cur()));
