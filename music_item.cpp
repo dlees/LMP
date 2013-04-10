@@ -28,6 +28,7 @@ QVariant Music_Item::data(int role) const
             return QVariant();
     }
     */
+    return QVariant();
 }
 
 QStringList Music_Item::get_headers() const
