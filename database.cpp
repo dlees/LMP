@@ -7,7 +7,7 @@
 #include <iostream>
 #include <sys/stat.h>
 #include <boost/filesystem.hpp>
-#include "XML/xpath_static.h"
+//#include "XML/xpath_static.h"
 
 using namespace std;
 
@@ -24,6 +24,7 @@ Database::Database(){
         temp.close();
     }
     //load file
+    /*
     song.LoadFile("database/song.xml");
     if(!songStream){
         TiXmlElement *songRoot = new TiXmlElement("songRoot");
@@ -130,7 +131,7 @@ Database::Database(){
         albumsByArtist.LinkEndChild(ABARoot);
         albumsByArtist.SaveFile();
     }
-
+*/
 
     //any other initialization goes here
 }
@@ -152,7 +153,7 @@ void Database::save_sec_count(int ID, qint64 start, qint64 end)
      * 	|~|
      */
 
-
+/*
     char temp[32];  //for fake itoa
 
     TiXmlElement *secCountE = new TiXmlElement("secCount");
@@ -186,6 +187,7 @@ void Database::save_sec_count(int ID, qint64 start, qint64 end)
     secCountE->LinkEndChild(timeE);
 
     secCount.SaveFile();
+    */
 }
 
 void Database::add_song(int songID, const QString &filename,
@@ -204,6 +206,7 @@ void Database::add_song(int songID, const QString &filename,
 
     sprintf(temp, "/songRoot/song[ID=%d]/ID", songID);
     cout << temp << endl;
+    /*
     bool check = TinyXPath::o_xpath_int(song.FirstChild(), temp, ret);
     if(check==false){
         cout << "FAILURE" << endl;
@@ -313,7 +316,8 @@ void Database::add_song(int songID, const QString &filename,
         artistE->LinkEndChild(IDE);
 
         artist.SaveFile();
-    }
+
+    }*/
 }
 
 

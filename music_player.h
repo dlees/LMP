@@ -11,7 +11,7 @@
 #ifdef __linux__
     #include <phonon/mediaobject.h>
     #include <phonon/audiooutput.h>
-    #include <Phonon/VolumeSlider>
+    #include <phonon/VolumeSlider> //#include <Phonon/VolumeSlider>
 #else
     #include <Phonon>
 #endif
