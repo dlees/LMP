@@ -235,7 +235,7 @@ void Database::add_song(int songID, const QString &filename,
         //Song
         QFile file;
 
-        song.setContent("database/song.xml");
+       // song.setContent("database/song.xml");
         QDomElement songE = song.createElement("song");
         QDomElement root = song.documentElement().elementsByTagName("songRoot").at(0).toElement();
         if(root.isNull()){
