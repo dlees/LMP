@@ -16,8 +16,6 @@ Media_Manager::Media_Manager()
     connect(&playing, SIGNAL(AlmostDone_PlaySong()),
             this, SLOT(next()));
 
-
-    //play_new(new_song);
 }
 
 void Media_Manager::play_cur()

@@ -14,7 +14,8 @@ Playing_Song::Playing_Song()
       totalDuration(0),
       position(0)
 {
-    connect(&mp, SIGNAL(almost_done()), this, SLOT(almostdone_playsong()));
+    connect(&mp, SIGNAL(almost_done()),
+            this, SLOT(almostdone_playsong()));
 
 }
 
@@ -87,7 +88,6 @@ void Playing_Song::replace_song(Song *song_)
 
     emit new_total_duration(temp);
 
-    qDebug() << "Playing_Song::replace_song()" << temp;
 }
 
 bool Playing_Song::song_exists()

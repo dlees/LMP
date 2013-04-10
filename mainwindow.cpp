@@ -13,8 +13,6 @@ MainWindow::MainWindow(QWidget *parent)
 {
     QWidget *widget = new QWidget;
 
-    qDebug() << "MAINWINDOW CONSTRUCTOR";
-
     Play_Controller *play_controller = new Play_Controller();
 
     // displays 2 rows of title, and panes

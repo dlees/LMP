@@ -17,7 +17,8 @@ Music_Player::Music_Player()
     volumeSlider->setAudioOutput(curAudio);
     volumeSlider->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
 
-    connect(curSong, SIGNAL(prefinishMarkReached(qint32)), this, SLOT(almostDone()));
+    connect(curSong, SIGNAL(prefinishMarkReached(qint32)),
+            this, SLOT(almostDone()));
 
 }
 
@@ -41,7 +42,7 @@ void Music_Player::play_song()
 bool Music_Player::cant_play()
 {
 
-    qDebug() << "cant_play" << curSong->totalTime();
+    qDebug() << "cant_play() " << curSong->totalTime();
 
     if (curSong->totalTime() < 5000)
     {
@@ -81,7 +82,6 @@ void Music_Player::set_song(QString filename)
 
     curSong->setCurrentSource(filename);
 
-    qDebug() << "     " << curSong->currentSource().fileName();
 }
 
 // stops playing the current song and prepares it to be replaced

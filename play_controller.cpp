@@ -35,8 +35,6 @@ Play_Controller::Play_Controller()
     setLineWidth(1);
     setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 
-    qDebug() << "PlayControler Construcer";
-
     connect(Playing_Song::get().get_media_object(), SIGNAL(tick(qint64)),
             this, SLOT(set_slider_position(qint64)));
     connect(slider, SIGNAL(sliderReleased()),
@@ -50,7 +48,6 @@ void Play_Controller::set_slider_position(qint64 value)
 
     slider->setValue((int) value);
 
-    qDebug() << value ;
 }
 
 void Play_Controller::send_new_position()
