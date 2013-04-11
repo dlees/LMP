@@ -1,4 +1,5 @@
-#include "mainwindow.h"
+#include "mini_mode.h"
+
 
 #include <QtGui>
 
@@ -7,45 +8,46 @@
 #include "play_controller.h"
 #include "pane.h"
 #include "collection.h"
-#include "main_view.h"
-#include "mini_mode.h"
 
-MainWindow::MainWindow(QWidget *parent)
+Mini_Mode::Mini_Mode(QWidget *parent)
     : QMainWindow(parent)
 {
+    QWidget *widget = new QWidget;
 
-    mainView = new Main_View();
-    miniView = new Mini_Mode();
+    Play_Controller *play_controller = new Play_Controller();
 
-    miniView->setMaximumHeight(100);
-    miniView->setMaximumWidth(300);
+    MainMode = new QPushButton("M");
+
+    QGridLayout *temp = new QGridLayout();
+    temp->addWidget(play_controller, 0,0,5,5,Qt::AlignCenter);
+    temp->addWidget(MainMode,0,5,1,1,Qt::AlignRight);
 
 
-    create_menu();
+    widget->setLayout(temp);
+    this->setCentralWidget(widget);
 
-    this->setCentralWidget(mainView);
+    //create_menu();
 
-    connect(mainView, SIGNAL(to_mini_mode()),
-            this, SLOT(switch_view_to_mini()));
-    connect(miniView, SIGNAL(to_main_mode()),
-            this, SLOT(switch_view_to_main()));
+    Media_Manager::get()->start_up();
 
+    connect(MainMode, SIGNAL(clicked()),
+            this, SLOT(send_to_main()));
 }
 
-void MainWindow::create_menu()
+void Mini_Mode::create_menu()
 {
     fileMenu = menuBar()->addMenu(tr("&File"));
     connect(add_menu_item((char*)"Add song to current playlist", true), SIGNAL(triggered()),
             Media_Manager::get(), SLOT(add_cur_to_playlist()));
     connect(add_menu_item((char*)"&Open song", true), SIGNAL(triggered()),
-            mainView, SLOT(add_files()));
+            this, SLOT(add_files()));
     connect(add_menu_item((char*)"&Exit", true), SIGNAL(triggered()),
-            mainView, SLOT(quit()));
+            this, SLOT(quit()));
 
     editMenu = menuBar()->addMenu(tr("&Edit"));
 }
 
-QAction *MainWindow::add_menu_item(char name[], bool enabled)
+QAction *Mini_Mode::add_menu_item(char name[], bool enabled)
 {
     QAction *newAct = new QAction(tr(name), this);
     newAct->setEnabled(enabled);
@@ -54,22 +56,22 @@ QAction *MainWindow::add_menu_item(char name[], bool enabled)
     return newAct;
 }
 
-MainWindow::~MainWindow()
+Mini_Mode::~Mini_Mode()
 {
-    
+
 }
 
-void MainWindow::play()
+void Mini_Mode::play()
 {
     Media_Manager::get()->play_cur();
 }
 
-void MainWindow::open_and_play()
+void Mini_Mode::open_and_play()
 {
     Media_Manager::get()->play_new("C:/Call Me Maybe");
 }
 
-void MainWindow::add_files()
+void Mini_Mode::add_files()
 {
     QStringList files = QFileDialog::getOpenFileNames(this, tr("Select Music Files"),
         QDesktopServices::storageLocation(QDesktopServices::MusicLocation));
@@ -84,25 +86,12 @@ void MainWindow::add_files()
     Media_Manager::get()->play_new(files.at(0));
 }
 
-void MainWindow::quit()
+void Mini_Mode::quit()
 {
     QApplication::quit();
 }
 
-void MainWindow::switch_view_to_mini()
+void Mini_Mode::send_to_main()
 {
-    qDebug() << "SWITCH_VIEW_TO_MINI";
-    mainView->setParent(0);
-
-    this->setCentralWidget(miniView);
-
-
-}
-
-void MainWindow::switch_view_to_main()
-{
-    qDebug() << "SWITCH_VIEW_TO_MAIN";
-    miniView->setParent(0);
-
-    this->setCentralWidget(mainView);
+    emit to_main_mode();
 }

@@ -27,6 +27,8 @@ SOURCES += main.cpp\
     button_container.cpp \
     play_controller.cpp \
     pane.cpp \
+    main_view.cpp \
+    mini_mode.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -43,6 +45,8 @@ HEADERS  += mainwindow.h \
     button_container.h \
     play_controller.h \
     pane.h \
+    main_view.h \
+    mini_mode.h
 
 OTHER_FILES +=
 
