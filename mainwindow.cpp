@@ -20,10 +20,16 @@ MainWindow::MainWindow(QWidget *parent)
     miniView->setMaximumHeight(100);
     miniView->setMaximumWidth(300);
 
+    miniSize.setWidth(300);
+    miniSize.setHeight(100);
 
     create_menu();
 
     this->setCentralWidget(mainView);
+
+    Media_Manager::get()->start_up();
+
+    this->setMinimumHeight(99);
 
     connect(mainView, SIGNAL(to_mini_mode()),
             this, SLOT(switch_view_to_mini()));
@@ -92,17 +98,26 @@ void MainWindow::quit()
 void MainWindow::switch_view_to_mini()
 {
     qDebug() << "SWITCH_VIEW_TO_MINI";
+
+    mainSize = this->size();
+
     mainView->setParent(0);
 
     this->setCentralWidget(miniView);
 
+    this->resize(miniSize);
 
 }
 
 void MainWindow::switch_view_to_main()
 {
     qDebug() << "SWITCH_VIEW_TO_MAIN";
+
+    //miniSize = this->size();
+
     miniView->setParent(0);
 
     this->setCentralWidget(mainView);
+
+    this->resize(mainSize);
 }

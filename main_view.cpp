@@ -64,7 +64,7 @@ Main_View::Main_View(QWidget *parent)
 
     //create_menu();
 
-    Media_Manager::get()->start_up();
+
 
     connect(MiniMode, SIGNAL(clicked()),
             this, SLOT(send_mini_mode()));

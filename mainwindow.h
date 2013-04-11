@@ -35,6 +35,8 @@ private:
 
     Main_View *mainView;
     Mini_Mode *miniView;
+    QSize mainSize;
+    QSize miniSize;
 
 };
 

@@ -19,16 +19,12 @@ Mini_Mode::Mini_Mode(QWidget *parent)
     MainMode = new QPushButton("M");
 
     QGridLayout *temp = new QGridLayout();
-    temp->addWidget(play_controller, 0,0,5,5,Qt::AlignCenter);
-    temp->addWidget(MainMode,0,5,1,1,Qt::AlignRight);
+    temp->addWidget(play_controller, 0,0,5,7,Qt::AlignCenter);
+    temp->addWidget(MainMode,0,7,1,1,Qt::AlignRight);
 
 
     widget->setLayout(temp);
     this->setCentralWidget(widget);
-
-    //create_menu();
-
-    Media_Manager::get()->start_up();
 
     connect(MainMode, SIGNAL(clicked()),
             this, SLOT(send_to_main()));
