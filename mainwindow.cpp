@@ -20,8 +20,8 @@ MainWindow::MainWindow(QWidget *parent)
     miniView->setMaximumHeight(100);
     miniView->setMaximumWidth(300);
 
-    miniSize.setWidth(300);
-    miniSize.setHeight(100);
+    miniSize.setWidth(225);
+    miniSize.setHeight(75);
 
     create_menu();
 
@@ -29,7 +29,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     Media_Manager::get()->start_up();
 
-    this->setMinimumHeight(99);
+    this->setMinimumHeight(49);
+    this->setMinimumWidth(99);
 
     connect(mainView, SIGNAL(to_mini_mode()),
             this, SLOT(switch_view_to_mini()));

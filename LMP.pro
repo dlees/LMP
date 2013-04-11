@@ -28,7 +28,8 @@ SOURCES += main.cpp\
     play_controller.cpp \
     pane.cpp \
     main_view.cpp \
-    mini_mode.cpp
+    mini_mode.cpp \
+    mini_mode_controller.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -46,7 +47,8 @@ HEADERS  += mainwindow.h \
     play_controller.h \
     pane.h \
     main_view.h \
-    mini_mode.h
+    mini_mode.h \
+    mini_mode_controller.h
 
 OTHER_FILES +=
 

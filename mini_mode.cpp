@@ -8,19 +8,20 @@
 #include "play_controller.h"
 #include "pane.h"
 #include "collection.h"
+#include "mini_mode_controller.h"
 
 Mini_Mode::Mini_Mode(QWidget *parent)
     : QMainWindow(parent)
 {
     QWidget *widget = new QWidget;
 
-    Play_Controller *play_controller = new Play_Controller();
+    Mini_Mode_Controller *play_controller = new Mini_Mode_Controller();
 
     MainMode = new QPushButton("M");
 
     QGridLayout *temp = new QGridLayout();
-    temp->addWidget(play_controller, 0,0,5,7,Qt::AlignCenter);
-    temp->addWidget(MainMode,0,7,1,1,Qt::AlignRight);
+    temp->addWidget(play_controller, 0,0,5,10,Qt::AlignCenter);
+    temp->addWidget(MainMode,0,10,1,1,Qt::AlignRight);
 
 
     widget->setLayout(temp);
