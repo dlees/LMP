@@ -29,7 +29,8 @@ SOURCES += main.cpp\
     pane.cpp \
     main_view.cpp \
     mini_mode.cpp \
-    mini_mode_controller.cpp
+    mini_mode_controller.cpp \
+    hotspots.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -48,7 +49,8 @@ HEADERS  += mainwindow.h \
     pane.h \
     main_view.h \
     mini_mode.h \
-    mini_mode_controller.h
+    mini_mode_controller.h \
+    hotspots.h
 
 OTHER_FILES +=
 

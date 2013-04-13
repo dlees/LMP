@@ -1,0 +1,55 @@
+#ifndef HOTSPOTS_H
+#define HOTSPOTS_H
+
+#pragma once
+
+#include <map>
+#include <vector>
+#include <fstream>
+
+// IF SLOW DOWN OCCURS:
+// Consider Hotspot cache.
+// the nice thing is these classes don't need to be modified
+// besides possibly adding a remove song function
+
+class Hotspots
+{
+public:
+    Hotspots(void);
+    ~Hotspots(void);
+
+    void add(int hotspot);
+    void remove(int hotspot);
+
+    int get_next(int spot);
+    int get_prev(int spot);
+
+    void save(std::wofstream &fout);
+    void load(std::wifstream &fin);
+
+private:
+    std::vector<int> hotspots;
+
+    std::vector<int>::iterator find(int hs);
+};
+
+class Hotspot_map
+{
+public:
+    Hotspot_map();
+    ~Hotspot_map();
+
+    Hotspots &get_hotspots(std::wstring &song);
+    void add_hotspot(std::wstring &song, int hotspot);
+
+    void save(char *filename);
+    void load(char *filename);
+
+private:
+    typedef std::map<std::wstring, Hotspots> hotspot_map_t;
+
+    hotspot_map_t hotspot_map;
+
+};
+
+#endif // HOTSPOTS_H
