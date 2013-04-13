@@ -14,11 +14,11 @@ Button_Container::Button_Container(int w, int h)
     connect(playPause, SIGNAL(clicked()),
             Media_Manager::get(), SLOT(play_cur()));
 
-    previous = new QToolButton(this);
-    //previous->setIcon(QIcon(":/buttons/prev.png"));
-    previous->setIcon(style()->standardIcon(QStyle::SP_MediaSkipBackward));
-    previous->setGeometry(0, 0, 10, 20);
-    connect(previous, SIGNAL(clicked()),
+    prev = new QToolButton(this);
+    //prev->setIcon(QIcon(":/buttons/prev.png"));
+    prev->setIcon(style()->standardIcon(QStyle::SP_MediaSkipBackward));
+    prev->setGeometry(0, 0, 10, 20);
+    connect(prev, SIGNAL(clicked()),
             Media_Manager::get(), SLOT(prev()));
 
     next = new QToolButton(this);
@@ -28,31 +28,57 @@ Button_Container::Button_Container(int w, int h)
     connect(next, SIGNAL(clicked()),
             Media_Manager::get(), SLOT(next()));
 
+    hotspot_prev = new QToolButton(this);
+    hotspot_prev->setIcon(QIcon(":/buttons/hotspot_prev.png"));
+    //next->setIcon(style()->standardIcon(QStyle::SP_MediaSkipForward));
+    hotspot_prev->setGeometry(0, 0, 10, 20);
+    connect(hotspot_prev, SIGNAL(clicked()),
+            this, SLOT(prev_hs()));
+
+    hotspot_next = new QToolButton(this);
+    hotspot_next->setIcon(QIcon(":/buttons/hotspot_next.png"));
+    //hotspot_next->setIcon(style()->standardIcon(QStyle::SP_MediaSkipForward));
+    hotspot_next->setGeometry(0, 0, 10, 20);
+    connect(hotspot_next, SIGNAL(clicked()),
+            this, SLOT(next_hs()));
+
     connect(Media_Manager::get(), SIGNAL(became_paused()),
              this, SLOT(set_icon_play()));
     connect(Media_Manager::get(), SIGNAL(started_playing()),
              this, SLOT(set_icon_pause()));
 
-    addWidget(previous);
+    addWidget(prev);
+    addWidget(hotspot_prev);
     addWidget(playPause);
+    addWidget(hotspot_next);
     addWidget(next);
 }
 
 void Button_Container::set_icon_play()
 {
-    //playPause->setIcon(QIcon(QString::fromUtf8(":/buttons/play.png")));
+    //playPause->setIcon(QIcon(":/buttons/play.png"));
     playPause->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
 }
 
 void Button_Container::set_icon_pause()
 {
-    //playPause->setIcon(QIcon(QString::fromUtf8(":/buttons/pause.png")));
+    //playPause->setIcon(QIcon(":/buttons/pause.png"));
     playPause->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
+}
+
+void Button_Container::prev_hs()
+{
+    Playing_Song::get().prev_hs();
+}
+
+void Button_Container::next_hs()
+{
+    Playing_Song::get().next_hs();
 }
 
 Button_Container::~Button_Container()
 {
     delete playPause;
-    delete previous;
+    delete prev;
     delete next;
 }

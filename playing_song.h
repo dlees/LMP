@@ -4,6 +4,7 @@
 #include <QObject>
 
 #include "music_player.h"
+#include "hotspots.h"
 
 class Song;
 
@@ -73,6 +74,7 @@ signals:
 
 private:
     Playing_Song();
+    Hotspot_map hs_map;
 
     Song *cur_playing;
     bool paused;	// true if the song is paused

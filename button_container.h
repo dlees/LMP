@@ -15,12 +15,16 @@ public:
 
 private:
     QToolButton *playPause;
-    QToolButton *previous;
+    QToolButton *prev;
     QToolButton *next;
+    QToolButton *hotspot_prev;
+    QToolButton *hotspot_next;
 
 public slots:
     void set_icon_play();
     void set_icon_pause();
+    void next_hs();
+    void prev_hs();
 
 signals:
 

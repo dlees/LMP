@@ -4,5 +4,7 @@
         <file>pause.png</file>
         <file>next.png</file>
         <file>prev.png</file>
+        <file>hotspot_next.png</file>
+        <file>hotspot_prev.png</file>
     </qresource>
 </RCC>

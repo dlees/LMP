@@ -106,18 +106,18 @@ void Hotspots::load(std::wifstream &fin)
     }
 }
 
-Hotspots &Hotspot_map::get_hotspots(std::wstring &song)
+Hotspots &Hotspot_map::get_hotspots(int song_id)
 {
-    if (hotspot_map.find(song) == hotspot_map.end())
+    if (hotspot_map.find(song_id) == hotspot_map.end())
         qDebug() << "ERROR: Song has no hotspots";
         //throw Error(L"Song Has No Hotspots.");
 
-    return hotspot_map.at(song);
+    return hotspot_map.at(song_id);
 }
 
-void Hotspot_map::add_hotspot(std::wstring &song, int hotspot)
+void Hotspot_map::add_hotspot(int song_id, qint64 hotspot)
 {
-    hotspot_map[song].add(hotspot);
+    hotspot_map[song_id].add(hotspot);
 }
 
 
@@ -163,10 +163,10 @@ void Hotspot_map::load(char *filename)
     if (fin.fail())
         qDebug() << "ERROR: Hotspots failed! Num";
         //throw Error(L"Hotspots Failed! Num");
-
+/*
     while (num--)
     {
-        wstring song;
+        qint64 song;
         Hotspots hs;
 
         fin.get(); // get '\n'
@@ -180,5 +180,6 @@ void Hotspot_map::load(char *filename)
 
         hotspot_map[song] = hs;
     }
+    */
     fin.close();
 }

@@ -17,11 +17,14 @@ MainWindow::MainWindow(QWidget *parent)
     mainView = new Main_View();
     miniView = new Mini_Mode();
 
+    //miniView->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     miniView->setMaximumHeight(100);
     miniView->setMaximumWidth(300);
 
+    //miniSize.setWidth(225);
+    //miniSize.setHeight(75);
     miniSize.setWidth(225);
-    miniSize.setHeight(75);
+    miniSize.setHeight(100);
 
     create_menu();
 
@@ -50,6 +53,10 @@ void MainWindow::create_menu()
             mainView, SLOT(quit()));
 
     editMenu = menuBar()->addMenu(tr("&Edit"));
+
+    hsMenu = menuBar()->addMenu(tr("&Hotspots"));
+    connect(add_menu_item((char*)"Add hotspot", false), SIGNAL(triggered()),
+            mainView, SLOT(quit()));
 }
 
 QAction *MainWindow::add_menu_item(char name[], bool enabled)

@@ -7,6 +7,8 @@
 #include <vector>
 #include <fstream>
 
+#include <QtGui>
+
 // IF SLOW DOWN OCCURS:
 // Consider Hotspot cache.
 // the nice thing is these classes don't need to be modified
@@ -39,14 +41,14 @@ public:
     Hotspot_map();
     ~Hotspot_map();
 
-    Hotspots &get_hotspots(std::wstring &song);
-    void add_hotspot(std::wstring &song, int hotspot);
+    Hotspots &get_hotspots(int song_id);
+    void add_hotspot(int song_id, qint64 hotspot);
 
     void save(char *filename);
     void load(char *filename);
 
 private:
-    typedef std::map<std::wstring, Hotspots> hotspot_map_t;
+    typedef std::map<int, Hotspots> hotspot_map_t;
 
     hotspot_map_t hotspot_map;
 

@@ -129,14 +129,26 @@ void Playing_Song::change_pos_relative(int relative_pos)
 
 void Playing_Song::set_hs()
 {
-
+    hs_map.add_hotspot(cur_playing->get_id(), get_position());
 }
 
-void Playing_Song::next_hs(){}
+void Playing_Song::next_hs()
+{
+    qDebug() << "Next HS";
+    change_position(hs_map.get_hotspots(cur_playing->get_id()).get_next(get_position()+1));
+}
 
-void Playing_Song::prev_hs(){}
+void Playing_Song::prev_hs()
+{
+    qDebug() << "Prev HS";
+    change_position(hs_map.get_hotspots(cur_playing->get_id()).get_prev(get_position()-1));
+}
 
-void Playing_Song::remove_hs(){}
+void Playing_Song::remove_hs()
+{
+    Hotspots &hotspots = hs_map.get_hotspots(cur_playing->get_id());
+    hotspots.remove(hotspots.get_next(get_position()));
+}
 
 bool Playing_Song::is_paused()
 {
