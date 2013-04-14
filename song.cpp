@@ -44,9 +44,9 @@ QStringList Song::get_headers() const
             << "Artist";
 }
 
-QList<QStandardItem*> Song::get_column_data() const
+QList<QVariant> Song::get_column_data() const
 {
     return Music_Item::get_column_data()
-            << new QStandardItem("Avril")
+            << ("The The")
                ;
 }

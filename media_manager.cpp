@@ -103,12 +103,17 @@ void Media_Manager::switch_playlist(Playlist *playlist)
     cur_list = playlist;
 }
 
-QStandardItemModel *Media_Manager::get_playlist()
+Collection *Media_Manager::get_playlist()
 {
-    return cur_list->get_model();
+    return cur_list;
 }
 
-QStandardItemModel *Media_Manager::get_library()
+Collection *Media_Manager::get_library()
 {
-    return lib.get_model();
+    return &lib;
+}
+
+Collection *Media_Manager::get_center()
+{
+    return center;
 }

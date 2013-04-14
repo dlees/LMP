@@ -6,7 +6,7 @@
 #include <QList>
 #include <QtGui>
 
-class Collection : public Music_Item, public QAbstractListModel
+class Collection : public Music_Item, public QAbstractTableModel
 {
 public:
     Collection(const QString &);
@@ -23,20 +23,25 @@ public:
 
     QStandardItemModel *get_model();
 
-     virtual void begin_playing();
+    virtual void begin_playing();
+
+    // put this collection in the center table
+    virtual void select();
 
     virtual void add_child(QStandardItem *);
 
     // gets the appropriate headers for this music item
     virtual QStringList get_headers() const;
 
-    virtual QList<QStandardItem*> get_column_data() const;
+    virtual QList<QVariant> get_column_data() const;
 
+    void select_child(int i);
 
-
-// ListModel functions
+// TableModel functions
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
     virtual QVariant data(const QModelIndex &index, int role) const;
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
 private:
     QList<Music_Item*> children;

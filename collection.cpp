@@ -9,10 +9,9 @@ Collection::Collection(const QString &name)
 
 void Collection::add(Music_Item *item)
 {
+    beginInsertRows(QModelIndex(), count(), count());
     children.push_back(item);
-
-    if (tree_model)
-        tree_model->appendRow(item->get_column_data());
+    endInsertRows();
 }
 
 void Collection::remove(Music_Item *item)
@@ -53,10 +52,29 @@ void Collection::begin_playing()
     Media_Manager::get()->switch_playlist(this);
 }
 
+void Collection::select()
+{
+    Media_Manager::get()->set_center(this);
+}
+
+void Collection::select_child(int i)
+{
+    children.at(i)->select();
+}
+
 int Collection::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     return children.count();
+}
+
+int Collection::columnCount(const QModelIndex &parent) const
+{
+    Q_UNUSED(parent);
+    if (!children.count())
+        return 3;
+
+    return children[0]->get_column_data().size();
 }
 
 QVariant Collection::data(const QModelIndex &index, int role) const
@@ -66,39 +84,40 @@ QVariant Collection::data(const QModelIndex &index, int role) const
 
     Music_Item *element = children.at(index.row());
 
+    QList<QVariant> columns = element->get_column_data();
     switch (role)
     {
         case Qt::DisplayRole:
-            return element->get_name();
+            return columns.at(index.column());
 
         default:
             return QVariant();
     }
 }
 
-QStandardItemModel *Collection::get_model()
+QVariant Collection::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    Music_Item *item;
+    if (role != Qt::DisplayRole)
+        return QVariant();
 
-    tree_model = new QStandardItemModel();
+    if (orientation == Qt::Horizontal) {
+        switch (section) {
+            case 0:
+                return tr("Name");
 
-    if (children.size())
-        tree_model->setHorizontalHeaderLabels(children.at(0)->get_headers());
+            case 1:
+                return tr("Seconds");
 
-    foreach (item, children)
-    {
-        QList<QStandardItem*> columns(item->get_column_data());
-
-        tree_model->appendRow(columns);
-
-        item->add_child(columns.at(0));
+            default:
+                return QVariant();
+        }
     }
-
-    return tree_model;
+    return QVariant();
 }
 
-void Collection::add_child(QStandardItem *parent)
+void Collection::add_child(QStandardItem *)
 {
+    /*
     Music_Item *item;
 
     foreach (item, children)
@@ -109,6 +128,7 @@ void Collection::add_child(QStandardItem *parent)
 
         item->add_child(columns.at(0));
     }
+    */
 }
 
 QStringList Collection::get_headers() const
@@ -118,9 +138,9 @@ QStringList Collection::get_headers() const
                ;
 }
 
-QList<QStandardItem*> Collection::get_column_data() const
+QList<QVariant> Collection::get_column_data() const
 {
     return Music_Item::get_column_data()
-            << new QStandardItem("No Data")
+            << ("No Data")
                ;
 }

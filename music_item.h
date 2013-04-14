@@ -26,6 +26,10 @@ public:
     // have Media Manager start playing this item
     virtual void begin_playing() = 0;
 
+    // select this item
+    virtual void select()
+        {begin_playing();}
+
 // For being shown in a View
     // adds itself and it's children to the QStandardItem passed in
     virtual void add_child(QStandardItem *) = 0;
@@ -33,7 +37,7 @@ public:
     // gets the appropriate headers for this music item
     virtual QStringList get_headers() const = 0;
 
-    virtual QList<QStandardItem*> get_column_data() const = 0;
+    virtual QList<QVariant> get_column_data() const = 0;
 
 // Necessary overrides from QStanardItem.
     int type()

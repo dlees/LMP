@@ -16,9 +16,6 @@ Music_Item::~Music_Item()
 
 QVariant Music_Item::data(int role) const
 {
-
-    //DOESN:T COME HERE ANYMORE
-    /*
     switch (role)
     {
         case Qt::DisplayRole:
@@ -27,7 +24,7 @@ QVariant Music_Item::data(int role) const
         default:
             return QVariant();
     }
-    */
+
     return QVariant();
 }
 
@@ -39,10 +36,10 @@ QStringList Music_Item::get_headers() const
                ;
 }
 
-QList<QStandardItem*> Music_Item::get_column_data() const
+QList<QVariant> Music_Item::get_column_data() const
 {
-    return QList<QStandardItem*>()
-            << new QStandardItem(get_name())
-            << new QStandardItem(QString::number(total_secs()))
+    return QList<QVariant>()
+            << (get_name())
+            << (total_secs())
                ;
 }

@@ -29,24 +29,31 @@ Main_View::Main_View(QWidget *parent)
 
     //2nd row containing Splitter of 3 panes
     // Library Pane
-    QTreeView *tree = new QTreeView();
-    Pane *libraryPane = new Pane("Library", tree);
-    tree->setModel(Media_Manager::get()->get_library());
-    for (int i = 1; i < Media_Manager::get()->get_library()->columnCount(); i++)
+    lib_list = new QListView();
+    Pane *libraryPane = new Pane("Library", lib_list);
+    lib_list->setModel(Media_Manager::get()->get_library());
+    connect(lib_list, SIGNAL(doubleClicked(QModelIndex)),
+            this, SLOT(select_lib_item(QModelIndex)));
+
+    /*for (int i = 1; i < Media_Manager::get()->get_library()->columnCount(); i++)
     {
         // Show only the first column for library
-        tree->hideColumn(i);
-    }
+        lib_list->hideColumn(i);
+    }*/
 
     // Center Table
-    QTreeView *test = new QTreeView();
-    test->setModel(Media_Manager::get()->get_library());
-    Pane *centerPane = new Pane("table", test);
+    table = new QTableView();
+    table->setModel(Media_Manager::get()->get_playlist());
+    Pane *centerPane = new Pane("table", table);
+    connect(table, SIGNAL(doubleClicked(QModelIndex)),
+            this, SLOT(select_center_item(QModelIndex)));
 
     // Playlist Pane
-    QListView *list = new QListView();
-    list->setModel(Media_Manager::get()->get_playlist());
-    Pane *playlistPane = new Pane("Currently Playing", list);
+    playlist = new QListView();
+    playlist->setModel(Media_Manager::get()->get_playlist());
+    Pane *playlistPane = new Pane("Currently Playing", playlist);
+    connect(playlist, SIGNAL(doubleClicked(QModelIndex)),
+            this, SLOT(select_song(QModelIndex)));
 
     splitter = new QSplitter(Qt::Horizontal);
     splitter->addWidget(libraryPane);
@@ -120,3 +127,32 @@ void Main_View::send_mini_mode()
 
     emit to_mini_mode();
 }
+
+
+// select a song from the playlist pane
+// should start playing
+void Main_View::select_song(QModelIndex index)
+{
+    // selecting the child in the playlist that corresponds
+    // to the row you clicked will make the song play
+    Media_Manager::get()->get_playlist()->select_child(index.row());
+
+}
+
+void Main_View::select_lib_item(QModelIndex index)
+{
+    // send whatever we selected into the center
+    Media_Manager::get()->get_library()->select_child(index.row());
+
+    table->setModel(Media_Manager::get()->get_center());
+}
+
+void Main_View::select_center_item(QModelIndex index)
+{
+    // send whatever we selected into the center
+    Media_Manager::get()->get_center()->select_child(index.row());
+
+    table->setModel(Media_Manager::get()->get_center());
+
+}
+

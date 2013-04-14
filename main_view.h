@@ -23,6 +23,9 @@ public slots:
     void add_files();
     void quit();
     void send_mini_mode();
+    void select_song(QModelIndex);
+    void select_lib_item(QModelIndex);
+    void select_center_item(QModelIndex);
 
 private:
     QAction *add_menu_item(char name[], bool enabled);
@@ -32,6 +35,9 @@ private:
     QMenu *fileMenu;
     QMenu *editMenu;
     QPushButton *MiniMode;
+    QListView *playlist;
+    QTableView *table;
+    QListView *lib_list;
 };
 
 

@@ -63,8 +63,13 @@ public slots:
     void switch_playlist(Collection *);
     void switch_playlist(Playlist *);
 
-    QStandardItemModel *get_playlist();
-    QStandardItemModel *get_library();
+    Collection *get_playlist();
+    Collection *get_center();
+    Collection *get_library();
+
+    void set_center(Collection *new_center)
+        { center = new_center;}
+
 
     void became_paused_slot() {emit became_paused();}
     void started_playing_slot() {emit started_playing();}
@@ -83,7 +88,7 @@ private:
     Playlist *cur_list;
     Playing_Song &playing;
     Library lib;
-
+    Collection *center;
 };
 
 #endif // MEDIA_MANAGER_H
