@@ -1,5 +1,5 @@
 #include <QVBoxLayout>
-
+#include <QGridLayout>
 #include "play_controller.h"
 #include "button_container.h"
 #include "playing_song.h"
@@ -23,11 +23,11 @@ Play_Controller::Play_Controller()
     volumeSlider->setAudioOutput(curAudio);
     volumeSlider->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
 
-    QHBoxLayout *inner_layout = new QHBoxLayout();
+    QGridLayout *inner_layout = new QGridLayout();
 
-    inner_layout->addWidget(button_container);
-    inner_layout->addWidget(song_title);
-    inner_layout->addWidget(volumeSlider);
+    inner_layout->addWidget(song_title, 0, 0, Qt::AlignLeft);
+    inner_layout->addWidget(button_container, 0, Qt::AlignLeft);
+    inner_layout->addWidget(volumeSlider, 0, 2, Qt::AlignRight);
 
     main_layout->addWidget(slider);
     main_layout->addLayout(inner_layout);
@@ -43,9 +43,8 @@ Play_Controller::Play_Controller()
             this, SLOT(send_new_position()));
     connect(&Playing_Song::get(), SIGNAL(new_total_duration(int)),
             this, SLOT(set_total_value(int)));
-    //connect(&Playing_Song::get(), SIGNAL(started_playing()),
-      //      this, SLOT(set_));
-
+    connect(&Playing_Song::get(), SIGNAL(song_changed(Song *)),
+            this, SLOT(set_song_title(Song *)));
 }
 
 void Play_Controller::set_slider_position(qint64 value)
