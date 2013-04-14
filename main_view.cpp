@@ -13,7 +13,6 @@ Main_View::Main_View(QWidget *parent)
     : QMainWindow(parent)
 {
     QWidget *widget = new QWidget;
-    //widget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 
     Play_Controller *play_controller = new Play_Controller();
 
@@ -30,15 +29,14 @@ Main_View::Main_View(QWidget *parent)
     connect(lib_list, SIGNAL(doubleClicked(QModelIndex)),
             this, SLOT(select_lib_item(QModelIndex)));
 
-    /*for (int i = 1; i < Media_Manager::get()->get_library()->columnCount(); i++)
-    {
-        // Show only the first column for library
-        lib_list->hideColumn(i);
-    }*/
-
     // Center Table
     table = new QTableView();
+    table->setSelectionBehavior(QAbstractItemView::SelectRows);
+    table->setSortingEnabled(true);
+    table->setShowGrid(false);
     table->setModel(Media_Manager::get()->get_playlist());
+    //QString special = Media_Manager::get()->get_center()->get_name();
+    //qDebug() << special;
     Pane *centerPane = new Pane("name of view", table);
     connect(table, SIGNAL(doubleClicked(QModelIndex)),
             this, SLOT(select_center_item(QModelIndex)));
@@ -56,7 +54,7 @@ Main_View::Main_View(QWidget *parent)
     splitter->addWidget(playlistPane);
 
     QGridLayout *center_layout = new QGridLayout;
-    center_layout->addWidget(search, 0, 0, Qt::AlignCenter);
+    center_layout->addWidget(search, 0, 0, Qt::AlignLeft);
     center_layout->addWidget(MiniMode, 0, 2, Qt::AlignRight);
     center_layout->addWidget(splitter, 1, 0, 1, -1);
 
