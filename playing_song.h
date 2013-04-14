@@ -39,12 +39,6 @@ public:
     void change_position(int new_pos);
     void change_pos_relative(int relative_pos);
 
-    // hotspots
-    void set_hs();
-    void next_hs();
-    void prev_hs();
-    void remove_hs();
-
     bool is_paused(); // true if paused
 
     bool is_finished();	// return true if the song ended
@@ -65,6 +59,11 @@ public:
 
 public slots:
     void almostdone_playsong();
+    // hotspots
+    void set_hs();
+    void next_hs();
+    void prev_hs();
+    void remove_hs();
 
 signals:
     void became_paused();

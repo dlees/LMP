@@ -129,6 +129,7 @@ void Playing_Song::change_pos_relative(int relative_pos)
 
 void Playing_Song::set_hs()
 {
+    qDebug() << "Hotspot set " << get_position();
     hs_map.add_hotspot(cur_playing->get_id(), get_position());
 }
 

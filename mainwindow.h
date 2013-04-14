@@ -26,7 +26,7 @@ public slots:
 
 private:
     void create_menu();
-    QAction *add_menu_item(char name[], bool enabled);
+    QAction *add_menu_item(char name[], bool enabled, QMenu *menu);
 
     QSplitter *splitter;
 

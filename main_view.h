@@ -25,7 +25,6 @@ public slots:
     void send_mini_mode();
 
 private:
-    void create_menu();
     QAction *add_menu_item(char name[], bool enabled);
 
     QSplitter *splitter;

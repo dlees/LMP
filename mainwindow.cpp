@@ -45,25 +45,25 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::create_menu()
 {
     fileMenu = menuBar()->addMenu(tr("&File"));
-    connect(add_menu_item((char*)"Add song to current playlist", true), SIGNAL(triggered()),
+    connect(add_menu_item((char*)"Add song to current playlist", true, fileMenu), SIGNAL(triggered()),
             Media_Manager::get(), SLOT(add_cur_to_playlist()));
-    connect(add_menu_item((char*)"&Open song", true), SIGNAL(triggered()),
+    connect(add_menu_item((char*)"&Open song", true, fileMenu), SIGNAL(triggered()),
             mainView, SLOT(add_files()));
-    connect(add_menu_item((char*)"&Exit", true), SIGNAL(triggered()),
+    connect(add_menu_item((char*)"&Exit", true, fileMenu), SIGNAL(triggered()),
             mainView, SLOT(quit()));
 
     editMenu = menuBar()->addMenu(tr("&Edit"));
 
     hsMenu = menuBar()->addMenu(tr("&Hotspots"));
-    connect(add_menu_item((char*)"Add hotspot", false), SIGNAL(triggered()),
-            mainView, SLOT(quit()));
+    connect(add_menu_item((char*)"Add hotspot", true, hsMenu), SIGNAL(triggered()),
+            &Playing_Song::get(), SLOT(set_hs()));
 }
 
-QAction *MainWindow::add_menu_item(char name[], bool enabled)
+QAction *MainWindow::add_menu_item(char name[], bool enabled, QMenu *menu)
 {
     QAction *newAct = new QAction(tr(name), this);
     newAct->setEnabled(enabled);
-    fileMenu->addAction(newAct);
+    menu->addAction(newAct);
 
     return newAct;
 }

@@ -12,48 +12,52 @@ Main_View::Main_View(QWidget *parent)
     : QMainWindow(parent)
 {
     QWidget *widget = new QWidget;
+    //widget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 
     Play_Controller *play_controller = new Play_Controller();
 
-    // displays 2 rows of title, and panes
-    QGridLayout *center_layout = new QGridLayout;
+    // 1st row containing "Playlist name", searchbar, minimode button
     QLabel *title = new QLabel("Playlist name");
-    center_layout->addWidget(title, 0, 1, 1, 3, Qt::AlignLeft);
     QLineEdit *search = new QLineEdit("search");
-    search->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
-    center_layout->addWidget(search, 0, 3, 1, 3, Qt::AlignCenter);
     MiniMode = new QPushButton("m");
     MiniMode->setMaximumWidth(20);
-    center_layout->addWidget(MiniMode, 0, 6, 1, 1, Qt::AlignCenter);
 
-    splitter = new QSplitter(Qt::Horizontal);
+    // Fixed size
+    title->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
+    search->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
+    MiniMode->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
 
+    //2nd row containing Splitter of 3 panes
     // Library Pane
     QTreeView *tree = new QTreeView();
     Pane *libraryPane = new Pane("Library", tree);
     tree->setModel(Media_Manager::get()->get_library());
     for (int i = 1; i < Media_Manager::get()->get_library()->columnCount(); i++)
     {
-        // Show only the first column for libarary
+        // Show only the first column for library
         tree->hideColumn(i);
     }
-    splitter->addWidget(libraryPane);
 
     // Center Table
     QTreeView *test = new QTreeView();
     test->setModel(Media_Manager::get()->get_library());
     Pane *centerPane = new Pane("table", test);
-    splitter->addWidget(centerPane);
 
     // Playlist Pane
     QListView *list = new QListView();
     list->setModel(Media_Manager::get()->get_playlist());
     Pane *playlistPane = new Pane("Currently Playing", list);
+
+    splitter = new QSplitter(Qt::Horizontal);
+    splitter->addWidget(libraryPane);
+    splitter->addWidget(centerPane);
     splitter->addWidget(playlistPane);
 
+    QGridLayout *center_layout = new QGridLayout;
+    center_layout->addWidget(title, 0, 1, 1, 3, Qt::AlignLeft);
+    center_layout->addWidget(search, 0, 3, 1, 3, Qt::AlignCenter);
+    center_layout->addWidget(MiniMode, 0, 6, 1, 1, Qt::AlignCenter);
     center_layout->addWidget(splitter, 1, 0, 1, -1);
-
-
 
     // Add all to main_layout
     QVBoxLayout *main_layout = new QVBoxLayout(widget);
@@ -62,26 +66,8 @@ Main_View::Main_View(QWidget *parent)
     widget->setLayout(main_layout);
     this->setCentralWidget(widget);
 
-    //create_menu();
-
-
-
     connect(MiniMode, SIGNAL(clicked()),
             this, SLOT(send_mini_mode()));
-
-}
-
-void Main_View::create_menu()
-{
-    fileMenu = menuBar()->addMenu(tr("&File"));
-    connect(add_menu_item((char*)"Add song to current playlist", true), SIGNAL(triggered()),
-            Media_Manager::get(), SLOT(add_cur_to_playlist()));
-    connect(add_menu_item((char*)"&Open song", true), SIGNAL(triggered()),
-            this, SLOT(add_files()));
-    connect(add_menu_item((char*)"&Exit", true), SIGNAL(triggered()),
-            this, SLOT(quit()));
-
-    editMenu = menuBar()->addMenu(tr("&Edit"));
 }
 
 QAction *Main_View::add_menu_item(char name[], bool enabled)

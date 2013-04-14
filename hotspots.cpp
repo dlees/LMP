@@ -29,9 +29,11 @@ void Hotspots::add(int hotspot)
 
     // if t is already present
     if (it != hotspots.end() && *it == hotspot)
+    {
         qDebug() << "ERROR: ALready a Hotspot";
-        //throw Error(L"Already a Hotspot");
-
+        return;
+        //throw Error("Already a Hotspot");
+    }
 
     // insert t at correct position
     hotspots.insert(it, hotspot);
@@ -50,9 +52,10 @@ vector<int>::iterator Hotspots::find(int hs)
 
     // if it is not present
     if (it == hotspots.end())
+    {
         qDebug() << "ERROR: No Hotspot at that Time";
-        //throw Error(L"No Hotspot at that Time");
-
+       // throw Error("No Hotspot at that Time");
+    }
     return it;
 }
 
@@ -110,7 +113,7 @@ Hotspots &Hotspot_map::get_hotspots(int song_id)
 {
     if (hotspot_map.find(song_id) == hotspot_map.end())
         qDebug() << "ERROR: Song has no hotspots";
-        //throw Error(L"Song Has No Hotspots.");
+        //throw Error("Song Has No Hotspots.");
 
     return hotspot_map.at(song_id);
 }
@@ -152,7 +155,7 @@ void Hotspot_map::load(char *filename)
 
     if (fin.fail())
     {
-        return ;//throw Error(L"Hotspots Failed!");
+        return ;//throw Error("Hotspots Failed!");
     }
 
     hotspot_map.clear();
@@ -162,7 +165,7 @@ void Hotspot_map::load(char *filename)
 
     if (fin.fail())
         qDebug() << "ERROR: Hotspots failed! Num";
-        //throw Error(L"Hotspots Failed! Num");
+        //throw Error("Hotspots Failed! Num");
 /*
     while (num--)
     {
@@ -174,7 +177,7 @@ void Hotspot_map::load(char *filename)
 
         if (fin.fail())
             qDebug() << "ERROR: Hotspots Failed";
-            //throw Error(L"Hotspots Failed!");
+            //throw Error("Hotspots Failed!");
 
         hs.load(fin);
 
