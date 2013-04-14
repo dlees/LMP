@@ -16,6 +16,7 @@ Play_Controller::Play_Controller()
 {
     QVBoxLayout *main_layout = new QVBoxLayout();
     slider = new QSlider(Qt::Horizontal);
+    song_title = new QLabel;
 
     Phonon::VolumeSlider *volumeSlider;
     volumeSlider = new Phonon::VolumeSlider(this);
@@ -25,6 +26,7 @@ Play_Controller::Play_Controller()
     QHBoxLayout *inner_layout = new QHBoxLayout();
 
     inner_layout->addWidget(button_container);
+    inner_layout->addWidget(song_title);
     inner_layout->addWidget(volumeSlider);
 
     main_layout->addWidget(slider);
@@ -41,13 +43,14 @@ Play_Controller::Play_Controller()
             this, SLOT(send_new_position()));
     connect(&Playing_Song::get(), SIGNAL(new_total_duration(int)),
             this, SLOT(set_total_value(int)));
+    //connect(&Playing_Song::get(), SIGNAL(started_playing()),
+      //      this, SLOT(set_));
+
 }
 
 void Play_Controller::set_slider_position(qint64 value)
 {
-
     slider->setValue((int) value);
-
 }
 
 void Play_Controller::send_new_position()
@@ -59,6 +62,11 @@ void Play_Controller::set_total_value(int time)
 {
     slider->setMaximum(time);
     qDebug() << "TIME: " << time;
+}
+
+void Play_Controller::set_song_title(Song *song)
+{
+    song_title->setText(song->get_filename());
 }
 
 Play_Controller::~Play_Controller()

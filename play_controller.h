@@ -3,7 +3,9 @@
 
 #include <QFrame>
 #include <QSlider>
+#include <QLabel>
 #include "button_container.h"
+#include "song.h"
 
 class Play_Controller : public QFrame
 {
@@ -16,12 +18,13 @@ public:
 private:
     Button_Container *button_container;
     QSlider *slider;
+    QLabel *song_title;
 
 public slots:
     void set_slider_position(qint64 value);
     void send_new_position();
     void set_total_value(int time);
-
+    void set_song_title(Song *song);
 };
 
 #endif // PLAY_CONTROLLER_H

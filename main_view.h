@@ -1,7 +1,6 @@
 #ifndef MAIN_VIEW_H
 #define MAIN_VIEW_H
 
-
 #include <QMainWindow>
 
 #include "media_manager.h"
@@ -29,6 +28,7 @@ public slots:
 
 private:
     QAction *add_menu_item(char name[], bool enabled);
+    QStringList *get_files();
 
     QSplitter *splitter;
 
