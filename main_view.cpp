@@ -7,6 +7,7 @@
 #include "play_controller.h"
 #include "pane.h"
 #include "collection.h"
+#include "playlist.h"
 
 Main_View::Main_View(QWidget *parent)
     : QMainWindow(parent)
@@ -151,6 +152,14 @@ void Main_View::select_center_item(QModelIndex index)
 {
     // send whatever we selected into the center
     Media_Manager::get()->get_center()->select_child(index.row());
+
+    //iff its a playlist, we must have selected a song,
+    //  so let's change the current playlist to that song
+    if (Playlist *plist = dynamic_cast<Playlist*>(Media_Manager::get()->get_center()))
+    {
+        Media_Manager::get()->switch_playlist(plist);
+        playlist->setModel(plist);
+    }
 
     table->setModel(Media_Manager::get()->get_center());
 
