@@ -65,7 +65,7 @@ void Play_Controller::set_total_value(int time)
 
 void Play_Controller::set_song_title(Song *song)
 {
-    song_title->setText(song->get_filename());
+    song_title->setText(song->get_name());
 }
 
 Play_Controller::~Play_Controller()
