@@ -34,6 +34,8 @@ void Music_Player::play_song()
 {
     qDebug() << "Playing...";
 
+    qDebug() << curSong->metaData("TITLE");
+
     curSong->play();
 
 }

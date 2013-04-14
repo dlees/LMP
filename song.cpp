@@ -2,6 +2,16 @@
 
 #include "database.h"
 #include "media_manager.h"
+#include <QString>
+#include <QObject>
+#ifdef __linux__
+    #include <phonon/mediaobject.h>
+    #include <phonon/audiooutput.h>
+    #include <phonon/VolumeSlider> //#include <Phonon/VolumeSlider>
+#else
+    #include <Phonon>
+#endif
+#include <QCoreApplication>
 
 Song::Song(const QString &filename_)
     : Music_Item(filename_),
@@ -12,6 +22,12 @@ Song::Song(const QString &filename_)
       is_playing(false)
 
 {
+    Phonon::MediaObject temp;
+
+    temp.setCurrentSource(filename_);
+
+    name = temp.metaData("TITLE").at(0);
+
     Database::get()->add_song(get_id(), filename, get_name(), created);
 }
 

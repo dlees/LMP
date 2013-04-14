@@ -19,11 +19,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     //miniView->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     miniView->setMaximumHeight(100);
-    miniView->setMaximumWidth(300);
+    miniView->setMaximumWidth(500);
 
     //miniSize.setWidth(225);
     //miniSize.setHeight(75);
-    miniSize.setWidth(225);
+    miniSize.setWidth(330);
     miniSize.setHeight(100);
 
     create_menu();

@@ -36,8 +36,10 @@ public:
 
     virtual QList<QVariant> get_column_data() const = 0;
 
-private:
+protected:
     QString name;
+
+private:
     int id;
 
 
