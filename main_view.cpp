@@ -18,15 +18,9 @@ Main_View::Main_View(QWidget *parent)
     Play_Controller *play_controller = new Play_Controller();
 
     // 1st row containing "Playlist name", searchbar, minimode button
-    QLabel *title = new QLabel("Playlist name");
     QLineEdit *search = new QLineEdit("search");
     MiniMode = new QPushButton("m");
     MiniMode->setMaximumWidth(20);
-
-    // Fixed size
-    title->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
-    search->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
-    MiniMode->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
 
     //2nd row containing Splitter of 3 panes
     // Library Pane
@@ -45,7 +39,7 @@ Main_View::Main_View(QWidget *parent)
     // Center Table
     table = new QTableView();
     table->setModel(Media_Manager::get()->get_playlist());
-    Pane *centerPane = new Pane("table", table);
+    Pane *centerPane = new Pane("name of view", table);
     connect(table, SIGNAL(doubleClicked(QModelIndex)),
             this, SLOT(select_center_item(QModelIndex)));
 
@@ -62,9 +56,8 @@ Main_View::Main_View(QWidget *parent)
     splitter->addWidget(playlistPane);
 
     QGridLayout *center_layout = new QGridLayout;
-    center_layout->addWidget(title, 0, 1, 1, 3, Qt::AlignLeft);
-    center_layout->addWidget(search, 0, 3, 1, 3, Qt::AlignCenter);
-    center_layout->addWidget(MiniMode, 0, 6, 1, 1, Qt::AlignCenter);
+    center_layout->addWidget(search, 0, 0, Qt::AlignCenter);
+    center_layout->addWidget(MiniMode, 0, 2, Qt::AlignRight);
     center_layout->addWidget(splitter, 1, 0, 1, -1);
 
     // Add all to main_layout
