@@ -3,8 +3,9 @@
 
 #include <QAbstractItemView>
 #include <QDockWidget>
+#include <QGroupBox>
 
-class Pane : public QDockWidget
+class Pane : public QFrame //QDockWidget
 {
     Q_OBJECT
 
