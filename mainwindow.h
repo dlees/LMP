@@ -33,6 +33,7 @@ private:
     QMenu *fileMenu;
     QMenu *editMenu;
     QMenu *hsMenu;
+    QMenu *plMenu; //playlist
 
     Main_View *mainView;
     Mini_Mode *miniView;

@@ -42,6 +42,7 @@ void Media_Manager::start_up()
     cur_list->set_cur(0);
 
     lib.add_playlist(cur_list);
+    center = cur_list;
 }
 
 void Media_Manager::play_new(QString filename)
