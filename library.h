@@ -11,6 +11,10 @@ class Library : public Collection
 public:
     Library();
 
+    // gets a song for a filename
+    // creates it if it needs to
+    Song *get_song(const QString &filename);
+
     void add_song(Song *);
 //    void add_artist(Artist *);
 //    void add_album(Album *);

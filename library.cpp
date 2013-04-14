@@ -16,6 +16,14 @@ Library::Library()
     add(playlists);
 }
 
+Song *Library::get_song(const QString& filename)
+{
+    // TODO: check to see if it already exists
+    Song *new_song = new Song(filename);
+    add_song(new_song);
+    return new_song;
+}
+
 void Library::add_song(Song *song)
 {
     songs->add(song);

@@ -17,13 +17,15 @@ Main_View::Main_View(QWidget *parent)
     Play_Controller *play_controller = new Play_Controller();
 
     // 1st row containing "Playlist name", searchbar, minimode button
+    QLabel *title = new QLabel("Playlist name");
     QLineEdit *search = new QLineEdit("search");
     MiniMode = new QPushButton("m");
     MiniMode->setMaximumWidth(20);
 
     // Fixed size
-    //search->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Fixed);
-    //MiniMode->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
+    title->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
+    search->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
+    MiniMode->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
 
     //2nd row containing Splitter of 3 panes
     // Library Pane
@@ -59,8 +61,9 @@ Main_View::Main_View(QWidget *parent)
     splitter->addWidget(playlistPane);
 
     QGridLayout *center_layout = new QGridLayout;
-    center_layout->addWidget(search, 0, 0, Qt::AlignCenter);
-    center_layout->addWidget(MiniMode, 0, 3, Qt::AlignRight);
+    center_layout->addWidget(title, 0, 1, 1, 3, Qt::AlignLeft);
+    center_layout->addWidget(search, 0, 3, 1, 3, Qt::AlignCenter);
+    center_layout->addWidget(MiniMode, 0, 6, 1, 1, Qt::AlignCenter);
     center_layout->addWidget(splitter, 1, 0, 1, -1);
 
     // Add all to main_layout
@@ -98,26 +101,19 @@ void Main_View::open_and_play()
     Media_Manager::get()->play_new("C:/Call Me Maybe");
 }
 
-QStringList* Main_View::get_files()
-{
-    QStringList *files = new QStringList(QFileDialog::getOpenFileNames(this, tr("Select Music Files"),
-        QDesktopServices::storageLocation(QDesktopServices::MusicLocation)));
-
-    return files;
-}
-
 void Main_View::add_files()
 {
-    QStringList *files = get_files();
+    QStringList files = QFileDialog::getOpenFileNames(this, tr("Select Music Files"),
+        QDesktopServices::storageLocation(QDesktopServices::MusicLocation));
 
-    if (files->isEmpty())
+    if (files.isEmpty())
         return;
 
-    foreach (QString filename, *files)
+    foreach (QString filename, files)
     {
         qDebug() << filename << endl;
     }
-    Media_Manager::get()->play_new(files->at(0));
+    Media_Manager::get()->play_new(files.at(0));
 }
 
 void Main_View::quit()

@@ -63,6 +63,10 @@ public slots:
     void switch_playlist(Collection *);
     void switch_playlist(Playlist *);
 
+    // creates a new playlist
+    void new_playlist();
+    void new_playlist(QStringList*);
+
     Collection *get_playlist();
     Collection *get_center();
     Collection *get_library();

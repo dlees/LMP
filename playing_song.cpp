@@ -86,6 +86,7 @@ void Playing_Song::replace_song(Song *song_)
 
     int temp = mp.get_duration();
 
+    emit song_changed(song_);
     emit new_total_duration(temp);
 
 }

@@ -13,6 +13,7 @@ public:
 
 public:
     virtual void add(Music_Item *);
+    void add_leaves(Music_Item *);
     void remove(Music_Item *);
     const QList<Music_Item *> &get_children() const;
     int count()
@@ -27,8 +28,6 @@ public:
 
     // put this collection in the center table
     virtual void select();
-
-    virtual void add_child(QStandardItem *);
 
     // gets the appropriate headers for this music item
     virtual QStringList get_headers() const;

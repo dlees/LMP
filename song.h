@@ -23,8 +23,6 @@ public:
     virtual QLinkedList<Song *> get_leaves();
     virtual void begin_playing();
 
-    virtual void add_child(QStandardItem *);
-
     // gets the appropriate headers for this music item
     virtual QStringList get_headers() const;
 

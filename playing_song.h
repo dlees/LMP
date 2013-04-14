@@ -10,7 +10,10 @@ class Song;
 
 /* This class is used to record Second Counts
  *
- * There should only ever be one instance of it.
+ * There should only ever be one instance of it:
+ *      Playing_Song::get()
+ *
+ *  To connect: &Playing_Song::get()
  *
  */
 
@@ -70,6 +73,7 @@ signals:
     void started_playing();
     void new_total_duration(int);
     void AlmostDone_PlaySong();
+    void song_changed(Song *);
 
 private:
     Playing_Song();

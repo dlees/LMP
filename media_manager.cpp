@@ -30,18 +30,14 @@ void Media_Manager::start_up()
 {
     Song *new_song;
 
-    cur_list->add(new_song = new Song("/Users/arikk/Music/80's - Billy Joel - We Didn't Start the Fire.mp3"));
-    lib.add_song(new_song);
+    cur_list->add(new_song = lib.get_song("/Users/arikk/Music/80's - Billy Joel - We Didn't Start the Fire.mp3"));
     playing.replace_song(new_song);
 
-    cur_list->add(new_song = new Song("/Users/arikk/Music/E-40 - Tell Me When To Go (Trackademics remix).mp3"));
-    lib.add_song(new_song);
+    cur_list->add(lib.get_song("/Users/arikk/Music/E-40 - Tell Me When To Go (Trackademics remix).mp3"));
 
-    cur_list->add(new_song = new Song("/Users/arikk/Music/Eagle Eyed Cherry - Save Tonight.mp3"));
-    lib.add_song(new_song);
+    cur_list->add(lib.get_song("/Users/arikk/Music/Eagle Eyed Cherry - Save Tonight.mp3"));
 
-    cur_list->add(new_song = new Song("/Users/arikk/Music/Guns N' Roses -  Sweet Child Of Mine.mp3"));
-    lib.add_song(new_song);
+    cur_list->add(lib.get_song("/Users/arikk/Music/Guns N' Roses -  Sweet Child Of Mine.mp3"));
 
     cur_list->set_cur(0);
 
@@ -50,26 +46,20 @@ void Media_Manager::start_up()
 
 void Media_Manager::play_new(QString filename)
 {
-    Song *new_song = new Song(filename);
-
-    lib.add_song(new_song);
+    Song *new_song = lib.get_song(filename);
 
     play_new(new_song);
 }
 
-void Media_Manager::play_new(Song *new_song)
+void Media_Manager::play_new(Song *song)
 {    
-
-    //playing.get_cur_song()->stop_playing();
-
-    playing.replace_song(new_song);
+    playing.replace_song(song);
     playing.play();
-
 }
 
 void Media_Manager::first()
 {
-
+    cur_list->set_cur(0);
 }
 
 void Media_Manager::prev()
@@ -101,6 +91,26 @@ void Media_Manager::switch_playlist(Collection *col)
 void Media_Manager::switch_playlist(Playlist *playlist)
 {
     cur_list = playlist;
+}
+
+void Media_Manager::new_playlist()
+{
+    lib.add_playlist(new Playlist());
+}
+
+void Media_Manager::new_playlist(QStringList *filenames)
+{
+    Playlist *new_pl = new Playlist();
+    QString filename;
+
+    foreach (filename, *filenames)
+    {
+        new_pl->add(lib.get_song(filename));
+    }
+
+    lib.add_playlist(new_pl);
+
+    switch_playlist(new_pl);
 }
 
 Collection *Media_Manager::get_playlist()

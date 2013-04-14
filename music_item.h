@@ -8,7 +8,7 @@
 
 class Song;
 
-class Music_Item : public QStandardItem
+class Music_Item
 {
 public:
     Music_Item(const QString &name);
@@ -31,23 +31,14 @@ public:
         {begin_playing();}
 
 // For being shown in a View
-    // adds itself and it's children to the QStandardItem passed in
-    virtual void add_child(QStandardItem *) = 0;
-
     // gets the appropriate headers for this music item
     virtual QStringList get_headers() const = 0;
 
     virtual QList<QVariant> get_column_data() const = 0;
 
-// Necessary overrides from QStanardItem.
-    int type()
-       {return UserType;}
-
-    QVariant data(int role) const;
-
 private:
-    int id;
     QString name;
+    int id;
 
 
     static int max_id;

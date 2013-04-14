@@ -2,6 +2,8 @@
 
 #include "media_manager.h"
 
+#include "song.h"
+
 Collection::Collection(const QString &name)
     : Music_Item(name), tree_model(0)
 {
@@ -12,6 +14,17 @@ void Collection::add(Music_Item *item)
     beginInsertRows(QModelIndex(), count(), count());
     children.push_back(item);
     endInsertRows();
+}
+
+void Collection::add_leaves(Music_Item *item)
+{
+    QLinkedList<Song*> songs = item->get_leaves();
+    Song* song;
+
+    foreach (song, songs)
+    {
+        add(song);
+    }
 }
 
 void Collection::remove(Music_Item *item)
@@ -115,22 +128,6 @@ QVariant Collection::headerData(int section, Qt::Orientation orientation, int ro
     return QVariant();
 }
 
-void Collection::add_child(QStandardItem *)
-{
-    /*
-    Music_Item *item;
-
-    foreach (item, children)
-    {
-        QList<QStandardItem*> columns(item->get_column_data());
-
-        parent->appendRow(columns);
-
-        item->add_child(columns.at(0));
-    }
-    */
-}
-
 QStringList Collection::get_headers() const
 {
     return Music_Item::get_headers()
@@ -144,3 +141,4 @@ QList<QVariant> Collection::get_column_data() const
             << ("No Data")
                ;
 }
+

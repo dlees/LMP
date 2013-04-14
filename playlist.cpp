@@ -3,13 +3,14 @@
 #include "song.h"
 
 Playlist::Playlist()
-    : Collection("Unsaved Playlist"),
+    : Collection("New Playlist"),
       cur(0)
 {
 }
 
 Playlist::Playlist(Collection *col)
-    : Collection(col->get_name()+"_playlist")
+    : Collection(col->get_name()+"_playlist"),
+      cur(0)
 {
    Music_Item *item;
    foreach (item, col->get_children())
@@ -26,7 +27,6 @@ void Playlist::add(Music_Item *item)
     {
         Collection::add(song);
     }
-
     cur = Collection::count() - 1;
 }
 
