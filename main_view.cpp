@@ -109,16 +109,15 @@ void Main_View::create_playlist_files()
 
 void Main_View::add_files()
 {
-    QStringList *files = get_files();
+    //Single file
+    QString *file = new QString(QFileDialog::getOpenFileName(this, tr("Select Music Files"),
+        QDesktopServices::storageLocation(QDesktopServices::MusicLocation)));
 
-    if (files->isEmpty())
+    if (!file)
         return;
 
-    foreach (QString filename, *files)
-    {
-        qDebug() << filename << endl;
-    }
-    Media_Manager::get()->play_new(files->at(0));
+    qDebug() << *file << endl;
+    Media_Manager::get()->play_new(*file);
 }
 
 void Main_View::quit()
