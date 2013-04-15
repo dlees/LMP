@@ -26,7 +26,8 @@ Song::Song(const QString &filename_)
 
     temp.setCurrentSource(filename_);
 
-    name = temp.metaData("TITLE").at(0);
+    if (temp.metaData("TITLE").size())
+        name = temp.metaData("TITLE").at(0);
 
     Database::get()->add_song(get_id(), filename, get_name(), created);
 }
