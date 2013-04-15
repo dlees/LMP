@@ -11,6 +11,8 @@ public:
 
     void add(Music_Item *);
 
+    void select_child(int i);
+
     void next();
     void prev();
 

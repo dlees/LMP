@@ -105,6 +105,8 @@ void Main_View::create_playlist_files()
 {
     QStringList *files = get_files();
     Media_Manager::get()->new_playlist(files);
+
+    playlist->setModel(Media_Manager::get()->get_playlist());
 }
 
 void Main_View::add_files()
@@ -153,16 +155,18 @@ void Main_View::select_lib_item(QModelIndex index)
 
 void Main_View::select_center_item(QModelIndex index)
 {
-    // send whatever we selected into the center
-    Media_Manager::get()->get_center()->select_child(index.row());
-
     //iff its a playlist, we must have selected a song,
     //  so let's change the current playlist to that song
     if (Playlist *plist = dynamic_cast<Playlist*>(Media_Manager::get()->get_center()))
     {
-        Media_Manager::get()->switch_playlist(plist);
+        qDebug() << plist->get_name();
+        Media_Manager::get()->switch_playlist(plist, index.row());
+
         playlist->setModel(plist);
     }
+
+    // send whatever we selected into the center
+    Media_Manager::get()->get_center()->select_child(index.row());
 
     table->setModel(Media_Manager::get()->get_center());
 

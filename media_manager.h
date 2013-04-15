@@ -61,7 +61,7 @@ public slots:
     void add_cur_to_playlist();
     void add_to_playlist(Song *);
     void switch_playlist(Collection *);
-    void switch_playlist(Playlist *);
+    void switch_playlist(Playlist *, int pos = 0);
 
     // creates a new playlist
     void new_playlist();

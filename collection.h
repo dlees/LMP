@@ -34,7 +34,7 @@ public:
 
     virtual QList<QVariant> get_column_data() const;
 
-    void select_child(int i);
+    virtual void select_child(int i);
 
 // TableModel functions
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;

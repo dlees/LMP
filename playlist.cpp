@@ -30,6 +30,12 @@ void Playlist::add(Music_Item *item)
     cur = Collection::count() - 1;
 }
 
+void Playlist::select_child(int i)
+{
+    Collection::select_child(i);
+    cur = i;
+}
+
 void Playlist::prev()
 {
     get_children().at(cur = (cur+count()-1)%count())->begin_playing();

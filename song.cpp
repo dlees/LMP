@@ -29,7 +29,7 @@ Song::Song(const QString &filename_)
     if (temp.metaData("TITLE").size())
         name = temp.metaData("TITLE").at(0);
 
-    Database::get()->add_song(get_id(), filename, get_name(), created);
+  //  Database::get()->add_song(get_id(), filename, get_name(), created);
 }
 
 void Song::add_secs(int amt)

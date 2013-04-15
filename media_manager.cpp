@@ -76,10 +76,10 @@ void Media_Manager::switch_playlist(Collection *col)
     switch_playlist(new Playlist(col));
 }
 
-void Media_Manager::switch_playlist(Playlist *playlist)
+void Media_Manager::switch_playlist(Playlist *playlist, int pos)
 {
-    qDebug() << playlist->get_name() << "loaded";
     cur_list = playlist;
+    cur_list->set_cur(pos);
 }
 
 void Media_Manager::new_playlist()
