@@ -352,7 +352,7 @@ void Database::delete_song(int ID){
     QString output;
     char filter[64];
     QFile write_file;
-    QTextStream out(&file);
+    QTextStream out(&write_file);
     int albumID;
     int artistID;
 
@@ -576,7 +576,7 @@ void Database::delete_from_playlist(int songID, int listID){
     QString output;
     char filter[64];
     QFile write_file;
-    QTextStream out(&file);
+    QTextStream out(&write_file);
 
     //delete song from songsInPlaylist
     sprintf(filter, "doc('database/songsInPlaylist.xml')/SIPRoot/songInPlaylist[songID!=%d]", songID);
