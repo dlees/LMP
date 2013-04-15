@@ -54,7 +54,7 @@ vector<int>::iterator Hotspots::find(int hs)
     if (it == hotspots.end())
     {
         qDebug() << "ERROR: No Hotspot at that Time";
-       // throw Error("No Hotspot at that Time");
+        throw Error("No Hotspot at that Time");
     }
     return it;
 }
@@ -118,9 +118,10 @@ void Hotspots::load(std::wifstream &fin)
 Hotspots &Hotspot_map::get_hotspots(int song_id)
 {
     if (hotspot_map.find(song_id) == hotspot_map.end())
-        qDebug() << "ERROR: Song has no hotspots";
-        //throw Error("Song Has No Hotspots.");
-
+    {
+         qDebug() << "ERROR: Song has no hotspots";
+         throw Error("Song Has No Hotspots.");
+    }
     return hotspot_map.at(song_id);
 }
 

@@ -5,6 +5,7 @@
 #include "error.h"
 #include "song.h"
 #include "database.h"
+#include "error.h"
 
 const int min_secs_c = 0;
 
@@ -137,13 +138,27 @@ void Playing_Song::set_hs()
 void Playing_Song::next_hs()
 {
     qDebug() << "Next HS";
-    change_position(hs_map.get_hotspots(cur_playing->get_id()).get_next(get_position()+1));
+    try
+    {
+        change_position(hs_map.get_hotspots(cur_playing->get_id()).get_next(get_position()+1000));
+    }
+    catch (Error &e)
+    {
+        e.print_error_msg();
+    }
 }
 
 void Playing_Song::prev_hs()
 {
     qDebug() << "Prev HS";
-    change_position(hs_map.get_hotspots(cur_playing->get_id()).get_prev(get_position()-1));
+    try
+    {
+        change_position(hs_map.get_hotspots(cur_playing->get_id()).get_prev(get_position()-1000));
+    }
+    catch (Error &e)
+    {
+        e.print_error_msg();
+    }
 }
 
 void Playing_Song::remove_hs()
@@ -154,7 +169,19 @@ void Playing_Song::remove_hs()
 
 std::vector<int> Playing_Song::get_hs_list()
 {
-    return hs_map.get_hotspots(cur_playing->get_id()).get_hotspots();
+    std::vector<int> hotspots;
+    try
+    {
+         hotspots = hs_map.get_hotspots(cur_playing->get_id()).get_hotspots();
+         return hotspots;
+    }
+    catch (Error &e)
+    {
+        qDebug() << e.msg;
+        // default is the beginning time
+        hotspots.push_back(0);
+        return hotspots;
+    }
 }
 
 bool Playing_Song::is_paused()

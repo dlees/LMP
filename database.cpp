@@ -230,7 +230,7 @@ void Database::add_song(int songID, const QString &filename,
     query.setQuery(temp);
     query.evaluateTo(&output);
     if(output.toDouble()!=songID){
-        sprintf(temp, "doc('database/song.xml')/songRoot/song[name=%d]/name/text()", name);
+        sprintf(temp, "doc('database/song.xml')/songRoot/song[name=%d]/name/text()", name.data());
         query.setQuery(temp);
         query.evaluateTo(&output);
         if(output==name){
