@@ -17,12 +17,12 @@ MainWindow::MainWindow(QWidget *parent)
     mainView = new Main_View();
     miniView = new Mini_Mode();
 
-    //miniView->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     miniView->setMaximumHeight(100);
     miniView->setMaximumWidth(500);
 
-    //miniSize.setWidth(225);
-    //miniSize.setHeight(75);
+    mainView->setMinimumWidth(500);
+    mainView->setMinimumHeight(400);
+
     miniSize.setWidth(330);
     miniSize.setHeight(100);
 

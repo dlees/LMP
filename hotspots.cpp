@@ -59,6 +59,12 @@ vector<int>::iterator Hotspots::find(int hs)
     return it;
 }
 
+vector<int> Hotspots::get_hotspots()
+{
+    return hotspots;
+}
+
+
 int Hotspots::get_next(int spot)
 {
     return *(find(spot)); // find uses lower_bound

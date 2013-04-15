@@ -18,16 +18,19 @@ Play_Controller::Play_Controller()
     slider = new QSlider(Qt::Horizontal);
     song_title = new QLabel;
 
+    song_title->setMaximumWidth(200);
+
     Phonon::VolumeSlider *volumeSlider;
     volumeSlider = new Phonon::VolumeSlider(this);
     volumeSlider->setAudioOutput(curAudio);
     volumeSlider->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+    volumeSlider->setMaximumWidth(200);
 
     QGridLayout *inner_layout = new QGridLayout();
 
-    inner_layout->addWidget(song_title, 0, 0, Qt::AlignLeft);
-    inner_layout->addWidget(button_container, 0, Qt::AlignLeft);
-    inner_layout->addWidget(volumeSlider, 0, 2, Qt::AlignRight);
+    inner_layout->addWidget(song_title, 0, 0, Qt::AlignCenter);
+    inner_layout->addWidget(button_container, 0, 1, Qt::AlignCenter);
+    inner_layout->addWidget(volumeSlider, 0, 2, Qt::AlignCenter);
 
     main_layout->addWidget(slider);
     main_layout->addLayout(inner_layout);

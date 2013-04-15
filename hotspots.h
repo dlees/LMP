@@ -23,6 +23,8 @@ public:
     void add(int hotspot);
     void remove(int hotspot);
 
+    std::vector<int> get_hotspots();
+
     int get_next(int spot);
     int get_prev(int spot);
 
