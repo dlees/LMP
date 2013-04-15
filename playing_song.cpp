@@ -152,6 +152,11 @@ void Playing_Song::remove_hs()
     hotspots.remove(hotspots.get_next(get_position()));
 }
 
+std::vector<int> Playing_Song::get_hs_list()
+{
+    return hs_map.get_hotspots(cur_playing->get_id()).get_hotspots();
+}
+
 bool Playing_Song::is_paused()
 {
     return paused;

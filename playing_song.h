@@ -2,7 +2,7 @@
 #define PLAYING_SONG
 
 #include <QObject>
-
+#include <vector>
 #include "music_player.h"
 #include "hotspots.h"
 
@@ -67,6 +67,7 @@ public slots:
     void next_hs();
     void prev_hs();
     void remove_hs();
+    std::vector<int> get_hs_list();
 
 signals:
     void became_paused();

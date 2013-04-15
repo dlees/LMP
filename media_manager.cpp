@@ -28,8 +28,6 @@ void Media_Manager::play_cur()
 
 void Media_Manager::start_up()
 {
-    Song *new_song;
-
     lib.add_playlist(cur_list);
     center = cur_list;
 }
