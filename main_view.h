@@ -27,6 +27,7 @@ public slots:
     void select_lib_item(QModelIndex);
     void select_center_item(QModelIndex);
     void create_playlist_files();
+    void delete_playlist_from_center();
 
 private:
     QStringList* get_files();

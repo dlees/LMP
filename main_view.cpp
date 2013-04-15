@@ -172,3 +172,11 @@ void Main_View::select_center_item(QModelIndex index)
 
 }
 
+void Main_View::delete_playlist_from_center()
+{
+    QModelIndexList indexes = lib_list->selectionModel()->selection().indexes();
+    for (int i = 0; i < indexes.count(); ++i)
+    {
+        Media_Manager::get()->get_library()->remove(indexes[i].row());
+    }
+}

@@ -63,6 +63,8 @@ void MainWindow::create_menu()
             mainView, SLOT(create_playlist_files()));
     connect(add_menu_item((char*)"Add song to current playlist", true, plMenu), SIGNAL(triggered()),
             Media_Manager::get(), SLOT(add_cur_to_playlist()));
+    connect(add_menu_item((char*)"Delete Selected Playlist in Table", true, plMenu), SIGNAL(triggered()),
+            mainView, SLOT(delete_playlist_from_center()));
 
 }
 

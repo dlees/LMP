@@ -11,9 +11,9 @@ Library::Library()
       playlists(new Collection("Playlists"))
 {
     add(songs);
-    add(new Collection("Artists"));
-    add(new Collection("Albums"));
-    add(playlists);
+//    add(new Collection("Artists"));
+//    add(new Collection("Albums"));
+//    add(playlists);
 }
 
 Song *Library::get_song(const QString& filename)
@@ -31,5 +31,6 @@ void Library::add_song(Song *song)
 
 void Library::add_playlist(Playlist *list)
 {
-    playlists->add(list);
+    add(list);
+//    playlists->add(list);
 }

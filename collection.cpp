@@ -29,7 +29,17 @@ void Collection::add_leaves(Music_Item *item)
 
 void Collection::remove(Music_Item *item)
 {
-    children.removeOne(item);
+    remove(children.indexOf(item));
+}
+
+void Collection::remove(int index)
+{
+    if (index == -1)
+        return;
+
+    beginRemoveRows(QModelIndex(), index, index+1);
+    children.removeAt(index);
+    endRemoveRows();
 }
 
 const QList<Music_Item *> &Collection::get_children() const
