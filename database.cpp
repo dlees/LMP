@@ -230,51 +230,56 @@ void Database::add_song(int songID, const QString &filename,
     query.setQuery(temp);
     query.evaluateTo(&output);
     if(output.toDouble()!=songID){
-        //Song
+        sprintf(temp, "doc('database/song.xml')/songRoot/song[name=%d]/name/text()", name);
+        query.setQuery(temp);
+        query.evaluateTo(&output);
+        if(output==name){
+            //Song
 
-        QDomElement songE = song.createElement("song");
-        song.elementsByTagName("songRoot").at(0).appendChild(songE);
+            QDomElement songE = song.createElement("song");
+            song.elementsByTagName("songRoot").at(0).appendChild(songE);
 
-        QDomElement IDE = song.createElement("ID");
-        sprintf(temp, "%d", songID);
-        QDomText IDT = song.createTextNode(temp);
-        IDE.appendChild(IDT);
-        songE.appendChild(IDE);
+            QDomElement IDE = song.createElement("ID");
+            sprintf(temp, "%d", songID);
+            QDomText IDT = song.createTextNode(temp);
+            IDE.appendChild(IDT);
+            songE.appendChild(IDE);
 
-        QDomElement nameE = song.createElement("name");
-        QDomText nameT = song.createTextNode(name);
-        nameE.appendChild(nameT);
-        songE.appendChild(nameE);
+            QDomElement nameE = song.createElement("name");
+            QDomText nameT = song.createTextNode(name);
+            nameE.appendChild(nameT);
+            songE.appendChild(nameE);
 
-        QDomElement pathE = song.createElement("filepath");
-        QDomText pathT = song.createTextNode(filename);
-        pathE.appendChild(pathT);
-        songE.appendChild(pathE);
+            QDomElement pathE = song.createElement("filepath");
+            QDomText pathT = song.createTextNode(filename);
+            pathE.appendChild(pathT);
+            songE.appendChild(pathE);
 
-        QDomElement createdE = song.createElement("created");
-        QDomText createdT = song.createTextNode(created.toString());
-        createdE.appendChild(createdT);
-        songE.appendChild(createdE);
+            QDomElement createdE = song.createElement("created");
+            QDomText createdT = song.createTextNode(created.toString());
+            createdE.appendChild(createdT);
+            songE.appendChild(createdE);
 
-        saveFile(song, "database/song.xml");
+            saveFile(song, "database/song.xml");
 
-        //songOnAlbum
-        QDomElement onAlbumE = songsOnAlbum.createElement("songOnAlbum");
-        songsOnAlbum.elementsByTagName("SOARoot").at(0).appendChild(onAlbumE);
+            //songOnAlbum
+            QDomElement onAlbumE = songsOnAlbum.createElement("songOnAlbum");
+            songsOnAlbum.elementsByTagName("SOARoot").at(0).appendChild(onAlbumE);
 
-        QDomElement songIDE = songsOnAlbum.createElement("songID");
-        sprintf(temp, "%d", songID);
-        QDomText songIDT = songsOnAlbum.createTextNode(temp);
-        songIDE.appendChild(songIDT);
-        onAlbumE.appendChild(songIDE);
+            QDomElement songIDE = songsOnAlbum.createElement("songID");
+            sprintf(temp, "%d", songID);
+            QDomText songIDT = songsOnAlbum.createTextNode(temp);
+            songIDE.appendChild(songIDT);
+            onAlbumE.appendChild(songIDE);
 
-        QDomElement albumIDE = songsOnAlbum.createElement("albumID");
-        sprintf(temp, "%d", albumID);
-        QDomText albumIDT = songsOnAlbum.createTextNode(temp);
-        albumIDE.appendChild(albumIDT);
-        onAlbumE.appendChild(albumIDE);
+            QDomElement albumIDE = songsOnAlbum.createElement("albumID");
+            sprintf(temp, "%d", albumID);
+            QDomText albumIDT = songsOnAlbum.createTextNode(temp);
+            albumIDE.appendChild(albumIDT);
+            onAlbumE.appendChild(albumIDE);
 
-        saveFile(songsOnAlbum, "database/songsOnAlbum.xml");
+            saveFile(songsOnAlbum, "database/songsOnAlbum.xml");
+        }
     }
 
     sprintf(temp, "doc('database/album.xml')/albumRoot/album[ID=%d]/ID/text()", albumID);
@@ -343,11 +348,91 @@ void Database::add_song(int songID, const QString &filename,
 
 void Database::delete_song(int ID){
 
+    QXmlQuery query;
+    QString output;
+    char filter[64];
+    QFile write_file;
+    QTextStream out(&file);
+    int albumID;
+    int artistID;
 
+    //delete song from song.xml
+    sprintf(filter, "doc('database/song.xml')/songRoot/song[ID!=%d]", ID);
+    query.setQuery(filter);
+    query.evaluateTo(&output);
+    //output now has all <song> nodes
+    write_file.setFileName("database/song.xml");
+    write_file.open(QIODevice::ReadWrite);
+    out << "<songRoot>\n" << output << "\n</songRoot>";
+    write_file.close();
+    //reload the memory object
+    write_file.open(QIODevice::ReadOnly|QIODevice::Text);
+    song.setContent(&write_file);
+
+    //make sure we know the album
+    sprintf(filter, "doc('database/songsOnAlbum.xml')/SOARoot/songOnAlbum[songID=%d]/albumID/text()", ID);
+    query.setQuery(filter);
+    query.evaluateTo(&output);
+    albumID = output.toInt();
+
+    //delete line from songsOnAlbum
+    sprintf(filter, "doc('database/songsOnAlbum.xml')/SOARoot/songOnAlbum[songID!=%d]", ID);
+    query.setQuery(filter);
+    query.evaluateTo(&output);
+    //output now has all <songOnAlbum> nodes
+    write_file.setFileName("database/songsOnAlbum.xml");
+    write_file.open(QIODevice::ReadWrite);
+    out << "<SOARoot>\n" << output << "</SOARoot>";
+    write_file.close();
+    //reload the memory object
+    write_file.open(QIODevice::ReadOnly|QIODevice::Text);
+    songsOnAlbum.setContent(&write_file);
+
+    //see if there's anything left in the album
+    sprintf(filter, "doc('database/songsOnAlbum.xml')/SOARoot/songOnAlbum[albumID=%d]/albumID/text()", albumID);
+    query.setQuery(filter);
+    query.evaluateTo(&output);
     //if it was the only song on an album
-    //  delete the album
+    if(output.toInt()!=albumID){
+        //get the artist ID
+        sprintf(filter, "doc('database/albumsByArtist.xml')/ABARoot/albumByArtist[albumID=%d]/artistID/text()", albumID);
+        query.setQuery(filter);
+        query.evaluateTo(&output);
+        artistID = output.toInt();
+
+        //delete the album
+        sprintf(filter, "doc('database/album.xml')/albumRoot/album[ID!=%d]", albumID);
+        query.setQuery(filter);
+        query.evaluateTo(&output);
+        //output now has all <songOnAlbum> nodes
+        write_file.setFileName("database/album.xml");
+        write_file.open(QIODevice::ReadWrite);
+        out << "<albumRoot>\n" << output << "</albumRoot>";
+        write_file.close();
+        //reload the memory object
+        write_file.open(QIODevice::ReadOnly|QIODevice::Text);
+        album.setContent(&write_file);
+    }
+
+    //see if there's anything left by the artist
+    sprintf(filter, "doc('database/albumsByArtist.xml')/ABARoot/albumByArtist[artistID=%d]/artistID/text()", artistID);
+    query.setQuery(filter);
+    query.evaluateTo(&output);
     //if that album was the only album by an artist
-    //  delete the artist
+    if(output.toInt()!=artistID){
+        //delete the artist
+        sprintf(filter, "doc('database/artist.xml')/artistRoot/artist[ID!=%d]", artistID);
+        query.setQuery(filter);
+        query.evaluateTo(&output);
+        //output now has all <songOnAlbum> nodes
+        write_file.setFileName("database/artist.xml");
+        write_file.open(QIODevice::ReadWrite);
+        out << "<artistRoot>\n" << output << "</artistRoot>";
+        write_file.close();
+        //reload the memory object
+        write_file.open(QIODevice::ReadOnly|QIODevice::Text);
+        artist.setContent(&write_file);
+    }
 }
 
 int Database::find_filename(const QString &name){
@@ -486,6 +571,43 @@ void Database::add_to_playlist(int songID, int listID){
 }
 
 void Database::delete_from_playlist(int songID, int listID){
-    //if it was the only thing on the playlist
-    //  delete the playlist
+
+    QXmlQuery query;
+    QString output;
+    char filter[64];
+    QFile write_file;
+    QTextStream out(&file);
+
+    //delete song from songsInPlaylist
+    sprintf(filter, "doc('database/songsInPlaylist.xml')/SIPRoot/songInPlaylist[songID!=%d]", songID);
+    query.setQuery(filter);
+    query.evaluateTo(&output);
+    //output now has all <song> nodes
+    write_file.setFileName("database/songsInPlaylist.xml");
+    write_file.open(QIODevice::ReadWrite);
+    out << "<SIPRoot>\n" << output << "\n</SIPRoot>";
+    write_file.close();
+    //reload the memory object
+    write_file.open(QIODevice::ReadOnly|QIODevice::Text);
+    songsInPlaylist.setContent(&write_file);
+
+    //see what's still on that playlist
+    sprintf(filter, "doc('database/songsInPlaylist.xml')/SIPRoot/songOnPlaylist[songID=%d]/playlistID/text()", songID);
+    query.setQuery(filter);
+    query.evaluateTo(&output);
+    //if that album was the only album by an artist
+    if(output.toInt()!=listID){
+        //delete the artist
+        sprintf(filter, "doc('database/playlist.xml')/playlistRoot/playlist[ID!=%d]", listID);
+        query.setQuery(filter);
+        query.evaluateTo(&output);
+        //output now has all <songOnAlbum> nodes
+        write_file.setFileName("database/playlist.xml");
+        write_file.open(QIODevice::ReadWrite);
+        out << "<playlistRoot>\n" << output << "</playlistRoot>";
+        write_file.close();
+        //reload the memory object
+        write_file.open(QIODevice::ReadOnly|QIODevice::Text);
+        playlist.setContent(&write_file);
+    }
 }
