@@ -85,10 +85,10 @@ void Playing_Song::replace_song(Song *song_)
 
     set_song(song_);
 
-    int temp = mp.get_duration();
+    //int temp = mp.get_duration();
 
-    emit song_changed(song_);
-    emit new_total_duration(temp);
+    //emit song_changed(song_);
+    //emit new_total_duration(temp);
 
 }
 
@@ -107,6 +107,9 @@ void Playing_Song::set_song(Song* song_)
 
     position = 0;
     paused = true;
+
+    emit song_changed(song_, totalDuration);
+    //emit new_total_duration(totalDuration);
 }
 
 // throws error if past total duration

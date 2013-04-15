@@ -72,9 +72,9 @@ public slots:
 signals:
     void became_paused();
     void started_playing();
-    void new_total_duration(int);
+    //void new_total_duration(int);
     void AlmostDone_PlaySong();
-    void song_changed(Song *);
+    void song_changed(Song *, int);
 
 private:
     Playing_Song();

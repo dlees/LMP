@@ -44,10 +44,10 @@ Play_Controller::Play_Controller()
             this, SLOT(set_slider_position(qint64)));
     connect(slider, SIGNAL(sliderReleased()),
             this, SLOT(send_new_position()));
-    connect(&Playing_Song::get(), SIGNAL(new_total_duration(int)),
-            this, SLOT(set_total_value(int)));
-    connect(&Playing_Song::get(), SIGNAL(song_changed(Song *)),
-            this, SLOT(set_song_title(Song *)));
+    //connect(&Playing_Song::get(), SIGNAL(new_total_duration(int)),
+      //      this, SLOT(set_total_value(int)));
+    connect(&Playing_Song::get(), SIGNAL(song_changed(Song *, int)),
+            this, SLOT(set_new_song(Song *, int)));
 }
 
 void Play_Controller::set_slider_position(qint64 value)
@@ -60,14 +60,22 @@ void Play_Controller::send_new_position()
     Playing_Song::get().change_position(slider->value());
 }
 
+/*
 void Play_Controller::set_total_value(int time)
 {
     slider->setMaximum(time);
     qDebug() << "TIME: " << time;
 }
+*/
 
-void Play_Controller::set_song_title(Song *song)
+//void Play_Controller::set_song_title(Song *song)
+void Play_Controller::set_new_song(Song *song, int time)
 {
+    //set total duration
+    slider->setMaximum(time);
+    qDebug() << "TIME: " << time;
+
+    slider->setValue(0);
     song_title->setText(song->get_name());
 }
 

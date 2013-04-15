@@ -23,8 +23,9 @@ private:
 public slots:
     void set_slider_position(qint64 value);
     void send_new_position();
-    void set_total_value(int time);
-    void set_song_title(Song *song);
+    //void set_total_value(int time);
+    //void set_song_title(Song *song);
+    void set_new_song(Song *song, int time);
 };
 
 #endif // PLAY_CONTROLLER_H
