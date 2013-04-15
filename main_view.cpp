@@ -93,19 +93,32 @@ void Main_View::open_and_play()
     Media_Manager::get()->play_new("C:/Call Me Maybe");
 }
 
+QStringList* Main_View::get_files()
+{
+    QStringList *files = new QStringList(QFileDialog::getOpenFileNames(this, tr("Select Music Files"),
+        QDesktopServices::storageLocation(QDesktopServices::MusicLocation)));
+
+    return files;
+}
+
+void Main_View::create_playlist_files()
+{
+    QStringList *files = get_files();
+    Media_Manager::get()->new_playlist(files);
+}
+
 void Main_View::add_files()
 {
-    QStringList files = QFileDialog::getOpenFileNames(this, tr("Select Music Files"),
-        QDesktopServices::storageLocation(QDesktopServices::MusicLocation));
+    QStringList *files = get_files();
 
-    if (files.isEmpty())
+    if (files->isEmpty())
         return;
 
-    foreach (QString filename, files)
+    foreach (QString filename, *files)
     {
         qDebug() << filename << endl;
     }
-    Media_Manager::get()->play_new(files.at(0));
+    Media_Manager::get()->play_new(files->at(0));
 }
 
 void Main_View::quit()

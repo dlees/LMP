@@ -60,7 +60,7 @@ void MainWindow::create_menu()
     connect(add_menu_item((char*)"Create Empty Playlist", true, plMenu), SIGNAL(triggered()),
             Media_Manager::get(), SLOT(new_playlist()));
     connect(add_menu_item((char*)"Create Playlist From Files...", true, plMenu), SIGNAL(triggered()),
-            Media_Manager::get(), SLOT());
+            mainView, SLOT(create_playlist_files()));
     connect(add_menu_item((char*)"Add song to current playlist", true, plMenu), SIGNAL(triggered()),
             Media_Manager::get(), SLOT(add_cur_to_playlist()));
 

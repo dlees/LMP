@@ -26,8 +26,10 @@ public slots:
     void select_song(QModelIndex);
     void select_lib_item(QModelIndex);
     void select_center_item(QModelIndex);
+    void create_playlist_files();
 
 private:
+    QStringList* get_files();
     QAction *add_menu_item(char name[], bool enabled);
 
     QSplitter *splitter;
