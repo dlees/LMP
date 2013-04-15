@@ -19,6 +19,7 @@ private:
     Button_Container *button_container;
     QSlider *slider;
     QLabel *song_title;
+    QLabel *HotSpots;
 
 public slots:
     void set_slider_position(qint64 value);

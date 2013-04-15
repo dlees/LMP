@@ -4,6 +4,7 @@
 #include "button_container.h"
 #include "playing_song.h"
 #include <QSlider>
+#include <vector>
 #include <Phonon>
 #include <phonon/audiooutput.h>
 #include <phonon/mediaobject.h>
@@ -20,6 +21,9 @@ Play_Controller::Play_Controller()
 
     song_title->setMaximumWidth(200);
 
+    HotSpots = new QLabel("Hotspots: None");
+
+
     Phonon::VolumeSlider *volumeSlider;
     volumeSlider = new Phonon::VolumeSlider(this);
     volumeSlider->setAudioOutput(curAudio);
@@ -32,6 +36,7 @@ Play_Controller::Play_Controller()
     inner_layout->addWidget(button_container, 0, 1, Qt::AlignCenter);
     inner_layout->addWidget(volumeSlider, 0, 2, Qt::AlignCenter);
 
+    main_layout->addWidget(HotSpots);
     main_layout->addWidget(slider);
     main_layout->addLayout(inner_layout);
 
@@ -77,6 +82,54 @@ void Play_Controller::set_new_song(Song *song, int time)
 
     slider->setValue(0);
     song_title->setText(song->get_name());
+
+    std::vector<int> HS_list = Playing_Song::get().get_hs_list();
+
+    HotSpots->setText("");
+
+    qDebug() << "HS_list Size: " << HS_list.size();
+
+    if (HS_list.size() == 0)
+    {
+        HotSpots->setText("Hotspots: None");
+    }
+    else
+    {
+        QString temp = "Hotspots: ";
+        QString temp2;
+
+        int miliSecs = HS_list[0];
+
+        int secs = miliSecs/1000;
+        int minutes = secs/60;
+
+        temp2.setNum(minutes);
+        temp.append(temp2);
+        temp.append(":");
+        temp2.setNum(secs%60);
+        temp.append(temp2);
+        for (int i=1; i<HS_list.size(); i++)
+        {
+            temp.append(", ");
+
+            miliSecs = HS_list[i];
+            secs = miliSecs/1000;
+            minutes = secs/60;
+
+            temp2.setNum(minutes);
+            temp.append(temp2);
+            temp.append(":");
+            if (secs%60 < 10)
+            {
+                temp.append("0");
+            }
+            temp2.setNum(secs%60);
+            temp.append(temp2);
+
+        }
+
+        HotSpots->setText(temp);
+    }
 }
 
 Play_Controller::~Play_Controller()
