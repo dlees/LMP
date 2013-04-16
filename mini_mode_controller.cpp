@@ -26,15 +26,18 @@ Mini_Mode_Controller::Mini_Mode_Controller()
     setFrameStyle(QFrame::Panel | QFrame::Raised);
     setLineWidth(1);
     setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
-
+/*
     connect(Playing_Song::get().get_media_object(), SIGNAL(tick(qint64)),
             this, SLOT(set_slider_position(qint64)));
     connect(slider, SIGNAL(sliderReleased()),
             this, SLOT(send_new_position()));
     connect(&Playing_Song::get(), SIGNAL(new_total_duration(int)),
             this, SLOT(set_total_value(int)));
+    connect(&Playing_Song::get(), SIGNAL(song_changed(Song *, int)),
+            this, SLOT(set_total_value(Song *, int)));
+*/
 }
-
+/*
 void Mini_Mode_Controller::set_slider_position(qint64 value)
 {
 
@@ -52,7 +55,7 @@ void Mini_Mode_Controller::set_total_value(int time)
     slider->setMaximum(time);
     qDebug() << "TIME: " << time;
 }
-
+*/
 Mini_Mode_Controller::~Mini_Mode_Controller()
 {
 

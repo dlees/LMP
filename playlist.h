@@ -8,6 +8,7 @@ class Playlist : public Collection
 public:
     Playlist();
     Playlist(Collection *);
+    ~Playlist();
 
     void add(Music_Item *);
 

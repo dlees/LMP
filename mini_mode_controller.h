@@ -18,10 +18,11 @@ private:
     QSlider *slider;
 
 public slots:
+    /*
     void set_slider_position(qint64 value);
     void send_new_position();
     void set_total_value(int time);
-
+    */
 };
 
 #endif // MINI_MODE_CONTROLLER_H

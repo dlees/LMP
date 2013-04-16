@@ -1,6 +1,7 @@
 #include "playlist.h"
 
 #include "song.h"
+#include "error.h"
 
 Playlist::Playlist()
     : Collection("New Playlist"),
@@ -38,15 +39,36 @@ void Playlist::select_child(int i)
 
 void Playlist::prev()
 {
-    get_children().at(cur = (cur+count()-1)%count())->begin_playing();
+    if (count() != 0)
+    {
+        get_children().at(cur = (cur+count()-1)%count())->begin_playing();
+    }
+    else
+    {
+        Error *error = new Error("No songs yet! Add songs to this playlist!");
+        error->print_error_msg();
+    }
 }
 
 void Playlist::next()
 {
-    get_children().at(cur = (cur+1)%count())->begin_playing();
+    if (count() != 0)
+    {
+        get_children().at(cur = (cur+1)%count())->begin_playing();
+    }
+    else
+    {
+        Error *error = new Error("No songs yet! Add songs to this playlist!");
+        error->print_error_msg();
+    }
 }
 
 void Playlist::set_cur(int index)
 {
     cur = index;
+}
+
+Playlist::~Playlist()
+{
+
 }

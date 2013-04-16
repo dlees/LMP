@@ -16,6 +16,13 @@ struct Error
         error_msg.setText(msg);
         error_msg.exec();
     }
+
+    void print_error_msg_str(QString message)
+    {
+        QMessageBox error_msg;
+        error_msg.setText(message);
+        error_msg.exec();
+    }
 };
 
 #endif
