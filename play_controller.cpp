@@ -16,12 +16,11 @@ extern Phonon::AudioOutput *curAudio;
 Play_Controller::Play_Controller()
     : button_container(new Button_Container(100, 30))
 {
-    QVBoxLayout *main_layout = new QVBoxLayout();
     slider = new QSlider(Qt::Horizontal);
     song_title = new QLabel;
-
     song_title->setMaximumWidth(200);
-
+    time = new QLabel;
+    time->setText("0:00");
     HotSpots = new QLabel("Hotspots: None");
 
     Phonon::VolumeSlider *volumeSlider;
@@ -30,14 +29,19 @@ Play_Controller::Play_Controller()
     volumeSlider->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
     volumeSlider->setMaximumWidth(200);
 
-    QGridLayout *inner_layout = new QGridLayout();
+    QHBoxLayout *slider_layout = new QHBoxLayout();
+    slider_layout->addWidget(slider);
+    slider_layout->addWidget(time);
 
+    QGridLayout *inner_layout = new QGridLayout();
     inner_layout->addWidget(song_title, 0, 0, Qt::AlignCenter);
     inner_layout->addWidget(button_container, 0, 1, Qt::AlignCenter);
     inner_layout->addWidget(volumeSlider, 0, 2, Qt::AlignCenter);
 
+    QVBoxLayout *main_layout = new QVBoxLayout();
     main_layout->addWidget(HotSpots);
-    main_layout->addWidget(slider);
+    main_layout->addLayout(slider_layout);
+    //main_layout->addWidget(slider);
     main_layout->addLayout(inner_layout);
 
     setLayout(main_layout);
@@ -58,6 +62,7 @@ Play_Controller::Play_Controller()
 void Play_Controller::set_slider_position(qint64 value)
 {
     slider->setValue((int) value);
+    time->setText(convert_ms_to_min((int) value));
 }
 
 void Play_Controller::send_new_position()
