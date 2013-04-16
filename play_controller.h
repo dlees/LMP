@@ -21,6 +21,8 @@ private:
     QLabel *song_title;
     QLabel *HotSpots;
 
+    QString convert_ms_to_min(int ms);
+
 public slots:
     void set_slider_position(qint64 value);
     void send_new_position();

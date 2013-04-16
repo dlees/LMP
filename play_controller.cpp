@@ -81,7 +81,6 @@ void Play_Controller::set_hs_text()
 {
     std::vector<int> HS_list = Playing_Song::get().get_hs_list();
     std::sort(HS_list.begin(), HS_list.end());
-    //HotSpots->setText("");
 
     qDebug() << "HS_list Size: " << HS_list.size();
 
@@ -91,6 +90,17 @@ void Play_Controller::set_hs_text()
     }
     else
     {
+        QString temp = "Hotspots: ";
+        for (int i=0; i < HS_list.size(); i++)
+        {
+            temp.append(convert_ms_to_min(HS_list[i]));
+            if (i != HS_list.size()-1)
+            {
+                temp.append(", ");
+            }
+        }
+
+        /*
         QString temp = "Hotspots: ";
         QString temp2;
 
@@ -123,9 +133,28 @@ void Play_Controller::set_hs_text()
             temp.append(temp2);
 
         }
+        */
 
         HotSpots->setText(temp);
     }
+}
+
+QString Play_Controller::convert_ms_to_min(int ms)
+{
+    QString num_str;
+    QString temp;
+    int total_sec = ms/1000;
+    int mins = total_sec/60;
+    int secs = total_sec%60;
+
+    num_str.append(temp.setNum(mins));
+    num_str.append(":");
+    if (secs/10 == 0)
+    {
+        num_str.append("0");
+    }
+    num_str.append(temp.setNum(secs));
+    return num_str;
 }
 
 Play_Controller::~Play_Controller()

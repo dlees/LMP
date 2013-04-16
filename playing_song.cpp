@@ -183,7 +183,7 @@ std::vector<int> Playing_Song::get_hs_list()
     {
         qDebug() << e.msg;
         // default is the beginning time
-        hotspots.push_back(0);
+        //hotspots.push_back(0);
         return hotspots;
     }
 }
