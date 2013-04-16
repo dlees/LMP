@@ -75,6 +75,7 @@ signals:
     //void new_total_duration(int);
     void AlmostDone_PlaySong();
     void song_changed(Song *, int);
+    void hs_added();
 
 private:
     Playing_Song();

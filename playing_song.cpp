@@ -136,6 +136,7 @@ void Playing_Song::set_hs()
 {
     qDebug() << "Hotspot set " << get_position();
     hs_map.add_hotspot(cur_playing->get_id(), get_position());
+    emit hs_added();
 }
 
 void Playing_Song::next_hs()

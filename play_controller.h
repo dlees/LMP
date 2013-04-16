@@ -27,6 +27,7 @@ public slots:
     //void set_total_value(int time);
     //void set_song_title(Song *song);
     void set_new_song(Song *song, int time);
+    void set_hs_text();
 };
 
 #endif // PLAY_CONTROLLER_H

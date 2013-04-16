@@ -9,6 +9,7 @@
 #include <phonon/audiooutput.h>
 #include <phonon/mediaobject.h>
 #include <phonon/volumeslider.h>
+#include <algorithm>
 
 extern Phonon::AudioOutput *curAudio;
 
@@ -22,7 +23,6 @@ Play_Controller::Play_Controller()
     song_title->setMaximumWidth(200);
 
     HotSpots = new QLabel("Hotspots: None");
-
 
     Phonon::VolumeSlider *volumeSlider;
     volumeSlider = new Phonon::VolumeSlider(this);
@@ -49,10 +49,10 @@ Play_Controller::Play_Controller()
             this, SLOT(set_slider_position(qint64)));
     connect(slider, SIGNAL(sliderReleased()),
             this, SLOT(send_new_position()));
-    //connect(&Playing_Song::get(), SIGNAL(new_total_duration(int)),
-      //      this, SLOT(set_total_value(int)));
     connect(&Playing_Song::get(), SIGNAL(song_changed(Song *, int)),
             this, SLOT(set_new_song(Song *, int)));
+    connect(&Playing_Song::get(), SIGNAL(hs_added()),
+            this, SLOT(set_hs_text()));
 }
 
 void Play_Controller::set_slider_position(qint64 value)
@@ -65,15 +65,6 @@ void Play_Controller::send_new_position()
     Playing_Song::get().change_position(slider->value());
 }
 
-/*
-void Play_Controller::set_total_value(int time)
-{
-    slider->setMaximum(time);
-    qDebug() << "TIME: " << time;
-}
-*/
-
-//void Play_Controller::set_song_title(Song *song)
 void Play_Controller::set_new_song(Song *song, int time)
 {
     //set total duration
@@ -83,9 +74,14 @@ void Play_Controller::set_new_song(Song *song, int time)
     slider->setValue(0);
     song_title->setText(song->get_name());
 
-    std::vector<int> HS_list = Playing_Song::get().get_hs_list();
+    set_hs_text();
+}
 
-    HotSpots->setText("");
+void Play_Controller::set_hs_text()
+{
+    std::vector<int> HS_list = Playing_Song::get().get_hs_list();
+    std::sort(HS_list.begin(), HS_list.end());
+    //HotSpots->setText("");
 
     qDebug() << "HS_list Size: " << HS_list.size();
 
