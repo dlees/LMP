@@ -22,6 +22,7 @@ Play_Controller::Play_Controller()
     time_view = new QLabel;
     time_view->setText("0:00");
     HotSpots = new QLabel("Hotspots: None");
+    cur_song = 0;
 
     Phonon::VolumeSlider *volumeSlider;
     volumeSlider = new Phonon::VolumeSlider(this);
@@ -83,8 +84,25 @@ void Play_Controller::set_total_value(int time)
 
 void Play_Controller::set_song(Song *song)
 {
-    song_title->setText(song->get_name());
+    if (cur_song)
+    {
+        // disconnect previous song
+        disconnect(cur_song, SIGNAL(data_changed()),
+            this, SLOT(set_song_title()));
+    }
+
+    cur_song = song;
+
+    song_title->setText(cur_song->get_name());
     initialize_slider();
+
+    connect(cur_song, SIGNAL(data_changed()),
+            this, SLOT(set_song_title()));
+}
+
+void Play_Controller::set_song_title()
+{
+    song_title->setText(cur_song->get_name());
 }
 
 void Play_Controller::initialize_slider()
