@@ -35,9 +35,7 @@ Main_View::Main_View(QWidget *parent)
     table->setSortingEnabled(true);
     table->setShowGrid(false);
     table->setModel(Media_Manager::get()->get_playlist());
-    //QString special = Media_Manager::get()->get_center()->get_name();
-    //qDebug() << special;
-    Pane *centerPane = new Pane("All Songs", table);
+    Pane *centerPane = new Pane("New Playlist", table);
     connect(table, SIGNAL(doubleClicked(QModelIndex)),
             this, SLOT(select_center_item(QModelIndex)));
 
@@ -52,6 +50,9 @@ Main_View::Main_View(QWidget *parent)
     splitter->addWidget(libraryPane);
     splitter->addWidget(centerPane);
     splitter->addWidget(playlistPane);
+    splitter->setStretchFactor(0, 1);
+    splitter->setStretchFactor(1, 2);
+    splitter->setStretchFactor(2, 1);
 
     QGridLayout *center_layout = new QGridLayout;
     center_layout->addWidget(search, 0, 0, Qt::AlignLeft);
