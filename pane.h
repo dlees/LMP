@@ -4,6 +4,8 @@
 #include <QAbstractItemView>
 #include <QDockWidget>
 #include <QGroupBox>
+#include <QLabel>
+#include "collection.h"
 
 class Pane : public QFrame //QDockWidget
 {
@@ -11,9 +13,14 @@ class Pane : public QFrame //QDockWidget
 
 public:
     Pane(QString title, QAbstractItemView *items_);
+    ~Pane();
 
 private:
     QAbstractItemView *items;
+    QLabel *title;
+
+public slots:
+    void set_title(Collection *new_center);
 };
 
 #endif // PANE_H

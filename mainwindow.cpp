@@ -29,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent)
     create_menu();
 
     this->setCentralWidget(mainView);
+    setWindowTitle("Lucidity Music Player");
 
     Media_Manager::get()->start_up();
 

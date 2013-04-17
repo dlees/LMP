@@ -37,7 +37,7 @@ Main_View::Main_View(QWidget *parent)
     table->setModel(Media_Manager::get()->get_playlist());
     //QString special = Media_Manager::get()->get_center()->get_name();
     //qDebug() << special;
-    Pane *centerPane = new Pane("name of view", table);
+    Pane *centerPane = new Pane("All Songs", table);
     connect(table, SIGNAL(doubleClicked(QModelIndex)),
             this, SLOT(select_center_item(QModelIndex)));
 
@@ -67,6 +67,8 @@ Main_View::Main_View(QWidget *parent)
 
     connect(MiniMode, SIGNAL(clicked()),
             this, SLOT(send_mini_mode()));
+    connect(Media_Manager::get(), SIGNAL(center_changed(Collection*)),
+            centerPane, SLOT(set_title(Collection*)));
 }
 
 QAction *Main_View::add_menu_item(char name[], bool enabled)
