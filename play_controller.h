@@ -20,7 +20,7 @@ private:
     QSlider *slider;
     QLabel *song_title;
     QLabel *HotSpots;
-    QLabel *time;
+    QLabel *time_view;
     QString convert_ms_to_min(int ms);
 
 public slots:

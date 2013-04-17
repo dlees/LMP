@@ -19,8 +19,8 @@ Play_Controller::Play_Controller()
     slider = new QSlider(Qt::Horizontal);
     song_title = new QLabel;
     song_title->setMaximumWidth(200);
-    time = new QLabel;
-    time->setText("0:00");
+    time_view = new QLabel;
+    time_view->setText("0:00");
     HotSpots = new QLabel("Hotspots: None");
 
     Phonon::VolumeSlider *volumeSlider;
@@ -31,7 +31,7 @@ Play_Controller::Play_Controller()
 
     QHBoxLayout *slider_layout = new QHBoxLayout();
     slider_layout->addWidget(slider);
-    slider_layout->addWidget(time);
+    slider_layout->addWidget(time_view);
 
     QGridLayout *inner_layout = new QGridLayout();
     inner_layout->addWidget(song_title, 0, 0, Qt::AlignCenter);
@@ -62,7 +62,7 @@ Play_Controller::Play_Controller()
 void Play_Controller::set_slider_position(qint64 value)
 {
     slider->setValue((int) value);
-    time->setText(convert_ms_to_min((int) value));
+    time_view->setText(convert_ms_to_min((int) value));
 }
 
 void Play_Controller::send_new_position()
@@ -77,6 +77,7 @@ void Play_Controller::set_new_song(Song *song, int time)
     qDebug() << "TIME: " << time;
 
     slider->setValue(0);
+    time_view->setText("0:00");
     song_title->setText(song->get_name());
 
     set_hs_text();
