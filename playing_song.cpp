@@ -68,17 +68,12 @@ void Playing_Song::update_position()
 
 qint64 Playing_Song::get_position()
 {
-    qint64 cur_time = QDateTime::currentMSecsSinceEpoch();
-
-    if (get_media_object()->state() == Phonon::PlayingState)
+    if (get_media_object()->state() != Phonon::PlayingState)
     {
-        return position + cur_time - start_time;
-    }
-    else
-    {
-        qDebug() << position << cur_time << start_time;
         return position;
     }
+    qint64 cur_time = QDateTime::currentMSecsSinceEpoch();
+    return position + cur_time - start_time;
 }
 
 // changes the curSong to the song
