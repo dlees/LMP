@@ -62,6 +62,7 @@ public:
 
 public slots:
     void almostdone_playsong();
+
     // hotspots
     void set_hs();
     void next_hs();

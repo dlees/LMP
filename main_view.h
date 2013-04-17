@@ -23,11 +23,15 @@ public slots:
     void add_files();
     void quit();
     void send_mini_mode();
+
     void select_song(QModelIndex);
     void select_lib_item(QModelIndex);
     void select_center_item(QModelIndex);
+
     void create_playlist_files();
-    void delete_playlist_from_center();
+    void delete_playlist_from_library();
+
+    void remove_selected_song();
 
 private:
     QStringList* get_files();

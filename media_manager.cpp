@@ -47,7 +47,8 @@ void Media_Manager::play_new(Song *song)
 
 void Media_Manager::first()
 {
-    cur_list->set_cur(0);
+    cur_list->set_cur(-1);
+    cur_list->next();
 }
 
 void Media_Manager::prev()
@@ -68,7 +69,6 @@ void Media_Manager::add_cur_to_playlist()
 void Media_Manager::add_to_playlist(Song *song)
 {
     cur_list->add(song);
-    emit playlist_updated();
 }
 
 void Media_Manager::switch_playlist(Collection *col)
@@ -80,6 +80,12 @@ void Media_Manager::switch_playlist(Playlist *playlist, int pos)
 {
     cur_list = playlist;
     cur_list->set_cur(pos);
+
+    emit playlist_changed(cur_list);
+
+    // if we aren't playing a song
+    if (playing.is_paused())
+        first(); // go to the first song in the playlist
 }
 
 void Media_Manager::new_playlist()
@@ -100,6 +106,14 @@ void Media_Manager::new_playlist(QStringList *filenames)
     lib.add_playlist(new_pl);
 
     switch_playlist(new_pl);
+}
+
+
+void Media_Manager::set_center(Collection *new_center)
+{
+    center = new_center;
+
+    emit center_changed(new_center);
 }
 
 Collection *Media_Manager::get_playlist()

@@ -16,7 +16,6 @@ Playlist::Playlist(Collection *col)
    Music_Item *item;
    foreach (item, col->get_children())
        add(item);
-
 }
 
 void Playlist::add(Music_Item *item)

@@ -58,19 +58,30 @@ void MainWindow::create_menu()
     connect(add_menu_item((char*)"Main", true, viewMenu), SIGNAL(triggered()),
             this, SLOT(switch_view_to_main()));
 
+ // Hotspots Menu
     hsMenu = menuBar()->addMenu(tr("&Hotspots"));
     connect(add_menu_item((char*)"Add hotspot", true, hsMenu), SIGNAL(triggered()),
             &Playing_Song::get(), SLOT(set_hs()));
+    connect(add_menu_item((char*)"Delete next hotspot", true, hsMenu), SIGNAL(triggered()),
+            &Playing_Song::get(), SLOT(remove_hs()));
 
+ // Playlist Menu
     plMenu = menuBar()->addMenu(tr("&Playlists"));
     connect(add_menu_item((char*)"Create Empty Playlist", true, plMenu), SIGNAL(triggered()),
             Media_Manager::get(), SLOT(new_playlist()));
     connect(add_menu_item((char*)"Create Playlist From Files...", true, plMenu), SIGNAL(triggered()),
             mainView, SLOT(create_playlist_files()));
-    connect(add_menu_item((char*)"Add song to current playlist", true, plMenu), SIGNAL(triggered()),
+
+    plMenu->addSeparator();
+    connect(add_menu_item((char*)"Delete Selected Playlist in Library", true, plMenu), SIGNAL(triggered()),
+            mainView, SLOT(delete_playlist_from_library()));
+
+    plMenu->addSeparator();
+    connect(add_menu_item((char*)"Add current song to current playlist", true, plMenu), SIGNAL(triggered()),
             Media_Manager::get(), SLOT(add_cur_to_playlist()));
-    connect(add_menu_item((char*)"Delete Selected Playlist in Table", true, plMenu), SIGNAL(triggered()),
-            mainView, SLOT(delete_playlist_from_center()));
+
+    connect(add_menu_item((char*)"Remove selected song from current playlist", true, plMenu), SIGNAL(triggered()),
+            mainView, SLOT(remove_selected_song()));
 
 }
 

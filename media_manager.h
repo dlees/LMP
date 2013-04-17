@@ -60,6 +60,7 @@ public slots:
 
     void add_cur_to_playlist();
     void add_to_playlist(Song *);
+
     void switch_playlist(Collection *);
     void switch_playlist(Playlist *, int pos = 0);
 
@@ -71,9 +72,7 @@ public slots:
     Collection *get_center();
     Collection *get_library();
 
-    void set_center(Collection *new_center)
-        { center = new_center;}
-
+    void set_center(Collection *new_center);
 
     void became_paused_slot() {emit became_paused();}
     void started_playing_slot() {emit started_playing();}
@@ -82,8 +81,9 @@ signals:
     void became_paused();
     void started_playing();
 
-    void playlist_updated();
-    void library_updated();
+    void playlist_changed(Collection *new_list);
+    void center_changed(Collection *new_center);
+
     void current_position(int);
 
 private:
