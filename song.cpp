@@ -79,9 +79,9 @@ void Song::set_song_data(Phonon::State, Phonon::State oldstate)
     if (mediaObject->metaData("ARTIST").size())
         artist = mediaObject->metaData("ARTIST").at(0);
 
-    emit data_changed();
-
     delete mediaObject;
+
+    emit data_changed();
 }
 
 void Song::stop_playing()
