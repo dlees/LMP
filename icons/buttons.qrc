@@ -6,5 +6,6 @@
         <file>prev.png</file>
         <file>hotspot_next.png</file>
         <file>hotspot_prev.png</file>
+        <file>headphone.png</file>
     </qresource>
 </RCC>

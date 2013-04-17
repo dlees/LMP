@@ -30,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     this->setCentralWidget(mainView);
     setWindowTitle("Lucidity Music Player");
-
+    setWindowIcon(QIcon(":/buttons/headphone.png"));
     Media_Manager::get()->start_up();
 
     this->setMinimumHeight(49);

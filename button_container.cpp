@@ -34,6 +34,7 @@ Button_Container::Button_Container(int w, int h)
     hotspot_prev->setGeometry(0, 0, 10, 20);
     connect(hotspot_prev, SIGNAL(clicked()),
             this, SLOT(prev_hs()));
+    hotspot_prev->setToolTip("Move to a previous Hotspot!");
 
     hotspot_next = new QToolButton(this);
     hotspot_next->setIcon(QIcon(":/buttons/hotspot_next.png"));
@@ -41,6 +42,7 @@ Button_Container::Button_Container(int w, int h)
     hotspot_next->setGeometry(0, 0, 10, 20);
     connect(hotspot_next, SIGNAL(clicked()),
             this, SLOT(next_hs()));
+    hotspot_next->setToolTip("Move to the next Hotspot!");
 
     connect(Media_Manager::get(), SIGNAL(became_paused()),
              this, SLOT(set_icon_play()));
