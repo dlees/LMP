@@ -37,8 +37,13 @@ public:
 
     virtual QList<QVariant> get_column_data() const;
 
-    void stop_playing()
-        {is_playing = false;}
+    virtual void stop_playing();
+    virtual void start_playing();
+
+signals:
+    // anytime our data is changed
+    // sec_count++, metadata set, is playing or not.
+    void data_changed();
 
 private slots:
     void set_song_data(Phonon::State, Phonon::State);
@@ -57,8 +62,6 @@ private:
     //    Album *album; // consider list
     //    QList<Playlist *> playlists; //could be useful
 
-
-    bool is_playing;
 };
 
 #endif // SONG_H

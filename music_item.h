@@ -26,6 +26,12 @@ public:
     // have Media Manager start playing this item
     virtual void begin_playing() = 0;
 
+    virtual void start_playing()
+        { is_playing = true;}
+    virtual void stop_playing()
+        { is_playing = false;}
+
+
     // select this item
     virtual void select()
         {begin_playing();}
@@ -40,8 +46,9 @@ protected:
     QString name;
 
 private:
-    int id;
+    bool is_playing;
 
+    int id;
 
     static int max_id;
 };

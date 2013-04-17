@@ -18,8 +18,7 @@ Song::Song(const QString &filename_)
       filename(filename_),
       seconds(10),
       rating(3),
-      created(QDateTime::currentDateTime()),
-      is_playing(false)
+      created(QDateTime::currentDateTime())
 
 {
     mediaObject = new Phonon::MediaObject;
@@ -39,6 +38,7 @@ Song::Song(const QString &filename_)
 void Song::add_secs(int amt)
 {
     seconds += amt;
+    emit data_changed();
 }
 
 QLinkedList<Song*> Song::get_leaves()
@@ -51,7 +51,6 @@ QLinkedList<Song*> Song::get_leaves()
 void Song::begin_playing()
 {
     Media_Manager::get()->play_new(this);
-    is_playing = true;
 }
 
 QStringList Song::get_headers() const
@@ -80,6 +79,20 @@ void Song::set_song_data(Phonon::State, Phonon::State oldstate)
     if (mediaObject->metaData("ARTIST").size())
         artist = mediaObject->metaData("ARTIST").at(0);
 
+    emit data_changed();
+
     delete mediaObject;
+}
+
+void Song::stop_playing()
+{
+    Music_Item::stop_playing();
+    emit data_changed();
+}
+
+void Song::start_playing()
+{
+    Music_Item::start_playing();
+    emit data_changed();
 }
 

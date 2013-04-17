@@ -86,6 +86,7 @@ void Playing_Song::replace_song(Song *song_)
     {
         update_position();
         mp.remove_song();
+        cur_playing->stop_playing();
     }
 
     set_song(song_);
@@ -106,6 +107,7 @@ void Playing_Song::set_song(Song* song_)
     paused = true;
 
     emit song_changed(song_);
+    song_->start_playing();
 }
 
 // throws error if past total duration
