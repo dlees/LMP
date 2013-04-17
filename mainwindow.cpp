@@ -52,6 +52,12 @@ void MainWindow::create_menu()
 
     editMenu = menuBar()->addMenu(tr("&Edit"));
 
+    viewMenu = menuBar()->addMenu(tr("&View"));
+    connect(add_menu_item((char*)"Mini", true, viewMenu), SIGNAL(triggered()),
+            this, SLOT(switch_view_to_mini()));
+    connect(add_menu_item((char*)"Main", true, viewMenu), SIGNAL(triggered()),
+            this, SLOT(switch_view_to_main()));
+
     hsMenu = menuBar()->addMenu(tr("&Hotspots"));
     connect(add_menu_item((char*)"Add hotspot", true, hsMenu), SIGNAL(triggered()),
             &Playing_Song::get(), SLOT(set_hs()));
