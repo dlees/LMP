@@ -70,7 +70,15 @@ qint64 Playing_Song::get_position()
 {
     qint64 cur_time = QDateTime::currentMSecsSinceEpoch();
 
-    return position + cur_time - start_time;
+    if (get_media_object()->state() == Phonon::PlayingState)
+    {
+        return position + cur_time - start_time;
+    }
+    else
+    {
+        qDebug() << position << cur_time << start_time;
+        return position;
+    }
 }
 
 // changes the curSong to the song
