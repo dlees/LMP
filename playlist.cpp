@@ -38,28 +38,22 @@ void Playlist::select_child(int i)
 
 void Playlist::prev()
 {
-    if (count() != 0)
+    if (count() == 0)
     {
-        get_children().at(cur = (cur+count()-1)%count())->begin_playing();
+        Error::print_error_msg_str("No songs yet! Add songs to this playlist!");
+        return;
     }
-    else
-    {
-        Error *error = new Error("No songs yet! Add songs to this playlist!");
-        error->print_error_msg();
-    }
+    get_children().at(cur = (cur+count()-1)%count())->begin_playing();
 }
 
 void Playlist::next()
 {
-    if (count() != 0)
+    if (count() == 0)
     {
-        get_children().at(cur = (cur+1)%count())->begin_playing();
+        Error::print_error_msg_str("No songs yet! Add songs to this playlist!");
+        return;
     }
-    else
-    {
-        Error *error = new Error("No songs yet! Add songs to this playlist!");
-        error->print_error_msg();
-    }
+    get_children().at(cur = (cur+1)%count())->begin_playing();
 }
 
 void Playlist::set_cur(int index)
