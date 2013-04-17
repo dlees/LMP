@@ -17,7 +17,7 @@ struct Error
         error_msg.exec();
     }
 
-    void print_error_msg_str(QString message)
+    static void print_error_msg_str(QString message)
     {
         QMessageBox error_msg;
         error_msg.setText(message);

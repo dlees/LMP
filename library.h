@@ -15,6 +15,8 @@ public:
     // creates it if it needs to
     Song *get_song(const QString &filename);
 
+    virtual void remove(int);
+
     void add_song(Song *);
 //    void add_artist(Artist *);
 //    void add_album(Album *);

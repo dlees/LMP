@@ -5,6 +5,8 @@
 #include "database.h"
 #include "playlist.h"
 
+#include "error.h"
+
 Library::Library()
     : Collection("Library"),
       songs(new Collection("All Songs")),
@@ -34,3 +36,16 @@ void Library::add_playlist(Playlist *list)
     add(list);
 //    playlists->add(list);
 }
+
+void Library::remove(int i)
+{
+    if (i == 0)
+    {
+        Error::print_error_msg_str("Can't delete \"All Songs\".");
+        return;
+    }
+
+    Collection::remove(i);
+
+}
+
