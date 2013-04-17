@@ -22,12 +22,16 @@ Song::Song(const QString &filename_)
       is_playing(false)
 
 {
-    Phonon::MediaObject temp;
+    mediaObject = new Phonon::MediaObject;
 
-    temp.setCurrentSource(filename_);
+    mediaObject->setCurrentSource(filename_);
 
-    if (temp.metaData("TITLE").size())
-        name = temp.metaData("TITLE").at(0);
+    connect(mediaObject, SIGNAL(stateChanged(Phonon::State,Phonon::State)),
+            this, SLOT(set_song_data(Phonon::State,Phonon::State)));
+
+    // For good Mac Support - useless on Windows
+    if (mediaObject->metaData("TITLE").size())
+        name = mediaObject->metaData("TITLE").at(0);
 
   //  Database::get()->add_song(get_id(), filename, get_name(), created);
 }
@@ -59,6 +63,23 @@ QStringList Song::get_headers() const
 QList<QVariant> Song::get_column_data() const
 {
     return Music_Item::get_column_data()
-            << ("The The")
+            << artist
                ;
 }
+
+// set the metadata of the song here
+void Song::set_song_data(Phonon::State, Phonon::State oldstate)
+{
+    // if we aren't loading anymore
+    if (oldstate != Phonon::LoadingState)
+        return;
+
+    if (mediaObject->metaData("TITLE").size())
+        name = mediaObject->metaData("TITLE").at(0);
+
+    if (mediaObject->metaData("ARTIST").size())
+        artist = mediaObject->metaData("ARTIST").at(0);
+
+    delete mediaObject;
+}
+

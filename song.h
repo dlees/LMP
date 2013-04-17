@@ -7,8 +7,17 @@
 #include <QList>
 #include <QDateTime>
 
-class Song : public Music_Item
+#ifdef __linux__
+    #include <phonon/mediaobject.h>
+    #include <phonon/audiooutput.h>
+    #include <phonon/VolumeSlider> //#include <Phonon/VolumeSlider>
+#else
+    #include <Phonon>
+#endif
+
+class Song : public QObject, public Music_Item
 {
+    Q_OBJECT
 public:
     Song(const QString &filename_);
 
@@ -31,6 +40,8 @@ public:
     void stop_playing()
         {is_playing = false;}
 
+private slots:
+    void set_song_data(Phonon::State, Phonon::State);
 
 private:
     QString filename;
@@ -38,8 +49,11 @@ private:
     int rating; // rating out of 5
     QDateTime created;
 
+    Phonon::MediaObject *mediaObject;
 
-    //    Artist *artist; //consider List
+    QString artist;
+
+
     //    Album *album; // consider list
     //    QList<Playlist *> playlists; //could be useful
 
