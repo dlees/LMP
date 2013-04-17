@@ -53,8 +53,12 @@ Play_Controller::Play_Controller()
             this, SLOT(set_slider_position(qint64)));
     connect(slider, SIGNAL(sliderReleased()),
             this, SLOT(send_new_position()));
-    connect(&Playing_Song::get(), SIGNAL(song_changed(Song *, int)),
-            this, SLOT(set_new_song(Song *, int)));
+    connect(&Playing_Song::get(), SIGNAL(song_changed(Song*)),
+                this, SLOT(set_song(Song *)));
+    connect(&Playing_Song::get(), SIGNAL(new_total_duration(int)),
+                this, SLOT(set_total_value(int)));
+    //connect(&Playing_Song::get(), SIGNAL(song_changed(Song *, int)),
+      //      this, SLOT(set_new_song(Song *, int)));
     connect(&Playing_Song::get(), SIGNAL(hs_added()),
             this, SLOT(set_hs_text()));
 }
@@ -70,16 +74,23 @@ void Play_Controller::send_new_position()
     Playing_Song::get().change_position(slider->value());
 }
 
-void Play_Controller::set_new_song(Song *song, int time)
+void Play_Controller::set_total_value(int time)
 {
-    //set total duration
     slider->setMaximum(time);
     qDebug() << "TIME: " << time;
+}
 
+
+void Play_Controller::set_song(Song *song)
+{
+    song_title->setText(song->get_name());
+    initialize_slider();
+}
+
+void Play_Controller::initialize_slider()
+{
     slider->setValue(0);
     time_view->setText("0:00");
-    song_title->setText(song->get_name());
-
     set_hs_text();
 }
 

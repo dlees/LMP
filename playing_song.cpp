@@ -18,6 +18,8 @@ Playing_Song::Playing_Song()
     connect(&mp, SIGNAL(almost_done()),
             this, SLOT(almostdone_playsong()));
 
+    connect(get_media_object(), SIGNAL(totalTimeChanged(qint64)),
+            this, SLOT(duration_changed(qint64)));
 }
 
 // throws an Error if cant play the song
@@ -87,12 +89,6 @@ void Playing_Song::replace_song(Song *song_)
     }
 
     set_song(song_);
-
-    //int temp = mp.get_duration();
-
-    //emit song_changed(song_);
-    //emit new_total_duration(temp);
-
 }
 
 bool Playing_Song::song_exists()
@@ -106,13 +102,10 @@ void Playing_Song::set_song(Song* song_)
 
     mp.set_song(cur_playing->get_filename());
 
-    totalDuration = mp.get_duration();
-
     position = 0;
     paused = true;
 
-    emit song_changed(song_, totalDuration);
-    //emit new_total_duration(totalDuration);
+    emit song_changed(song_);
 }
 
 // throws error if past total duration
@@ -235,3 +228,9 @@ void Playing_Song::almostdone_playsong()
 }
 
 void Playing_Song::close(){}
+
+void Playing_Song::duration_changed(qint64 new_dur)
+{
+    totalDuration = new_dur;
+    emit new_total_duration(totalDuration);
+}

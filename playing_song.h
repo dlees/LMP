@@ -69,12 +69,15 @@ public slots:
     void remove_hs();
     std::vector<int> get_hs_list();
 
+private slots:
+    void duration_changed(qint64);
+
 signals:
     void became_paused();
     void started_playing();
-    //void new_total_duration(int);
+    void new_total_duration(int);
     void AlmostDone_PlaySong();
-    void song_changed(Song *, int);
+    void song_changed(Song *);
     void hs_added();
 
 private:
