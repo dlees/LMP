@@ -9,6 +9,8 @@ Media_Manager::Media_Manager()
     : cur_list(new Playlist()),
       playing(Playing_Song::get())
 {
+    cur_list->start_playing();
+
     connect(&playing, SIGNAL(became_paused()),
             this, SLOT(became_paused_slot()));
     connect(&playing, SIGNAL(started_playing()),
@@ -78,8 +80,15 @@ void Media_Manager::switch_playlist(Collection *col)
 
 void Media_Manager::switch_playlist(Playlist *playlist, int pos)
 {
+    if (cur_list)
+        // tell the old list that it isn't currently playing anymore
+        cur_list->stop_playing();
+
     cur_list = playlist;
     cur_list->set_cur(pos);
+
+    // tell the new one that it is playing
+    cur_list->start_playing();
 
     emit playlist_changed(cur_list);
 

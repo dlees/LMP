@@ -45,7 +45,14 @@ void Library::remove(int i)
         return;
     }
 
-    Collection::remove(i);
+    Playlist* p = dynamic_cast<Playlist*>(get_children().at(i));
+    // if it is the current playlist, don't delete
+    if ( p && p->get_is_playing())
+    {
+        Error::print_error_msg_str("Can't delete " + p->get_name() + ".\nIt is being played.");
+        return;
+    }
 
+    Collection::remove(i);
 }
 

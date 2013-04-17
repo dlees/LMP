@@ -14,8 +14,10 @@ public:
 public:
     virtual void add(Music_Item *);
     void add_leaves(Music_Item *);
+
     virtual void remove(Music_Item *);
-    virtual void remove(int);
+    virtual void remove(int index);
+
     const QList<Music_Item *> &get_children() const;
     int count()
         {return children.size();}

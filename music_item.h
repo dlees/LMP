@@ -30,6 +30,8 @@ public:
         { is_playing = true;}
     virtual void stop_playing()
         { is_playing = false;}
+    bool get_is_playing()
+        {return is_playing;}
 
 
     // select this item
