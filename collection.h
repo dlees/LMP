@@ -6,8 +6,9 @@
 #include <QList>
 #include <QtGui>
 
-class Collection : public Music_Item, public QAbstractTableModel
+class Collection : public QAbstractTableModel, public Music_Item
 {
+    Q_OBJECT
 public:
     Collection(const QString &);
 
@@ -44,6 +45,9 @@ public:
     virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
     virtual QVariant data(const QModelIndex &index, int role) const;
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+
+public slots:
+    void data_updated();
 
 private:
     QList<Music_Item*> children;

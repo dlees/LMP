@@ -12,8 +12,23 @@ Collection::Collection(const QString &name)
 void Collection::add(Music_Item *item)
 {
     beginInsertRows(QModelIndex(), count(), count());
+
+    Song *song = dynamic_cast<Song*>(item);
+
+    if (song)
+    {
+        connect(song, SIGNAL(data_changed()),
+                this, SLOT(data_updated()));
+    }
+
     children.push_back(item);
     endInsertRows();
+}
+
+void Collection::data_updated()
+{
+    emit dataChanged(createIndex(0, 0, 0),
+                     createIndex(count(), children.at(0)->get_column_data().size(), 0));
 }
 
 void Collection::add_leaves(Music_Item *item)
