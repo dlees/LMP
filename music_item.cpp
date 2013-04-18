@@ -27,6 +27,6 @@ QList<QVariant> Music_Item::get_column_data() const
 {
     return QList<QVariant>()
             << (is_playing?"->":"") + get_name()
-            << (total_secs())
+            << (total_secs()/1000)
                ;
 }

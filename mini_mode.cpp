@@ -18,6 +18,7 @@ Mini_Mode::Mini_Mode(QWidget *parent)
     Mini_Mode_Controller *play_controller = new Mini_Mode_Controller();
 
     MainMode = new QPushButton("+");
+    MainMode->setToolTip("Switch to MaxiMode");
 
     QGridLayout *temp = new QGridLayout();
     temp->addWidget(play_controller, 0,0,5,10,Qt::AlignCenter);

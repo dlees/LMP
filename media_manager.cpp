@@ -29,9 +29,22 @@ void Media_Manager::play_cur()
 }
 
 void Media_Manager::start_up()
-{
-    lib.add_playlist(cur_list);
-    center = cur_list;
+{    
+    Song *new_song;
+
+       cur_list->add(new_song = lib.get_song("/Users/arikk/Music/80's - Billy Joel - We Didn't Start the Fire.mp3"));
+       playing.replace_song(new_song);
+
+       cur_list->add(lib.get_song("/Users/arikk/Music/E-40 - Tell Me When To Go (Trackademics remix).mp3"));
+
+       cur_list->add(lib.get_song("/Users/arikk/Music/Eagle Eyed Cherry - Save Tonight.mp3"));
+
+       cur_list->add(lib.get_song("/Users/arikk/Music/Guns N' Roses -  Sweet Child Of Mine.mp3"));
+
+       cur_list->set_cur(0);
+
+       lib.add_playlist(cur_list);
+       center = cur_list;
 }
 
 void Media_Manager::play_new(QString filename)

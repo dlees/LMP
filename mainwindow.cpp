@@ -24,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent)
     mainView->setMinimumHeight(400);
 
     miniSize.setWidth(330);
-    miniSize.setHeight(100);
+    miniSize.setHeight(90);
 
     create_menu();
 

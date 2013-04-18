@@ -19,7 +19,8 @@ Main_View::Main_View(QWidget *parent)
     // 1st row containing "Playlist name", searchbar, minimode button
     QLineEdit *search = new QLineEdit("search");
     MiniMode = new QPushButton("-");
-    MiniMode->setMaximumWidth(20);
+    MiniMode->setToolTip("Switch to MiniMode");
+    //MiniMode->setMaximumWidth(20);
 
     //2nd row containing Splitter of 3 panes
     // Library Pane
@@ -35,6 +36,7 @@ Main_View::Main_View(QWidget *parent)
     table->setSortingEnabled(true);
     table->setShowGrid(false);
     table->setModel(Media_Manager::get()->get_playlist());
+    table->setColumnWidth(0, 200);
     Pane *centerPane = new Pane("New Playlist", table);
     connect(table, SIGNAL(doubleClicked(QModelIndex)),
             this, SLOT(select_center_item(QModelIndex)));
@@ -42,7 +44,7 @@ Main_View::Main_View(QWidget *parent)
     // Playlist Pane
     playlist = new QListView();
     playlist->setModel(Media_Manager::get()->get_playlist());
-    Pane *playlistPane = new Pane("Currently Playing", playlist);
+    Pane *playlistPane = new Pane("Current Playlist", playlist);
     connect(playlist, SIGNAL(doubleClicked(QModelIndex)),
             this, SLOT(select_song(QModelIndex)));
 
