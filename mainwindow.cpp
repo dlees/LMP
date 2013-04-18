@@ -51,7 +51,7 @@ void MainWindow::create_menu()
     connect(add_menu_item((char*)"&Exit", true, fileMenu), SIGNAL(triggered()),
             mainView, SLOT(quit()));
 
-    editMenu = menuBar()->addMenu(tr("&Edit"));
+//    editMenu = menuBar()->addMenu(tr("&Edit"));
 
     viewMenu = menuBar()->addMenu(tr("&View"));
     connect(add_menu_item((char*)"Mini", true, viewMenu), SIGNAL(triggered()),
@@ -68,8 +68,8 @@ void MainWindow::create_menu()
 
  // Playlist Menu
     plMenu = menuBar()->addMenu(tr("&Playlists"));
-    connect(add_menu_item((char*)"Create Empty Playlist", true, plMenu), SIGNAL(triggered()),
-            Media_Manager::get(), SLOT(new_playlist()));
+  //  connect(add_menu_item((char*)"Create Empty Playlist", true, plMenu), SIGNAL(triggered()),
+  //          Media_Manager::get(), SLOT(new_playlist()));
     connect(add_menu_item((char*)"Create Playlist From Files...", true, plMenu), SIGNAL(triggered()),
             mainView, SLOT(create_playlist_files()));
 
