@@ -9,6 +9,15 @@ Collection::Collection(const QString &name)
 {
 }
 
+Collection::Collection(const QString &name_, int id_,
+           const QList<Music_Item*> &items)
+    : Music_Item(name_, id_)
+{
+    Music_Item *item;
+    foreach (item, items)
+        add(item);
+}
+
 void Collection::add(Music_Item *item)
 {
     beginInsertRows(QModelIndex(), count(), count());

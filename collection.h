@@ -10,7 +10,9 @@ class Collection : public QAbstractTableModel, public Music_Item
 {
     Q_OBJECT
 public:
-    Collection(const QString &);
+    Collection(const QString &name);
+    Collection(const QString &name_, int id_,
+               const QList<Music_Item*> &items);
 
 public:
     virtual void add(Music_Item *);

@@ -8,6 +8,9 @@ class Playlist : public Collection
 public:
     Playlist();
     Playlist(Collection *);
+    Playlist(const QString &name, int id_,
+             const QList<Music_Item*> &items);
+
     ~Playlist();
 
     void add(Music_Item *);

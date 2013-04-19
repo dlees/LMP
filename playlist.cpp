@@ -18,6 +18,13 @@ Playlist::Playlist(Collection *col)
        add(item);
 }
 
+
+Playlist::Playlist(const QString &name, int id_,
+         const QList<Music_Item*> &items)
+    : Collection(name, id_, items),
+      cur(0)
+{}
+
 void Playlist::add(Music_Item *item)
 {
     QLinkedList<Song*> songs = item->get_leaves();

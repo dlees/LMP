@@ -16,7 +16,7 @@
 Song::Song(const QString &filename_)
     : Music_Item(filename_),
       filename(filename_),
-      seconds(10),
+      seconds(0),
       rating(3),
       created(QDateTime::currentDateTime())
 
@@ -34,6 +34,19 @@ Song::Song(const QString &filename_)
 
   //  Database::get()->add_song(get_id(), filename, get_name(), created);
 }
+
+Song::Song(const QString &name_, int id_,
+     const QString &filename_, int seconds_,
+     int rating_, QDateTime created_,
+     const QString &artist_, const QString &album_)
+    : Music_Item(name_, id_),
+      filename(filename_), seconds(seconds_),
+      rating(rating_), created(created_),
+      artist(artist_), album(album_)
+{
+
+}
+
 
 void Song::add_secs(int amt)
 {

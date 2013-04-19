@@ -20,6 +20,10 @@ class Song : public QObject, public Music_Item
     Q_OBJECT
 public:
     Song(const QString &filename_);
+    Song(const QString &name_, int id,
+         const QString &filename_, int seconds_,
+         int rating_, QDateTime created,
+         const QString &artist_, const QString &album_);
 
     QString get_filename() const
         { return filename;}
@@ -57,6 +61,7 @@ private:
     Phonon::MediaObject *mediaObject;
 
     QString artist;
+    QString album;
 
 
     //    Album *album; // consider list

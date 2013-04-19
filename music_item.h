@@ -12,6 +12,9 @@ class Music_Item
 {
 public:
     Music_Item(const QString &name);
+    Music_Item(const QString &name_, int id_)
+        : name(name_), id(id_) {}
+
     virtual ~Music_Item() = 0;
 
     const QString &get_name() const
