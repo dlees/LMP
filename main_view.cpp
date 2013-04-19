@@ -23,14 +23,16 @@ Main_View::Main_View(QWidget *parent)
     //MiniMode->setMaximumWidth(20);
 
     //2nd row containing Splitter of 3 panes
-    // Library Pane
+// Library Pane
     lib_list = new QListView();
     Pane *libraryPane = new Pane("Library", lib_list);
     lib_list->setModel(Media_Manager::get()->get_library());
-    connect(lib_list, SIGNAL(doubleClicked(QModelIndex)),
+    connect(lib_list, SIGNAL(clicked(QModelIndex)),
             this, SLOT(select_lib_item(QModelIndex)));
+    connect(lib_list, SIGNAL(doubleClicked(QModelIndex)),
+            this, SLOT(open_playlist_from_lib(QModelIndex)));
 
-    // Center Table
+// Center Table
     table = new QTableView();
     table->setSelectionBehavior(QAbstractItemView::SelectRows);
     table->setSortingEnabled(true);
@@ -41,7 +43,7 @@ Main_View::Main_View(QWidget *parent)
     connect(table, SIGNAL(doubleClicked(QModelIndex)),
             this, SLOT(select_center_item(QModelIndex)));
 
-    // Playlist Pane
+// Playlist Pane
     playlist = new QListView();
     playlist->setModel(Media_Manager::get()->get_playlist());
     Pane *playlistPane = new Pane("Current Playlist", playlist);
@@ -158,13 +160,25 @@ void Main_View::select_lib_item(QModelIndex index)
     table->setModel(Media_Manager::get()->get_center());
 }
 
+void Main_View::open_playlist_from_lib(QModelIndex index)
+{
+    // start playing any thing in this index
+    Media_Manager::get()->get_library()->select_child(index.row());
+
+    Media_Manager::get()->get_center()->begin_playing();
+
+    table->setModel(Media_Manager::get()->get_center());
+    playlist->setModel(Media_Manager::get()->get_playlist());
+
+    Media_Manager::get()->first();
+}
+
 void Main_View::select_center_item(QModelIndex index)
 {
     //iff its a playlist, we must have selected a song,
     //  so let's change the current playlist to that song
     if (Playlist *plist = dynamic_cast<Playlist*>(Media_Manager::get()->get_center()))
     {
-        qDebug() << plist->get_name();
         Media_Manager::get()->switch_playlist(plist, index.row());
 
         playlist->setModel(plist);
@@ -174,7 +188,6 @@ void Main_View::select_center_item(QModelIndex index)
     Media_Manager::get()->get_center()->select_child(index.row());
 
     table->setModel(Media_Manager::get()->get_center());
-
 }
 
 void Main_View::delete_playlist_from_library()

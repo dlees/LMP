@@ -24,8 +24,16 @@ public slots:
     void quit();
     void send_mini_mode();
 
+    // when you double click on playlist pane: play the song
     void select_song(QModelIndex);
+
+    // when you click on lib pane: put that list in center
     void select_lib_item(QModelIndex);
+
+    // when you double click on lib pane: play that playlist
+    void open_playlist_from_lib(QModelIndex);
+
+    // when you double click on table: play that item, load list into playlist
     void select_center_item(QModelIndex);
 
     void create_playlist_files();
