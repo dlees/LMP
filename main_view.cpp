@@ -162,6 +162,7 @@ void Main_View::select_lib_item(QModelIndex index)
 
 void Main_View::open_playlist_from_lib(QModelIndex index)
 {
+    /*
     // start playing any thing in this index
     Media_Manager::get()->get_library()->select_child(index.row());
 
@@ -171,6 +172,7 @@ void Main_View::open_playlist_from_lib(QModelIndex index)
     playlist->setModel(Media_Manager::get()->get_playlist());
 
     Media_Manager::get()->first();
+    */
 }
 
 void Main_View::select_center_item(QModelIndex index)

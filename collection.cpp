@@ -96,6 +96,7 @@ QLinkedList<Song*> Collection::get_leaves()
 
 void Collection::begin_playing()
 {
+    start_playing();
     Media_Manager::get()->switch_playlist(this);
 }
 
