@@ -25,6 +25,7 @@ public slots:
     void quit();
     void send_mini_mode();
     void new_create_playlist_files(QString name);
+    void update_center(Collection *new_center);
 
 
     // when you double click on playlist pane: play the song

@@ -75,10 +75,14 @@ Main_View::Main_View(QWidget *parent)
 
     connect(MiniMode, SIGNAL(clicked()),
             this, SLOT(send_mini_mode()));
+
+    // Set the title of the center pane
     connect(Media_Manager::get(), SIGNAL(center_changed(Collection*)),
             centerPane, SLOT(set_title(Collection*)));
-    connect(this, SIGNAL(got_name(QString)),
-            this, SLOT(new_create_playlist_files(QStringList*,QString)));
+
+    // tell table that the center changed
+    connect(Media_Manager::get(), SIGNAL(center_changed(Collection*)),
+            this, SLOT(update_center(Collection*)));
 }
 
 QAction *Main_View::add_menu_item(char name[], bool enabled)
@@ -159,8 +163,6 @@ void Main_View::quit()
 
 void Main_View::send_mini_mode()
 {
-    qDebug() << "SEND_MINI_MODE";
-
     emit to_mini_mode();
 }
 
@@ -188,8 +190,6 @@ void Main_View::open_playlist_from_lib(QModelIndex index)
     // start playing any thing in this index
     Media_Manager::get()->get_library()->select_child(index.row());
 
-    table->setModel(Media_Manager::get()->get_center());
-
     Media_Manager::get()->get_center()->begin_playing();
 
     playlist->setModel(Media_Manager::get()->get_playlist());
@@ -208,8 +208,6 @@ void Main_View::select_center_item(QModelIndex index)
 
     // send whatever we selected into the center
     Media_Manager::get()->get_center()->select_child(index.row());
-
-    table->setModel(Media_Manager::get()->get_center());
 }
 
 void Main_View::delete_playlist_from_library()
@@ -217,13 +215,11 @@ void Main_View::delete_playlist_from_library()
     QModelIndexList indexes = lib_list->selectionModel()->selection().indexes();
     for (int i = 0; i < indexes.count(); ++i)
     {
-
         // if this collection is in the table currently
         if (Media_Manager::get()->get_library()->get_children()[indexes[i].row()] == Media_Manager::get()->get_center())
         {
             // set All Songs to be in the center
             Media_Manager::get()->get_library()->select_child(0);
-            table->setModel(Media_Manager::get()->get_center());
 
             // select all songs in the lib_list
             lib_list->setCurrentIndex(Media_Manager::get()->get_library()->index(0,0));
@@ -251,3 +247,10 @@ void Main_View::add_selected_to_playlist()
         Media_Manager::get()->get_playlist()->add(item);
     }
 }
+
+void Main_View::update_center(Collection *)
+{
+    table->setModel(Media_Manager::get()->get_center());
+}
+
+
