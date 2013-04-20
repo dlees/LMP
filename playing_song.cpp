@@ -133,7 +133,7 @@ void Playing_Song::change_pos_relative(int relative_pos)
 void Playing_Song::set_hs()
 {
     hs_map.add_hotspot(cur_playing->get_id(), get_position());
-    Database.get()->add_hotspot(cur_playing->get_id(), get_position());
+    Database::get()->add_hotspot(cur_playing->get_id(), get_position());
     emit hs_added();
 }
 
@@ -169,7 +169,7 @@ void Playing_Song::remove_hs()
     Hotspots &hotspots = hs_map.get_hotspots(cur_playing->get_id());
     oldHotspot = hotspots.get_next((get_position()));
     hotspots.remove(oldHotspot);
-    Database.get()->delete_hotspot(cur_playing->get_id(), oldHotspot);
+    Database::get()->delete_hotspot(cur_playing->get_id(), oldHotspot);
 
     emit hs_added();
 }
