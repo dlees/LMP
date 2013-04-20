@@ -32,19 +32,15 @@ void Collection::add(Music_Item *item)
                                    + item->get_name() + ".\nCan't insert!");
         return;
     }
-    Song *song = dynamic_cast<Song*>(item);
 
-    if (song)
-    {
+    if (Song *song = dynamic_cast<Song*>(item))
         connect(song, SIGNAL(data_changed()),
                 this, SLOT(data_updated()));
-    }
 
     if (Collection *col = dynamic_cast<Collection*>(item))
-    {
         connect(col, SIGNAL(data_changed()),
                 this, SLOT(data_updated()));
-    }
+
 
     beginInsertRows(QModelIndex(), count(), count());
     children.push_back(item);
@@ -79,6 +75,13 @@ void Collection::remove(int index)
 {
     if (index == -1)
         return;
+
+    if (children[index]->get_is_playing())
+    {
+        Error::print_error_msg_str("Can't remove " + children[index]->get_name()
+                                   + " while it is being played.");
+        return;
+    }
 
     beginRemoveRows(QModelIndex(), index, index+1);
     children.removeAt(index);
