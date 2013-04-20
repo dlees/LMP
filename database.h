@@ -17,10 +17,11 @@ public:
     // save a sec count to the database
     void save_sec_count(int ID, qint64 start, qint64 end);
 
-    void add_song(int ID, const QString &filename,
-                  const QString &name, const QDateTime &created);
-
+    void add_song(int ID, const QString &filename, const QString &name, const QDateTime &created);
     void delete_song(int ID);
+
+    void add_hotspot(int songID, qint64 hotspot);
+    void delete_hotspot(int songID, qint64 hotspot);
 
     // returns the ID of a song that has filepath as its filepath
     // -1 if file doesn't exit
@@ -30,15 +31,13 @@ public:
     // -1 if DNE
     int find_filename(const QString &name);
 
-    // returns all the id's of anything in the database
+    // returns all the ids of anything in the database
     // that has str in it (Songs, Artists, Albums, Playlists)
     // **NOTE: All Music Items have unique ID's, so there won't be conflictions
     QList<int> find(const QString &str);
 
     void new_playlist(const QString &name, int ID);
-
     void add_to_playlist(int songID, int listID);
-
     void delete_from_playlist(int songID, int listID);
 
 private:
@@ -50,6 +49,7 @@ private:
     QDomDocument songsInPlaylist;
     QDomDocument songsOnAlbum;
     QDomDocument albumsByArtist;
+    QDomDocument hotspots;
 
     Database();
     void saveFile(QDomDocument, QString);
