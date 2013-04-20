@@ -80,7 +80,10 @@ void MainWindow::create_menu()
     plMenu->addSeparator();
     connect(add_menu_item((char*)"Add current song to current playlist", true, plMenu), SIGNAL(triggered()),
             Media_Manager::get(), SLOT(add_cur_to_playlist()));
+    connect(add_menu_item((char*)"Add selected songs in table to current playlist", true, plMenu), SIGNAL(triggered()),
+            mainView, SLOT(add_selected_to_playlist()));
 
+    plMenu->addSeparator();
     connect(add_menu_item((char*)"Remove selected song from current playlist", true, plMenu), SIGNAL(triggered()),
             mainView, SLOT(remove_selected_song()));
 

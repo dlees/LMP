@@ -15,6 +15,8 @@ public:
                const QList<Music_Item*> &items);
 
 public:
+    bool contains(Music_Item*);
+
     virtual void add(Music_Item *);
     void add_leaves(Music_Item *);
 
@@ -62,7 +64,7 @@ signals:
 private:
     QList<Music_Item*> children;
 
-    // could sort by name? or own sorting Function*?
+    QMap<int, Music_Item*> id_to_item;
 
     QStandardItemModel *tree_model;
     QStandardItemModel *list_model;

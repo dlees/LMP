@@ -39,6 +39,7 @@ public slots:
     // when you double click on table: play that item, load list into playlist
     void select_center_item(QModelIndex);
 
+    void add_selected_to_playlist();
     void create_playlist_files();
     void delete_playlist_from_library();
 

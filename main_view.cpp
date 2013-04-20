@@ -77,7 +77,7 @@ Main_View::Main_View(QWidget *parent)
             this, SLOT(send_mini_mode()));
     connect(Media_Manager::get(), SIGNAL(center_changed(Collection*)),
             centerPane, SLOT(set_title(Collection*)));
-    connect(this, SIGNAL(got_name(QStringList*,QString)),
+    connect(this, SIGNAL(got_name(QString)),
             this, SLOT(new_create_playlist_files(QStringList*,QString)));
 }
 
@@ -115,7 +115,6 @@ QStringList* Main_View::get_files()
 
 void Main_View::create_playlist_files()
 {
-
     QString name;
 
     QInputDialog *getName = new QInputDialog();
@@ -129,7 +128,6 @@ void Main_View::create_playlist_files()
 
     connect(getName, SIGNAL(textValueSelected(QString)),
             this, SLOT(new_create_playlist_files(QString)));
-
 }
 
 void Main_View::new_create_playlist_files(QString name)
@@ -242,4 +240,14 @@ void Main_View::remove_selected_song()
         Media_Manager::get()->get_playlist()->remove(indexes[i].row());
     }
 
+}
+
+void Main_View::add_selected_to_playlist()
+{
+    QModelIndexList indexes = table->selectionModel()->selectedRows();
+    for (int i = 0; i < indexes.count(); ++i)
+    {
+        Music_Item *item = Media_Manager::get()->get_center()->get_children()[indexes[i].row()];
+        Media_Manager::get()->get_playlist()->add(item);
+    }
 }

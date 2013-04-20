@@ -1,7 +1,7 @@
 #include "collection.h"
 
 #include "media_manager.h"
-
+#include "error.h"
 #include "song.h"
 
 Collection::Collection(const QString &name)
@@ -18,10 +18,20 @@ Collection::Collection(const QString &name_, int id_,
         add(item);
 }
 
+bool Collection::contains(Music_Item* item)
+{
+    return children.contains(item);
+           // id_to_item.find(item->get_id()) != id_to_item.end();
+}
+
 void Collection::add(Music_Item *item)
 {
-    beginInsertRows(QModelIndex(), count(), count());
-
+    if (contains(item))
+    {
+        Error::print_error_msg_str(get_name() + " already contains "
+                                   + item->get_name() + ".\nCan't insert!");
+        return;
+    }
     Song *song = dynamic_cast<Song*>(item);
 
     if (song)
@@ -36,7 +46,10 @@ void Collection::add(Music_Item *item)
                 this, SLOT(data_updated()));
     }
 
+    beginInsertRows(QModelIndex(), count(), count());
     children.push_back(item);
+//    id_to_item.insert(item->get_id(), item);
+
     endInsertRows();
 }
 
@@ -69,6 +82,7 @@ void Collection::remove(int index)
 
     beginRemoveRows(QModelIndex(), index, index+1);
     children.removeAt(index);
+//    id_to_item.remove(children.at(index)->get_id());
     endRemoveRows();
 }
 
