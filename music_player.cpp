@@ -1,4 +1,5 @@
 #include "music_player.h"
+#include "error.h"
 
 #include <QDebug>
 
@@ -45,11 +46,12 @@ bool Music_Player::cant_play()
 {
 
     qDebug() << "cant_play() " << curSong->totalTime();
-
-    if (curSong->totalTime() < 5000)
+#ifdef __APPLE__ && __MACH__
+    if (curSong->totalTime() < 2000)
     {
-        qDebug() << "TOTAL TIME LESS THAN 5 SECONDS" ;
-        //return true;
+        qDebug() << "TOTAL TIME LESS THAN 2 SECONDS" ;
+        Error::print_error_msg_str("File not a Music File");
+        return true;
     }
 
     if (curSong->currentSource().type() == -1)
@@ -60,12 +62,14 @@ bool Music_Player::cant_play()
     if (curSong->isSeekable() == false)
     {
         qDebug() << "NOT SEEKABLE" ;
-        //return true;
+        Error::print_error_msg_str("File no Seekable");
+        return true;
     }
     if (curSong->hasVideo() == true)
     {
         qDebug() << "HAS VIDEO" ;
     }
+#endif
     return false;
 }
 

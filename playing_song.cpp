@@ -26,7 +26,9 @@ Playing_Song::Playing_Song()
 void Playing_Song::play()
 {
     if (mp.cant_play())
-        throw new Error("Can't play " + cur_playing->get_name());
+    {
+        return;
+    }
 
     mp.play_song();
 
