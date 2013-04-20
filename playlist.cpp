@@ -4,8 +4,8 @@
 #include "song.h"
 #include "error.h"
 
-Playlist::Playlist()
-    : Collection("Default Playlist"),
+Playlist::Playlist(const QString &name)
+    : Collection(name),
       cur(0)
 {
 }

@@ -9,7 +9,7 @@
 
 Library::Library()
     : Collection("Library"),
-      songs(new Collection("All Songs")),
+      songs(new Playlist("All Songs")),
       playlists(new Collection("Playlists"))
 {
     add(songs);
