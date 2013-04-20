@@ -20,6 +20,7 @@ Button_Container::Button_Container(int w, int h)
     prev->setGeometry(0, 0, 10, 20);
     connect(prev, SIGNAL(clicked()),
             Media_Manager::get(), SLOT(prev()));
+    prev->setToolTip("Skip to Previous Song");
 
     next = new QToolButton(this);
     //next->setIcon(QIcon(":/buttons/next.png"));
@@ -27,6 +28,7 @@ Button_Container::Button_Container(int w, int h)
     next->setGeometry(0, 0, 10, 20);
     connect(next, SIGNAL(clicked()),
             Media_Manager::get(), SLOT(next()));
+    next->setToolTip("Skipt to Next Song");
 
     hotspot_prev = new QToolButton(this);
     hotspot_prev->setIcon(QIcon(":/buttons/hotspot_prev.png"));
