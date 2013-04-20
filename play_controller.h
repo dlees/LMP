@@ -22,11 +22,13 @@ private:
     QLabel *HotSpots;
     QLabel *time_view;
     Song *cur_song;
+    bool slider_down;
     QString convert_ms_to_min(int ms);
     void initialize_slider();
 
 public slots:
     void set_slider_position(qint64 value);
+    void no_tick();
     void send_new_position();
     void set_total_value(int time);
     void set_song(Song *song);

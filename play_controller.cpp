@@ -50,6 +50,8 @@ Play_Controller::Play_Controller()
     setLineWidth(1);
     setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 
+    slider_down = false;
+
     connect(Playing_Song::get().get_media_object(), SIGNAL(tick(qint64)),
             this, SLOT(set_slider_position(qint64)));
     connect(slider, SIGNAL(sliderReleased()),
@@ -62,17 +64,32 @@ Play_Controller::Play_Controller()
       //      this, SLOT(set_new_song(Song *, int)));
     connect(&Playing_Song::get(), SIGNAL(hs_added()),
             this, SLOT(set_hs_text()));
+
+
+    connect(slider, SIGNAL(sliderPressed()),
+            this, SLOT(no_tick()));
 }
 
 void Play_Controller::set_slider_position(qint64 value)
 {
+    if (slider_down == true)
+    {
+        time_view->setText(convert_ms_to_min((int) value));
+        return;
+    }
     slider->setValue((int) value);
     time_view->setText(convert_ms_to_min((int) value));
+}
+
+void Play_Controller::no_tick()
+{
+    slider_down = true;
 }
 
 void Play_Controller::send_new_position()
 {
     Playing_Song::get().change_position(slider->value());
+    slider_down = false;
 }
 
 void Play_Controller::set_total_value(int time)
