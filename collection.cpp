@@ -30,6 +30,12 @@ void Collection::add(Music_Item *item)
                 this, SLOT(data_updated()));
     }
 
+    if (Collection *col = dynamic_cast<Collection*>(item))
+    {
+        connect(col, SIGNAL(data_changed()),
+                this, SLOT(data_updated()));
+    }
+
     children.push_back(item);
     endInsertRows();
 }
@@ -96,7 +102,6 @@ QLinkedList<Song*> Collection::get_leaves()
 
 void Collection::begin_playing()
 {
-    start_playing();
     Media_Manager::get()->switch_playlist(this);
 }
 
@@ -177,3 +182,15 @@ QList<QVariant> Collection::get_column_data() const
                ;
 }
 
+void Collection::start_playing()
+{
+    qDebug() << get_name() << "starts playing";
+    Music_Item::start_playing();
+    emit data_changed();
+}
+
+void Collection::stop_playing()
+{
+    Music_Item::stop_playing();
+    emit data_changed();
+}

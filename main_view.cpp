@@ -49,6 +49,9 @@ Main_View::Main_View(QWidget *parent)
     Pane *playlistPane = new Pane("Current Playlist", playlist);
     connect(playlist, SIGNAL(doubleClicked(QModelIndex)),
             this, SLOT(select_song(QModelIndex)));
+    playlist->setDragEnabled(true);
+    playlist->viewport()->setAcceptDrops(true);
+    playlist->setDropIndicatorShown(true);
 
     splitter = new QSplitter(Qt::Horizontal);
     splitter->addWidget(libraryPane);
@@ -161,18 +164,15 @@ void Main_View::select_lib_item(QModelIndex index)
 }
 
 void Main_View::open_playlist_from_lib(QModelIndex index)
-{
-    /*
+{    
     // start playing any thing in this index
     Media_Manager::get()->get_library()->select_child(index.row());
 
+    table->setModel(Media_Manager::get()->get_center());
+
     Media_Manager::get()->get_center()->begin_playing();
 
-    table->setModel(Media_Manager::get()->get_center());
     playlist->setModel(Media_Manager::get()->get_playlist());
-
-    Media_Manager::get()->first();
-    */
 }
 
 void Main_View::select_center_item(QModelIndex index)

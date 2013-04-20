@@ -15,7 +15,8 @@ public:
 
     void add(Music_Item *);
 
-    void select_child(int i);
+    virtual void select_child(int i);
+    virtual void begin_playing();
 
     void next();
     void prev();

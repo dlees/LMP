@@ -93,8 +93,8 @@ void Media_Manager::switch_playlist(Collection *col)
 
 void Media_Manager::switch_playlist(Playlist *playlist, int pos)
 {
+    // tell the old list that it isn't currently playing anymore
     if (cur_list)
-        // tell the old list that it isn't currently playing anymore
         cur_list->stop_playing();
 
     cur_list = playlist;
@@ -106,7 +106,7 @@ void Media_Manager::switch_playlist(Playlist *playlist, int pos)
     emit playlist_changed(cur_list);
 
     // if we aren't playing a song
-    if (playing.is_paused())
+    //if (playing.is_paused())
         first(); // go to the first song in the playlist
 }
 

@@ -48,8 +48,16 @@ public:
     virtual QVariant data(const QModelIndex &index, int role) const;
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
+    virtual void start_playing();
+    virtual void stop_playing();
+
 public slots:
     void data_updated();
+
+signals:
+    // name changed, playing or not,
+    // Doesn't count for changing children
+    void data_changed();
 
 private:
     QList<Music_Item*> children;

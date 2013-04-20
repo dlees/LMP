@@ -1,10 +1,11 @@
 #include "playlist.h"
 
+#include "media_manager.h"
 #include "song.h"
 #include "error.h"
 
 Playlist::Playlist()
-    : Collection("New Playlist"),
+    : Collection("Default Playlist"),
       cur(0)
 {
 }
@@ -41,6 +42,12 @@ void Playlist::select_child(int i)
 {
     Collection::select_child(i);
     cur = i;
+}
+
+void Playlist::begin_playing()
+{
+    qDebug() << get_name() << "playing";
+    Media_Manager::get()->switch_playlist(this);
 }
 
 void Playlist::prev()
