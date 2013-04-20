@@ -115,9 +115,9 @@ void Media_Manager::new_playlist()
     lib.add_playlist(new Playlist());
 }
 
-void Media_Manager::new_playlist(QStringList *filenames)
+void Media_Manager::new_playlist(QStringList *filenames, QString name)
 {
-    Playlist *new_pl = new Playlist();
+    Playlist *new_pl = new Playlist(name);
     QString filename;
 
     foreach (filename, *filenames)

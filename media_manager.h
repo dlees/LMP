@@ -66,7 +66,7 @@ public slots:
 
     // creates a new playlist
     void new_playlist();
-    void new_playlist(QStringList*);
+    void new_playlist(QStringList*, QString);
 
     Collection *get_playlist();
     Collection *get_center();

@@ -16,6 +16,7 @@ public:
 
 signals:
     void to_mini_mode();
+    void got_name(QString name);
 
 public slots:
     void play();
@@ -23,6 +24,8 @@ public slots:
     void add_files();
     void quit();
     void send_mini_mode();
+    void new_create_playlist_files(QString name);
+
 
     // when you double click on playlist pane: play the song
     void select_song(QModelIndex);

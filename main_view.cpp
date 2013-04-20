@@ -77,6 +77,8 @@ Main_View::Main_View(QWidget *parent)
             this, SLOT(send_mini_mode()));
     connect(Media_Manager::get(), SIGNAL(center_changed(Collection*)),
             centerPane, SLOT(set_title(Collection*)));
+    connect(this, SIGNAL(got_name(QStringList*,QString)),
+            this, SLOT(new_create_playlist_files(QStringList*,QString)));
 }
 
 QAction *Main_View::add_menu_item(char name[], bool enabled)
@@ -113,8 +115,28 @@ QStringList* Main_View::get_files()
 
 void Main_View::create_playlist_files()
 {
+
+    QString name;
+
+    QInputDialog *getName = new QInputDialog();
+
+    getName->setCancelButtonText("Cancel");
+    getName->setOkButtonText("OK");
+    getName->setLabelText("Playlist Name: ");
+    getName->setInputMode(QInputDialog::TextInput);
+
+    getName->show();
+
+    connect(getName, SIGNAL(textValueSelected(QString)),
+            this, SLOT(new_create_playlist_files(QString)));
+
+}
+
+void Main_View::new_create_playlist_files(QString name)
+{
     QStringList *files = get_files();
-    Media_Manager::get()->new_playlist(files);
+
+    Media_Manager::get()->new_playlist(files, name);
 
     playlist->setModel(Media_Manager::get()->get_playlist());
 }
