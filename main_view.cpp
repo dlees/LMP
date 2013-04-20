@@ -197,6 +197,17 @@ void Main_View::delete_playlist_from_library()
     QModelIndexList indexes = lib_list->selectionModel()->selection().indexes();
     for (int i = 0; i < indexes.count(); ++i)
     {
+
+        // if this collection is in the table currently
+        if (Media_Manager::get()->get_library()->get_children()[indexes[i].row()] == Media_Manager::get()->get_center())
+        {
+            // set All Songs to be in the center
+            Media_Manager::get()->get_library()->select_child(0);
+            table->setModel(Media_Manager::get()->get_center());
+
+            // select all songs in the lib_list
+            lib_list->setCurrentIndex(Media_Manager::get()->get_library()->index(0,0));
+        }
         Media_Manager::get()->get_library()->remove(indexes[i].row());
     }
 }
