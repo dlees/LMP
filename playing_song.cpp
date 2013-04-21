@@ -167,13 +167,20 @@ void Playing_Song::prev_hs()
 
 void Playing_Song::remove_hs()
 {
-    int oldHotspot;
-    Hotspots &hotspots = hs_map.get_hotspots(cur_playing->get_id());
-    oldHotspot = hotspots.get_next((get_position()));
-    hotspots.remove(oldHotspot);
-    Database::get()->delete_hotspot(cur_playing->get_id(), oldHotspot);
+    try
+    {
+        int oldHotspot;
+        Hotspots &hotspots = hs_map.get_hotspots(cur_playing->get_id());
+        oldHotspot = hotspots.get_next((get_position()));
+        hotspots.remove(oldHotspot);
+        Database::get()->delete_hotspot(cur_playing->get_id(), oldHotspot);
 
-    emit hs_added();
+        emit hs_added();
+    }
+    catch (Error &e)
+    {
+        e.print_error_msg();
+    }
 }
 
 std::vector<int> Playing_Song::get_hs_list()

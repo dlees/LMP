@@ -20,7 +20,8 @@ private:
     QLabel *title;
 
 public slots:
-    void set_title(Collection *new_center);
+    //void set_title(Collection *new_center);
+    void set_title(QString str);
 };
 
 #endif // PANE_H

@@ -39,14 +39,14 @@ Main_View::Main_View(QWidget *parent)
     table->setShowGrid(false);
     table->setModel(Media_Manager::get()->get_playlist());
     table->setColumnWidth(0, 200);
-    Pane *centerPane = new Pane("New Playlist", table);
+    centerPane = new Pane("Default Playlist", table);
     connect(table, SIGNAL(doubleClicked(QModelIndex)),
             this, SLOT(select_center_item(QModelIndex)));
 
 // Playlist Pane
     playlist = new QListView();
     playlist->setModel(Media_Manager::get()->get_playlist());
-    Pane *playlistPane = new Pane("Current Playlist", playlist);
+    playlistPane = new Pane("Current Playlist", playlist);
     connect(playlist, SIGNAL(doubleClicked(QModelIndex)),
             this, SLOT(select_song(QModelIndex)));
     playlist->setDragEnabled(true);
@@ -77,12 +77,16 @@ Main_View::Main_View(QWidget *parent)
             this, SLOT(send_mini_mode()));
 
     // Set the title of the center pane
-    connect(Media_Manager::get(), SIGNAL(center_changed(Collection*)),
-            centerPane, SLOT(set_title(Collection*)));
+    //connect(Media_Manager::get(), SIGNAL(center_changed(Collection*)),
+      //      centerPane, SLOT(set_title(Collection*)));
 
     // tell table that the center changed
     connect(Media_Manager::get(), SIGNAL(center_changed(Collection*)),
             this, SLOT(update_center(Collection*)));
+
+    // tell playlist of change
+    connect(Media_Manager::get(), SIGNAL(playlist_changed(Collection*)),
+            this, SLOT(update_playlist(Collection *)));
 }
 
 QAction *Main_View::add_menu_item(char name[], bool enabled)
@@ -248,9 +252,14 @@ void Main_View::add_selected_to_playlist()
     }
 }
 
-void Main_View::update_center(Collection *)
+void Main_View::update_center(Collection *collection)
 {
     table->setModel(Media_Manager::get()->get_center());
+    centerPane->set_title(collection->get_name());
 }
 
-
+void Main_View::update_playlist(Collection *collection)
+{
+    playlist->setModel(Media_Manager::get()->get_playlist());
+    playlistPane->set_title("Current Playlist: " +collection->get_name());
+}

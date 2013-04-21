@@ -23,9 +23,10 @@ Pane::Pane(QString title_, QAbstractItemView *items_)
     setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 }
 
-void Pane::set_title(Collection *new_center)
+void Pane::set_title(QString str)
 {
-    title->setText(new_center->get_name());
+    //title->setText(new_center->get_name());
+    title->setText(str);
 }
 
 Pane::~Pane()

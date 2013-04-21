@@ -3,8 +3,11 @@
 
 
 #include <QMainWindow>
+#include <QtGui>
 
-#include "media_manager.h"
+class Pane;
+class Collection;
+
 
 class Main_View : public QMainWindow
 {
@@ -26,7 +29,7 @@ public slots:
     void send_mini_mode();
     void new_create_playlist_files(QString name);
     void update_center(Collection *new_center);
-
+    void update_playlist(Collection *collection);
 
     // when you double click on playlist pane: play the song
     void select_song(QModelIndex);
@@ -58,6 +61,9 @@ private:
     QListView *playlist;
     QTableView *table;
     QListView *lib_list;
+
+    Pane *centerPane;
+    Pane *playlistPane;
 };
 
 
