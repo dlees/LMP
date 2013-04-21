@@ -17,8 +17,10 @@ public:
     // save a sec count to the database
     void save_sec_count(int ID, qint64 start, qint64 end);
 
-    void add_song(int ID, const QString &filename, const QString &name, const QDateTime &created);
+    void add_song(int ID, const QString &filename, const QString &name, const QDateTime &created,
+                  const QString &artistName = "noName", const QString &albumName = "noAName", int albumID = 43, int artistID = 42);
     void delete_song(int ID);
+    QList<QList<QString> > *get_all_song_info();
 
     void add_hotspot(int songID, qint64 hotspot);
     void delete_hotspot(int songID, qint64 hotspot);

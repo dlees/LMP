@@ -225,18 +225,32 @@ void Database::save_sec_count(int ID, qint64 start, qint64 end)
     saveFile(secCount, "database/secCount.xml");
 }
 
-void Database::add_song(int songID, const QString &filename,
-                        const QString &name, const QDateTime& created)
+QList< QList<QString> >* Database::get_all_song_info(){
+    //returns a list of lists of strings of this info in this order:
+    //name, ID, filename, created, seconds, artist, album
+
+    QList< QList<QString> > *ret = new QList< QList<QString> >;
+
+   /* QDomNodeList nodeList = song.elementsByTagName("song");
+    for (int i=0; i<nodeList.count(); i++){
+        QList<QString> *temp = new QList<QString>;
+        ret->append(*temp);
+        ret->at(i).append(nodeList.at(1).toElement().);
+        cout << nodeList.at(1) << endl;
+        ret->at(i).append(nodeList.at(0));
+        ret->at(i).append(nodeList.at(3));
+        ret->at(i).append(nodeList.at(2));
+    }
+*/
+    return ret;
+}
+
+void Database::add_song(int songID, const QString &filename,const QString &name, const QDateTime& created,
+                        const QString &artistName, const QString &albumName, int albumID, int artistID)
 {
     qDebug() << "At" << created << filename << "added to DB with ID =" << songID ;
 
     char temp[128];
-
-    //temp data until real stuff gets put in
-    QString artistName = "XTC";
-    QString albumName = "Apple Venus Volume One";
-    int albumID = 56345;
-    int artistID = 98734;
 
     QXmlQuery query;
     QString output = "-1";
@@ -559,7 +573,7 @@ void Database::delete_hotspot(int songID, qint64 hotspot){
 
     QXmlQuery query;
     QString output;
-    char filter[64];
+    char filter[256];
     QFile write_file;
     QTextStream out(&write_file);
 
