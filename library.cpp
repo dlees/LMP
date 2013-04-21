@@ -26,9 +26,15 @@ Library::Library()
 // load songs from the database
 void Library::load_songs()
 {
-//    Song *song;
+    Song *song;
+
+    //for every song in the database
+    QList< QList<QString> > *songsInfo;
+    songsInfo = Database::get()->get_all_song_info();
 
   // get from database somehow ...
+
+
 
 //    add_song(song);
 }
