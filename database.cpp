@@ -231,17 +231,17 @@ QList< QList<QString> >* Database::get_all_song_info(){
 
     QList< QList<QString> > *ret = new QList< QList<QString> >;
 
-   /* QDomNodeList nodeList = song.elementsByTagName("song");
+    QDomNodeList nodeList = song.elementsByTagName("song");
     for (int i=0; i<nodeList.count(); i++){
-        QList<QString> *temp = new QList<QString>;
-        ret->append(*temp);
-        ret->at(i).append(nodeList.at(1).toElement().);
-        cout << nodeList.at(1) << endl;
-        ret->at(i).append(nodeList.at(0));
-        ret->at(i).append(nodeList.at(3));
-        ret->at(i).append(nodeList.at(2));
+    //    QList<QString> *temp = new QList<QString>;
+     //   ret->append(*temp);
+      //  temp->append(nodeList.at(1).firstChild().toText().nodeValue());
+       // cout << nodeList.at(1).firstChild().toText().nodeValue().toStdString() << endl;
+        //temp->append(nodeList.at(0));
+        //temp->append(nodeList.at(3));
+        //temp->append(nodeList.at(2));
     }
-*/
+
     return ret;
 }
 
@@ -261,7 +261,7 @@ void Database::add_song(int songID, const QString &filename,const QString &name,
         sprintf(temp, "doc('database/song.xml')/songRoot/song[name=%s]/name/text()", name.toStdString().c_str());
         query.setQuery(temp);
         query.evaluateTo(&output);
-        if(output==name){
+        if(output!=name){
             //Song
 
             QDomElement songE = song.createElement("song");
@@ -578,13 +578,14 @@ void Database::delete_hotspot(int songID, qint64 hotspot){
     QTextStream out(&write_file);
 
     //delete hotspot
-    sprintf(filter, "doc('database/hotspots.xml')/hotspotRoot/hotspot[songID!=%d and spot!=%d]", songID, hotspot);
+    sprintf(filter, "doc('database/hotspots.xml')/hotspotRoot/hotspot[not(songID=%d and spot=%d)]", songID, hotspot);
     query.setQuery(filter);
     query.evaluateTo(&output);
     //output now has all <song> nodes
     write_file.setFileName("database/hotspots.xml");
     write_file.open(QIODevice::ReadWrite);
-    out << "<hotspotRoot>\n" << output << "\n</hotspotRoot>";
+    write_file.resize(0);
+    out << "<hotspotRoot>/n" << output << "</hotspotRoot>";
     write_file.close();
     //reload the memory object
     write_file.open(QIODevice::ReadOnly|QIODevice::Text);
