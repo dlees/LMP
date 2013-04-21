@@ -176,7 +176,10 @@ QVariant Collection::headerData(int section, Qt::Orientation orientation, int ro
                 return tr("Name");
 
             case 1:
-                return tr("Seconds");
+                return tr("Seconds");                
+
+            case 2:
+                return tr("Artist");
 
             default:
                 return QVariant();

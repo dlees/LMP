@@ -31,8 +31,10 @@ Song::Song(const QString &filename_)
     // For good Mac Support - useless on Windows
     if (mediaObject->metaData("TITLE").size())
         name = mediaObject->metaData("TITLE").at(0);
+    if (mediaObject->metaData("ARTIST").size())
+        artist = mediaObject->metaData("ARTIST").at(0);
 
-  //  Database::get()->add_song(get_id(), filename, get_name(), created);
+    Database::get()->add_song(get_id(), filename, get_name(), created);
 }
 
 Song::Song(const QString &name_, int id_,
