@@ -13,8 +13,7 @@
 
 Library::Library()
     : Collection("Library"),
-      songs(new Playlist("All Songs")),
-      playlists(new Collection("Playlists"))
+      songs(new Playlist("All Songs"))
 {
     add(songs);
 //    add(new Collection("Artists"));

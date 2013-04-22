@@ -21,11 +21,11 @@ public:
     SongInfo();
     SongInfo(const SongInfo& other);
     //ID, name, filename, created, seconds, album, artist
-    int songID = 0;
+    int songID;
     QString songName;
     QString fileName;
     QDateTime created;
-    int seconds = 0;
+    int seconds;
     QString albumName;
     QString artistName;
 };
