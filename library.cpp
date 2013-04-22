@@ -7,6 +7,10 @@
 
 #include "error.h"
 
+#include <iostream>
+
+
+
 Library::Library()
     : Collection("Library"),
       songs(new Playlist("All Songs")),
@@ -27,16 +31,32 @@ Library::Library()
 void Library::load_songs()
 {
     Song *song;
-
-    //for every song in the database
+    QDateTime datetime;
     QList< QList<QString> > *songsInfo;
+    //QList< QList<QString> >::iterator it;
     songsInfo = Database::get()->get_all_song_info();
 
-  // get from database somehow ...
+    //we now have a list of lists of strings of this info in this order:
+    //ID, name, filename, created, seconds, album, artist
+    //iterate over the giant list
+    QList<QString> songI;
+    //QString temp;
+    foreach(songI, *songsInfo){
+        datetime = QDateTime::fromString(songI[3]);
+        song = new Song(songI[1], songI[0].toInt(), songI[2], songI[4].toInt(),
+                        0, datetime, songI[6], songI[5]);
+        add_song(song);
+    }
 
-
-
-//    add_song(song);
+   /* for(it = songsInfo->begin(); it !=songsInfo->end(); ++it){
+        datetime = QDate::fromString((*it).at(3));
+        song = new Song((*it)[1], (*it)[0].toInt(), it[2], it[4].toInt(),
+                        0, datetime, it[6], it[5]);
+        add_song(song);
+    }*/
+    //new Song(const QString &name_, int id, const QString &filename_,
+    //  int seconds_, int rating_, QDateTime created, const QString &artist_,
+    //  const QString &album_
 }
 
 // load playlists from the database
