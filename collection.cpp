@@ -4,9 +4,13 @@
 #include "error.h"
 #include "song.h"
 
+#include "database.h"
+
 Collection::Collection(const QString &name)
     : Music_Item(name), tree_model(0)
 {
+    if (!(name == "Library" || name == "All Songs"))
+        Database::get()->new_playlist(get_name(), get_id());
 }
 
 Collection::Collection(const QString &name_, int id_,
@@ -34,8 +38,12 @@ void Collection::add(Music_Item *item)
     }
 
     if (Song *song = dynamic_cast<Song*>(item))
+    {
         connect(song, SIGNAL(data_changed()),
-                this, SLOT(data_updated()));
+                this, SLOT(data_updated()));    
+
+        Database::get()->add_to_playlist(song->get_id(), this->get_id());
+    }
 
     if (Collection *col = dynamic_cast<Collection*>(item))
         connect(col, SIGNAL(data_changed()),
@@ -47,6 +55,8 @@ void Collection::add(Music_Item *item)
 //    id_to_item.insert(item->get_id(), item);
 
     endInsertRows();
+
+
 }
 
 void Collection::data_updated()
@@ -82,6 +92,18 @@ void Collection::remove(int index)
                                    + " while it is being played.");
         return;
     }
+
+    if (Song *song = dynamic_cast<Song*>(children[index]))
+    {
+        disconnect(song, SIGNAL(data_changed()),
+                this, SLOT(data_updated()));
+
+        Database::get()->delete_from_playlist(song->get_id(), this->get_id());
+    }
+
+    if (Collection *col = dynamic_cast<Collection*>(children[index]))
+        disconnect(col, SIGNAL(data_changed()),
+                this, SLOT(data_updated()));
 
     beginRemoveRows(QModelIndex(), index, index+1);
     children.removeAt(index);
