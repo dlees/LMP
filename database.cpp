@@ -17,7 +17,6 @@ using namespace std;
 SongInfo::SongInfo(){
     songID = seconds = 0;
     albumName = songName = artistName = fileName = "";
-
 }
 
 SongInfo::SongInfo(const SongInfo &other){
@@ -243,11 +242,95 @@ void Database::save_sec_count(int ID, qint64 start, qint64 end)
     saveFile(secCount, "database/secCount.xml");
 }
 
-QList< SongInfo >* Database::get_all_song_info(){
+QList<PlaylistInfo>* Database::get_all_list_info(){
+    //returns a list of structs with the following:
+    // list of song IDs, list ID, list name
+
+    QList<PlaylistInfo> *ret = new QList<PlaylistInfo>;
+    QMap<int, int> listIDToPosition;
+    PlaylistInfo *curList;
+    int ID = 0;
+    int i = 0;
+
+    //go through the playlist file
+    QFile *listFile = new QFile("database/playlist.xml");
+    listFile->open(QIODevice::ReadOnly | QIODevice::Text);
+    QXmlStreamReader *listReader = new QXmlStreamReader(listFile);
+    while(!listReader->atEnd() && !listReader->hasError()){
+        //read next
+        QXmlStreamReader::TokenType token = listReader->readNext();
+        if(token==QXmlStreamReader::StartDocument){
+            continue;
+        }
+        if(token==QXmlStreamReader::StartElement){
+            if(listReader->name() == "playlist"){
+                //we're in a new playlist
+                //add a new struct to the list
+                curList = 0;
+                curList = new PlaylistInfo;
+            }
+            if(listReader->name() == "ID"){
+                ID = listReader->readElementText().toInt();
+                curList->ID = ID;
+            }
+            if(listReader->name() == "name"){
+                curList->name = listReader->readElementText();
+                //map of playlist ID to main list position
+                listIDToPosition[ID] = i++;
+                //last thing, put the struct in the list
+                ret->append(*curList);
+            }
+        }
+    }
+    listFile->close();
+    listReader->clear();
+    delete listFile;
+    delete listReader;
+
+    //go through the playlist relational file
+    QFile *listRFile = new QFile("database/songsInPlaylist.xml");
+    listRFile->open(QIODevice::ReadOnly | QIODevice::Text);
+    QXmlStreamReader *listRReader = new QXmlStreamReader(listRFile);
+    int songID;
+    int listPos;
+    while(!listRReader->atEnd() && !listRReader->hasError()){
+        //read next
+        QXmlStreamReader::TokenType token = listRReader->readNext();
+        if(token==QXmlStreamReader::StartDocument){
+            continue;
+        }
+        if(token==QXmlStreamReader::StartElement){
+            if(listRReader->name() == "songInPlaylist"){
+                //we're in a new thing
+                continue;
+            }
+            if(listRReader->name() == "songID"){
+                songID = listRReader->readElementText().toInt();
+            }
+            if(listRReader->name() == "playlistID"){
+                //look up the list position for this playlistID
+                listPos = listIDToPosition[listRReader->readElementText().toInt()];
+                //append the songID to ret[listPos].songIDs
+                PlaylistInfo tempInfo;
+                tempInfo = ret->takeAt(listPos);
+                tempInfo.songIDs.append(songID);
+                ret->insert(listPos, tempInfo);
+            }
+        }
+    }
+    listRFile->close();
+    listRReader->clear();
+    delete listRFile;
+    delete listRReader;
+
+    return ret;
+}
+
+QList<SongInfo>* Database::get_all_song_info(){
     //returns a list of structs of this info in this order:
     //ID, name, filename, created, seconds, album, artist
 
-    QList< SongInfo > *ret = new QList< SongInfo >;
+    QList<SongInfo> *ret = new QList< SongInfo >;
     int i = 0;
     SongInfo *curList;
     QMap<int, int> songIDToList;
@@ -347,20 +430,11 @@ QList< SongInfo >* Database::get_all_song_info(){
     //QString* stringPtr;
     for(it = songIDToSeconds.begin(); it!=songIDToSeconds.end(); it++) {
         listPos = songIDToList[it.key()];
-        //stringPtr = new QString;
-        //*stringPtr = it.value();
-        //have to take it out to change it
-
-       // ret[listPos].seconds = it.value;
         SongInfo tempInfo;
         tempInfo = ret->takeAt(listPos);
         tempInfo.seconds = it.value();
         ret->insert(listPos, tempInfo);
 
-       // QList<QString> tempList;
-        //tempList = ret->takeAt(listPos);
-        //tempList.append(*stringPtr);
-        //ret->insert(listPos, tempList);
     }
 
     secFile->close();
@@ -840,6 +914,7 @@ QList<int> Database::find(const QString &str){
     return IDs;
 }
 
+
 void Database::add_hotspot(int songID, qint64 hotspot){
 
     char temp[256];
@@ -925,11 +1000,12 @@ void Database::add_to_playlist(int songID, int listID){
     char temp[256];
     QXmlQuery query;
     QString output = "-1";
-    sprintf(temp, "doc('database/songsInPlaylist.xml')/SIPRoot/songInPlaylist[songID=%d][playlistID=%d]/ID/text()", songID, listID);
+    cout << "Adding " << songID << " to " << listID << endl;
+    sprintf(temp, "doc('database/songsInPlaylist.xml')/SIPRoot/songInPlaylist[songID=%d and playlistID=%d]/songID/text()", songID, listID);
     query.setQuery(temp);
     query.evaluateTo(&output);
-    if(output.toDouble()==-1){
-
+    if(output.toInt()!=songID){
+        //relation not already there
         QDomElement SIPE = songsInPlaylist.createElement("songInPlaylist");
         songsInPlaylist.elementsByTagName("SIPRoot").at(0).appendChild(SIPE);
 

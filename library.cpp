@@ -32,39 +32,34 @@ void Library::load_songs()
 {
     Song *song;
     QList< SongInfo > *songsInfo;
-    //QList< QList<QString> >::iterator it;
     songsInfo = Database::get()->get_all_song_info();
 
-    //we now have a list of lists of strings of this info in this order:
-    //ID, name, filename, created, seconds, album, artist
-    //iterate over the giant list
+    //we now have a list of lists of structs with relevant info
     SongInfo songI;
-    //QString temp;
     foreach(songI, *songsInfo){
         song = new Song(songI.songName, songI.songID, songI.fileName, songI.seconds,
                         0, songI.created, songI.artistName, songI.albumName);
         add_song(song);
     }
-
-   /* for(it = songsInfo->begin(); it !=songsInfo->end(); ++it){
-        datetime = QDate::fromString((*it).at(3));
-        song = new Song((*it)[1], (*it)[0].toInt(), it[2], it[4].toInt(),
-                        0, datetime, it[6], it[5]);
-        add_song(song);
-    }*/
-    //new Song(const QString &name_, int id, const QString &filename_,
-    //  int seconds_, int rating_, QDateTime created, const QString &artist_,
-    //  const QString &album_
 }
 
 // load playlists from the database
 void Library::load_playlists()
 {
-//    Playlist *playlist;
+    Playlist *playlist;
+    QList<PlaylistInfo> *listsInfo;
+    listsInfo = Database::get()->get_all_list_info();
+    QList<Music_Item*> songList;
+    int ID = 0;
 
-    //get from database somehow ...
-
-//    add_playlist(playlist);
+    PlaylistInfo playlistI;
+    foreach(playlistI, *listsInfo){
+        foreach(ID, playlistI.songIDs){
+            songList.append(get_song(ID));
+        }
+        playlist = new Playlist(playlistI.name, playlistI.ID, songList);
+        add_playlist(playlist);
+    }
 }
 
 Song *Library::get_song(const QString& filename)

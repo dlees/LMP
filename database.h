@@ -5,6 +5,12 @@
 #include <QList>
 #include <QtXml/QtXml>
 
+struct PlaylistInfo{
+    QList<int> songIDs;
+    int ID;
+    QString name;
+};
+
 class SongInfo{
 public:
     SongInfo();
@@ -55,6 +61,7 @@ public:
     void new_playlist(const QString &name, int ID);
     void add_to_playlist(int songID, int listID);
     void delete_from_playlist(int songID, int listID);
+    QList<PlaylistInfo> *get_all_list_info();
 
 private:
     QDomDocument song;
