@@ -14,6 +14,23 @@
 
 using namespace std;
 
+SongInfo::SongInfo(){
+    songID = seconds = 0;
+    albumName = songName = artistName = fileName = "";
+
+}
+
+SongInfo::SongInfo(const SongInfo &other){
+    //copy constructor up in dis bitch
+    albumName = other.albumName;
+    artistName = other.artistName;
+    created = other.created;
+    fileName = other.fileName;
+    seconds = other.seconds;
+    songID = other.songID;
+    songName = other.songName;
+}
+
 void Database::saveFile(QDomDocument document, QString filename){
 
     QFile outFile(filename);
@@ -226,13 +243,13 @@ void Database::save_sec_count(int ID, qint64 start, qint64 end)
     saveFile(secCount, "database/secCount.xml");
 }
 
-QList< QList<QString> >* Database::get_all_song_info(){
-    //returns a list of lists of strings of this info in this order:
+QList< SongInfo >* Database::get_all_song_info(){
+    //returns a list of structs of this info in this order:
     //ID, name, filename, created, seconds, album, artist
 
-    QList< QList<QString> > *ret = new QList< QList<QString> >;
+    QList< SongInfo > *ret = new QList< SongInfo >;
     int i = 0;
-    QList<QString> *curList;
+    SongInfo *curList;
     QMap<int, int> songIDToList;
     QString temp;
 
@@ -251,19 +268,24 @@ QList< QList<QString> >* Database::get_all_song_info(){
                 //we're in a new song
                 //add a new list to our list list
                 curList = 0;
-                curList = new QList<QString>;
-                ret->append(*curList);
+                curList = new SongInfo;
             }
             if(songReader->name() == "ID"){
                 temp = songReader->readElementText();
-                curList->append(temp);
+                curList->songID = temp.toInt();
                 songIDToList[temp.toInt()] = i++;
             }
-            if(songReader->name() == "name" ||
-                    songReader->name() == "filepath" ||
-                    songReader->name() == "created"){
-                temp = songReader->readElementText();
-                curList->append(temp);
+            if(songReader->name() == "name"){
+                curList->songName = songReader->readElementText();
+            }
+            if(songReader->name() == "filepath"){
+                curList->fileName = songReader->readElementText();
+            }
+            if(songReader->name() == "created"){
+                QDateTime temp;
+                curList->created = temp.fromString(songReader->readElementText());
+                //last one
+                ret->append(*curList);
             }
         }
     }
@@ -285,12 +307,13 @@ QList< QList<QString> >* Database::get_all_song_info(){
     int ID = 0;
 
     //iterate through songIDToList, put all the IDs and 0 into the songIDToSeconds map
-    QMapIterator<int, int> iter(songIDToList);
-    while (iter.hasNext()) {
-        iter.next();
+    QMap<int, int>::iterator iter;
+    iter = songIDToList.begin();
+    for (iter = songIDToList.begin(); iter!=songIDToList.end(); iter++) {
         songIDToSeconds[iter.key()] = 0;
     }
 
+    iter = songIDToList.begin();
     while(!secReader->atEnd() && !secReader->hasError()){
         //read next
         QXmlStreamReader::TokenType token = secReader->readNext();
@@ -303,34 +326,41 @@ QList< QList<QString> >* Database::get_all_song_info(){
                 continue;
             }
             if(secReader->name() == "ID"){
-                temp = songReader->readElementText();
+                temp = secReader->readElementText();
                 ID = temp.toInt();
             }
             if(secReader->name() == "startTime"){
-                temp = songReader->readElementText();
+                temp = secReader->readElementText();
                 startTime = temp.toInt();
             }
             if(secReader->name() == "endTime"){
-                temp = songReader->readElementText();
-                cout << (temp.toInt() - startTime) << endl;
-                songIDToSeconds[ID] += (temp.toInt() - startTime);
+                temp = secReader->readElementText();
+                int ti;
+                ti = songIDToSeconds[ID];
+                songIDToSeconds[ID] = ti + (temp.toInt() - startTime);
             }
         }
     }
     //put all the counts from the map into the list
-    QMapIterator<int, int> it(songIDToSeconds);
+    QMap<int, int>::iterator it;
     int listPos = 0;
-    QString* stringPtr;
-    while (it.hasNext()) {
-        it.next();
+    //QString* stringPtr;
+    for(it = songIDToSeconds.begin(); it!=songIDToSeconds.end(); it++) {
         listPos = songIDToList[it.key()];
-        stringPtr = new QString;
-        *stringPtr = it.value();
+        //stringPtr = new QString;
+        //*stringPtr = it.value();
         //have to take it out to change it
-        QList<QString> tempList;
-        tempList = ret->takeAt(listPos);
-        curList->append(*stringPtr);
-        ret->insert(listPos, *curList);
+
+       // ret[listPos].seconds = it.value;
+        SongInfo tempInfo;
+        tempInfo = ret->takeAt(listPos);
+        tempInfo.seconds = it.value();
+        ret->insert(listPos, tempInfo);
+
+       // QList<QString> tempList;
+        //tempList = ret->takeAt(listPos);
+        //tempList.append(*stringPtr);
+        //ret->insert(listPos, tempList);
     }
 
     secFile->close();
@@ -403,11 +433,19 @@ QList< QList<QString> >* Database::get_all_song_info(){
                 //put the album name in the list
                 name = albumIDToName[temp.toInt()];
                 listPos = songIDToList[ID];
+
+                SongInfo tempInfo;
+                tempInfo = ret->takeAt(listPos);
+                tempInfo.albumName = name;
+                ret->insert(listPos, tempInfo);
+
+                //ret[listPos].albumName = name;
+
                 //have to take it out to change it
-                QList<QString> tempList;
-                tempList = ret->takeAt(listPos);
-                curList->append(name);
-                ret->insert(listPos, *curList);
+                //QList<QString> tempList;
+                //tempList = ret->takeAt(listPos);
+                //tempList.append(name);
+                //ret->insert(listPos, tempList);
             }
         }
     }
@@ -482,11 +520,19 @@ QList< QList<QString> >* Database::get_all_song_info(){
                 ID = albumIDToSong[albumID];
                 name = artIDToName[temp.toInt()];
                 listPos = songIDToList[ID];
+
+                SongInfo tempInfo;
+                tempInfo = ret->takeAt(listPos);
+                tempInfo.artistName = name;
+                ret->insert(listPos, tempInfo);
+
+                //ret[listPos].artistName = name;
+
                 //have to take it out to change it
-                QList<QString> tempList;
-                tempList = ret->takeAt(listPos);
-                curList->append(name);
-                ret->insert(listPos, *curList);
+                //QList<QString> tempList;
+                //tempList = ret->takeAt(listPos);
+                //tempList.append(name);
+                //ret->insert(listPos, tempList);
             }
         }
     }
@@ -879,7 +925,7 @@ void Database::add_to_playlist(int songID, int listID){
     char temp[256];
     QXmlQuery query;
     QString output = "-1";
-    sprintf(temp, "doc('database/songInPlaylist.xml')/SIPRoot/songInPlaylist[songID=%d][playlistID=%d]/ID/text()", songID, listID);
+    sprintf(temp, "doc('database/songsInPlaylist.xml')/SIPRoot/songInPlaylist[songID=%d][playlistID=%d]/ID/text()", songID, listID);
     query.setQuery(temp);
     query.evaluateTo(&output);
     if(output.toDouble()==-1){

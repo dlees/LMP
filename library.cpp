@@ -31,20 +31,18 @@ Library::Library()
 void Library::load_songs()
 {
     Song *song;
-    QDateTime datetime;
-    QList< QList<QString> > *songsInfo;
+    QList< SongInfo > *songsInfo;
     //QList< QList<QString> >::iterator it;
     songsInfo = Database::get()->get_all_song_info();
 
     //we now have a list of lists of strings of this info in this order:
     //ID, name, filename, created, seconds, album, artist
     //iterate over the giant list
-    QList<QString> songI;
+    SongInfo songI;
     //QString temp;
     foreach(songI, *songsInfo){
-        datetime = QDateTime::fromString(songI[3]);
-        song = new Song(songI[1], songI[0].toInt(), songI[2], songI[4].toInt(),
-                        0, datetime, songI[6], songI[5]);
+        song = new Song(songI.songName, songI.songID, songI.fileName, songI.seconds,
+                        0, songI.created, songI.artistName, songI.albumName);
         add_song(song);
     }
 

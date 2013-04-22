@@ -5,6 +5,20 @@
 #include <QList>
 #include <QtXml/QtXml>
 
+class SongInfo{
+public:
+    SongInfo();
+    SongInfo(const SongInfo& other);
+    //ID, name, filename, created, seconds, album, artist
+    int songID = 0;
+    QString songName;
+    QString fileName;
+    QDateTime created;
+    int seconds = 0;
+    QString albumName;
+    QString artistName;
+};
+
 class Database
 {
 public:
@@ -20,7 +34,7 @@ public:
     void add_song(int ID, const QString &filename, const QString &name, const QDateTime &created,
                   const QString &artistName = "noName", const QString &albumName = "noAName", int albumID = 43, int artistID = 42);
     void delete_song(int ID);
-    QList<QList<QString> > *get_all_song_info();
+    QList<SongInfo> *get_all_song_info();
 
     void add_hotspot(int songID, qint64 hotspot);
     void delete_hotspot(int songID, qint64 hotspot);
