@@ -41,8 +41,8 @@ void Collection::add(Music_Item *item)
     {
         connect(song, SIGNAL(data_changed()),
                 this, SLOT(data_updated()));    
-
-        Database::get()->add_to_playlist(song->get_id(), this->get_id());
+        if (get_name() != "All Songs")
+            Database::get()->add_to_playlist(song->get_id(), this->get_id());
     }
 
     if (Collection *col = dynamic_cast<Collection*>(item))
@@ -98,7 +98,8 @@ void Collection::remove(int index)
         disconnect(song, SIGNAL(data_changed()),
                 this, SLOT(data_updated()));
 
-        Database::get()->delete_from_playlist(song->get_id(), this->get_id());
+        if (get_name() != "All Songs")
+            Database::get()->delete_from_playlist(song->get_id(), this->get_id());
     }
 
     if (Collection *col = dynamic_cast<Collection*>(children[index]))

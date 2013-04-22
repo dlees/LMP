@@ -45,8 +45,18 @@ Song::Song(const QString &name_, int id_,
       filename(filename_), seconds(seconds_),
       rating(rating_), created(created_),
       artist(artist_), album(album_)
-{
+{    
+    mediaObject = new Phonon::MediaObject;
 
+    mediaObject->setCurrentSource(filename_);
+
+    connect(mediaObject, SIGNAL(stateChanged(Phonon::State,Phonon::State)),
+            this, SLOT(set_song_data(Phonon::State,Phonon::State)));
+
+    if (mediaObject->metaData("TITLE").size())
+        name = mediaObject->metaData("TITLE").at(0);
+    if (mediaObject->metaData("ARTIST").size())
+        artist = mediaObject->metaData("ARTIST").at(0);
 }
 
 
