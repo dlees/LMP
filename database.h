@@ -11,6 +11,11 @@ struct PlaylistInfo{
     QString name;
 };
 
+struct HotspotInfo{
+    int ID;
+    QList<qint64> hotspots;
+};
+
 class SongInfo{
 public:
     SongInfo();
@@ -44,6 +49,7 @@ public:
 
     void add_hotspot(int songID, qint64 hotspot);
     void delete_hotspot(int songID, qint64 hotspot);
+    QList<HotspotInfo> *get_hotspot_info();
 
     // returns the ID of a song that has filepath as its filepath
     // -1 if file doesn't exit

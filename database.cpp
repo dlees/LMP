@@ -242,6 +242,53 @@ void Database::save_sec_count(int ID, qint64 start, qint64 end)
     saveFile(secCount, "database/secCount.xml");
 }
 
+QList<HotspotInfo>* Database::get_hotspot_info(){
+    //returns a list of structs with:
+    //song ID, list of hotspots(as qint64)
+
+    QList<HotspotInfo> *ret = new QList<HotspotInfo>;
+    HotspotInfo *curList = 0;
+    int ID;
+    QFile *spotFile = new QFile("database/hotspots.xml");
+    spotFile->open(QIODevice::ReadOnly | QIODevice::Text);
+    QXmlStreamReader *spotReader = new QXmlStreamReader(spotFile);
+
+    //create a map from the song ID to a list of its hotspots
+    QMap<int, QList<qint64> > songIDToSpots;
+    while(!spotReader->atEnd() && !spotReader->hasError()){
+        //read next
+        QXmlStreamReader::TokenType token = spotReader->readNext();
+        if(token==QXmlStreamReader::StartDocument){
+            continue;
+        }
+        if(token==QXmlStreamReader::StartElement){
+            if(spotReader->name() == "hotspot"){
+                continue;
+            }
+            if(spotReader->name() == "songID"){
+                ID = spotReader->readElementText().toInt();
+            }
+            if(spotReader->name() == "spot"){
+                songIDToSpots[ID].append(spotReader->readElementText().toInt());
+            }
+        }
+    }
+    spotFile->close();
+    spotReader->clear();
+    delete spotFile;
+    delete spotReader;
+
+    //iterate throuhg the map and put things into our struct
+    QMap<int, QList<qint64> >::iterator it;
+    for (it = songIDToSpots.begin(); it!=songIDToSpots.end(); it++) {
+        curList = new HotspotInfo;
+        curList->ID = it.key();
+        curList->hotspots = it.value();
+        ret->append(*curList);
+    }
+    return ret;
+}
+
 QList<PlaylistInfo>* Database::get_all_list_info(){
     //returns a list of structs with the following:
     // list of song IDs, list ID, list name
@@ -512,14 +559,6 @@ QList<SongInfo>* Database::get_all_song_info(){
                 tempInfo = ret->takeAt(listPos);
                 tempInfo.albumName = name;
                 ret->insert(listPos, tempInfo);
-
-                //ret[listPos].albumName = name;
-
-                //have to take it out to change it
-                //QList<QString> tempList;
-                //tempList = ret->takeAt(listPos);
-                //tempList.append(name);
-                //ret->insert(listPos, tempList);
             }
         }
     }
