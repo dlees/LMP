@@ -1034,6 +1034,51 @@ void Database::new_playlist(const QString &name, int ID){
     }
 }
 
+void Database::edit_playlist_name(int listID, QString newName){
+    //okay, we're going to do this real classy-like. You ready?
+    //we're going to delete the playlist entry and put it back in with a different name.
+    //I know, I'm impressed too.
+
+    //delete the playlist entry from playlist.xml
+    QXmlQuery query;
+    QString output;
+    char filter[256];
+    QFile write_file;
+    QTextStream out(&write_file);
+
+    sprintf(filter, "doc('database/playlist.xml')/playlistRoot/playlist[not(ID=%d)]", listID);
+    query.setQuery(filter);
+    query.evaluateTo(&output);
+    //output now has all <playlist> nodes
+    write_file.setFileName("database/playlist.xml");
+    write_file.open(QIODevice::ReadWrite);
+    write_file.resize(0);
+    out << "<playlistRoot>/n" << output << "</playlistRoot>";
+    write_file.close();
+    //reload the memory object
+    write_file.open(QIODevice::ReadOnly|QIODevice::Text);
+    playlist.setContent(&write_file);
+
+    //insert into playlist.xml with ID and name
+    char temp[256];
+    QDomElement playlistE = playlist.createElement("playlist");
+    playlist.elementsByTagName("playlistRoot").at(0).appendChild(playlistE);
+
+    QDomElement listIDE = playlist.createElement("ID");
+    sprintf(temp, "%d", listID);
+    QDomText listIDT = playlist.createTextNode(temp);
+    listIDE.appendChild(listIDT);
+    playlistE.appendChild(listIDE);
+
+    QDomElement nameE = playlist.createElement("name");
+    sprintf(temp, "%d", newName);
+    QDomText nameT = playlist.createTextNode(temp);
+    nameE.appendChild(nameT);
+    playlistE.appendChild(nameE);
+
+    saveFile(playlist, "database/playlist.xml");
+}
+
 void Database::add_to_playlist(int songID, int listID){
 
     char temp[256];

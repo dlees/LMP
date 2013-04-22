@@ -67,6 +67,7 @@ public:
     void new_playlist(const QString &name, int ID);
     void add_to_playlist(int songID, int listID);
     void delete_from_playlist(int songID, int listID);
+    void edit_playlist_name(int listID, QString newName);
     QList<PlaylistInfo> *get_all_list_info();
 
 private:
