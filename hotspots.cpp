@@ -8,6 +8,7 @@
 #include <QDebug>
 
 #include "error.h"
+#include "database.h"
 //#include "Utility.h"
 
 using namespace std;
@@ -133,7 +134,7 @@ void Hotspot_map::add_hotspot(int song_id, qint64 hotspot)
 
 Hotspot_map::Hotspot_map()
 {
-    //load(def_path_c "hotspots.txt");
+    load();
 }
 
 Hotspot_map::~Hotspot_map()
@@ -156,9 +157,23 @@ void Hotspot_map::save(char *filename)
     fout.close();
 }
 
-void Hotspot_map::load(char *filename)
+void Hotspot_map::load()
 {
-    wifstream fin(filename);
+
+    //Hotspot_map::add_hotspot(int song_id, qint64 hotspot);
+
+    QList<HotspotInfo> *spotsList;
+    spotsList = Database::get()->get_hotspot_info();
+    HotspotInfo hInfo;
+    qint64 spot;
+    foreach(hInfo, *spotsList){
+        foreach(spot, hInfo.hotspots){
+            add_hotspot(hInfo.ID, spot);
+        }
+    }
+
+
+    /*wifstream fin(filename);
 
     if (fin.fail())
     {
@@ -173,7 +188,6 @@ void Hotspot_map::load(char *filename)
     if (fin.fail())
         qDebug() << "ERROR: Hotspots failed! Num";
         //throw Error("Hotspots Failed! Num");
-/*
     while (num--)
     {
         qint64 song;
@@ -190,6 +204,5 @@ void Hotspot_map::load(char *filename)
 
         hotspot_map[song] = hs;
     }
-    */
-    fin.close();
+    fin.close();*/
 }

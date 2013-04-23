@@ -47,7 +47,7 @@ public:
     void add_hotspot(int song_id, qint64 hotspot);
 
     void save(char *filename);
-    void load(char *filename);
+    void load();
 
 private:
     typedef std::map<int, Hotspots> hotspot_map_t;
