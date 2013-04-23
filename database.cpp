@@ -64,6 +64,7 @@ Database::Database(){
         song.appendChild(root);
         saveFile(song, "database/song.xml");
     }
+    songFile.close();
 
     //Playlist
     ifstream playlistStream("database/playlist.xml");
@@ -80,6 +81,7 @@ Database::Database(){
         playlist.appendChild(root);
         saveFile(playlist, "database/playlist.xml");
     }
+    playlistFile.close();
 
     //Album
     ifstream albumStream("database/album.xml");
@@ -96,6 +98,7 @@ Database::Database(){
         album.appendChild(root);
         saveFile(album, "database/album.xml");
     }
+    albumFile.close();
 
     //Artist
     ifstream artistStream("database/artist.xml");
@@ -111,6 +114,7 @@ Database::Database(){
         artist.appendChild(root);
         saveFile(artist, "database/artist.xml");
     }
+    artistFile.close();
 
     //SecCount
     ifstream secStream("database/secCount.xml");
@@ -126,6 +130,7 @@ Database::Database(){
         secCount.appendChild(root);
         saveFile(secCount, "database/secCount.xml");
     }
+    secFile.close();
 
     //SongsInPlaylist
     ifstream SIPStream("database/songsInPlaylist.xml");
@@ -141,6 +146,7 @@ Database::Database(){
         songsInPlaylist.appendChild(root);
         saveFile(songsInPlaylist, "database/songsInPlaylist.xml");
     }
+    SIPFile.close();
 
     //SongsOnAlbum
     ifstream SOAStream("database/songsOnAlbum.xml");
@@ -156,6 +162,7 @@ Database::Database(){
         songsOnAlbum.appendChild(root);
         saveFile(songsOnAlbum, "database/songsOnAlbum.xml");
     }
+    SOAFile.close();
 
     //AlbumsByArtist
     ifstream ABAStream("database/albumsByArtist.xml");
@@ -171,6 +178,7 @@ Database::Database(){
         albumsByArtist.appendChild(root);
         saveFile(albumsByArtist, "database/albumsByArtist.xml");
     }
+    ABAFile.close();
 
     //hotspots
     ifstream HStream("database/hotspots.xml");
@@ -186,6 +194,7 @@ Database::Database(){
         hotspots.appendChild(root);
         saveFile(hotspots, "database/hotspots.xml");
     }
+    HFile.close();
 
     //any other initialization goes here
 }
@@ -808,6 +817,7 @@ void Database::delete_song(int ID){
     //reload the memory object
     write_file.open(QIODevice::ReadOnly|QIODevice::Text);
     song.setContent(&write_file);
+    write_file.close();
 
     //make sure we know the album
     sprintf(filter, "doc('database/songsOnAlbum.xml')/SOARoot/songOnAlbum[songID=%d]/albumID/text()", ID);
@@ -827,6 +837,7 @@ void Database::delete_song(int ID){
     //reload the memory object
     write_file.open(QIODevice::ReadOnly|QIODevice::Text);
     songsOnAlbum.setContent(&write_file);
+    write_file.close();
 
     //see if there's anything left in the album
     sprintf(filter, "doc('database/songsOnAlbum.xml')/SOARoot/songOnAlbum[albumID=%d]/albumID/text()", albumID);
@@ -852,6 +863,7 @@ void Database::delete_song(int ID){
         //reload the memory object
         write_file.open(QIODevice::ReadOnly|QIODevice::Text);
         album.setContent(&write_file);
+        write_file.close();
     }
 
     //see if there's anything left by the artist
@@ -872,6 +884,7 @@ void Database::delete_song(int ID){
         //reload the memory object
         write_file.open(QIODevice::ReadOnly|QIODevice::Text);
         artist.setContent(&write_file);
+        write_file.close();
     }
 }
 
@@ -1003,7 +1016,7 @@ void Database::delete_hotspot(int songID, qint64 hotspot){
     //reload the memory object
     write_file.open(QIODevice::ReadOnly|QIODevice::Text);
     hotspots.setContent(&write_file);
-
+    write_file.close();
 }
 
 void Database::new_playlist(const QString &name, int ID){
@@ -1058,6 +1071,7 @@ void Database::edit_playlist_name(int listID, QString newName){
     //reload the memory object
     write_file.open(QIODevice::ReadOnly|QIODevice::Text);
     playlist.setContent(&write_file);
+    write_file.close();
 
     //insert into playlist.xml with ID and name
     char temp[256];
@@ -1128,6 +1142,7 @@ void Database::delete_playlist(int listID){
     //reload the memory object
     write_file.open(QIODevice::ReadOnly|QIODevice::Text);
     playlist.setContent(&write_file);
+    write_file.close();
 }
 
 void Database::delete_from_playlist(int songID, int listID){
@@ -1150,6 +1165,7 @@ void Database::delete_from_playlist(int songID, int listID){
     //reload the memory object
     write_file.open(QIODevice::ReadOnly|QIODevice::Text);
     songsInPlaylist.setContent(&write_file);
+    write_file.close();
 
     //see what's still on that playlist
     sprintf(filter, "doc('database/songsInPlaylist.xml')/SIPRoot/songOnPlaylist[songID=%d]/playlistID/text()", songID);
@@ -1169,5 +1185,6 @@ void Database::delete_from_playlist(int songID, int listID){
         //reload the memory object
         write_file.open(QIODevice::ReadOnly|QIODevice::Text);
         playlist.setContent(&write_file);
+        write_file.close();
     }
 }
