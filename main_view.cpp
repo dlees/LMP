@@ -17,7 +17,7 @@ Main_View::Main_View(QWidget *parent)
     Play_Controller *play_controller = new Play_Controller();
 
     // 1st row containing "Playlist name", searchbar, minimode button
-    QLineEdit *search = new QLineEdit("search");
+    //QLineEdit *search = new QLineEdit("search");
     MiniMode = new QPushButton("-");
     MiniMode->setToolTip("Switch to MiniMode");
     //MiniMode->setMaximumWidth(20);
@@ -62,8 +62,8 @@ Main_View::Main_View(QWidget *parent)
     splitter->setStretchFactor(2, 1);
 
     QGridLayout *center_layout = new QGridLayout;
-    center_layout->addWidget(search, 0, 0, Qt::AlignLeft);
-    center_layout->addWidget(MiniMode, 0, 2, Qt::AlignRight);
+    //center_layout->addWidget(search, 0, 0, Qt::AlignLeft);
+    center_layout->addWidget(MiniMode, 0, 0, Qt::AlignLeft);
     center_layout->addWidget(splitter, 1, 0, 1, -1);
 
     // Add all to main_layout
