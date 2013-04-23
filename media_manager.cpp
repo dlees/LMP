@@ -6,9 +6,9 @@
 #include "collection.h"
 
 Media_Manager::Media_Manager()
-    : cur_list(new Playlist()),
-      playing(Playing_Song::get())
+    : playing(Playing_Song::get())
 {
+    cur_list = lib.get_all_songs();
     cur_list->start_playing();
 
     connect(&playing, SIGNAL(became_paused()),
@@ -17,7 +17,6 @@ Media_Manager::Media_Manager()
             this, SLOT(started_playing_slot()));
     connect(&playing, SIGNAL(AlmostDone_PlaySong()),
             this, SLOT(next()));
-
 }
 
 void Media_Manager::play_cur()
@@ -43,8 +42,7 @@ void Media_Manager::start_up()
 
        cur_list->set_cur(0);
 */
-       lib.add_playlist(cur_list);
-       center = cur_list;
+     center = cur_list;
 }
 
 void Media_Manager::play_new(QString filename)

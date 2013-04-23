@@ -34,6 +34,8 @@ public:
     // returns true if it has been deleted
     bool delete_playlist(Playlist *);
 
+    Playlist *get_all_songs();
+
 private:
     Collection *songs;
     Collection *playlists;

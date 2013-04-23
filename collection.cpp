@@ -41,6 +41,7 @@ void Collection::add(Music_Item *item)
     {
         connect(song, SIGNAL(data_changed()),
                 this, SLOT(data_updated()));    
+
         if (get_name() != "All Songs")
             Database::get()->add_to_playlist(song->get_id(), this->get_id());
     }
@@ -52,8 +53,6 @@ void Collection::add(Music_Item *item)
 
     beginInsertRows(QModelIndex(), count(), count());
     children.push_back(item);
-//    id_to_item.insert(item->get_id(), item);
-
     endInsertRows();
 
 
@@ -85,6 +84,12 @@ void Collection::remove(int index)
 {
     if (index == -1)
         return;
+
+    if (get_name() == "All Songs")
+    {
+        Error::print_error_msg_str("Can't remove songs from All Songs");
+        return;
+    }
 
     if (children[index]->get_is_playing())
     {

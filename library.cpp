@@ -130,7 +130,8 @@ bool Library::delete_playlist(Playlist *p)
     // if it is the current playlist, don't delete
     if (p->get_is_playing())
     {
-        Error::print_error_msg_str("Can't delete " + p->get_name() + ".\nIt is being played.");
+        Error::print_error_msg_str("Can't delete " + p->get_name()
+                                   + ".\nIt is being played.");
         return false;
     }
 
@@ -140,3 +141,7 @@ bool Library::delete_playlist(Playlist *p)
 
     return true;
 }
+
+
+Playlist *Library::get_all_songs()
+{ return dynamic_cast<Playlist*>(songs);}
