@@ -104,17 +104,26 @@ void Collection::remove(int index)
                 this, SLOT(data_updated()));
 
         if (get_name() != "All Songs")
+        {
+            qDebug() << "Removing" << song->get_name() << "from" << get_name();
             Database::get()->delete_from_playlist(song->get_id(), this->get_id());
+        }
     }
 
     if (Collection *col = dynamic_cast<Collection*>(children[index]))
+    {
         disconnect(col, SIGNAL(data_changed()),
                 this, SLOT(data_updated()));
 
-    beginRemoveRows(QModelIndex(), index, index+1);
+        if (get_name() == "Library")
+            Database::get()->delete_playlist(col->get_id());
+    }
+
+
+    beginRemoveRows(QModelIndex(), index-1, index);
     children.removeAt(index);
-//    id_to_item.remove(children.at(index)->get_id());
     endRemoveRows();
+    emit data_changed();
 }
 
 const QList<Music_Item *> &Collection::get_children() const

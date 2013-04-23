@@ -126,7 +126,9 @@ void Media_Manager::new_playlist(QStringList *filenames, QString name)
     lib.add_playlist(new_pl);
 
     set_center(new_pl);
-//    switch_playlist(new_pl);
+
+
+    switch_playlist(new_pl);
 }
 
 

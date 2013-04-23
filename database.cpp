@@ -1134,6 +1134,8 @@ void Database::delete_playlist(int listID){
     QFile write_file;
     QTextStream out(&write_file);
 
+    qDebug() << "DELETING PLAYLIST";
+
     sprintf(filter, "doc('database/playlist.xml')/playlistRoot/playlist[not(ID=%d)]", listID);
     query.setQuery(filter);
     query.evaluateTo(&output);
@@ -1173,10 +1175,10 @@ void Database::delete_from_playlist(int songID, int listID){
     QTextStream out(&write_file);
 
     //delete song from songsInPlaylist
-    sprintf(filter, "doc('database/songsInPlaylist.xml')/SIPRoot/songInPlaylist[songID!=%d]", songID);
+    sprintf(filter, "doc('database/songsInPlaylist.xml')/SIPRoot/songInPlaylist[not(songID=%d and listID=%d)]", songID, listID);
     query.setQuery(filter);
     query.evaluateTo(&output);
-    //output now has all <song> nodes
+    //output now has all <songInPlaylist> nodes
     write_file.setFileName("database/songsInPlaylist.xml");
     write_file.open(QIODevice::ReadWrite);
     write_file.resize(0);
@@ -1187,25 +1189,5 @@ void Database::delete_from_playlist(int songID, int listID){
     songsInPlaylist.setContent(&write_file);
     write_file.close();
 
-    //see what's still on that playlist
-    sprintf(filter, "doc('database/songsInPlaylist.xml')/SIPRoot/songOnPlaylist[songID=%d]/playlistID/text()", songID);
-    query.setQuery(filter);
-    query.evaluateTo(&output);
-    //if that album was the only album by an artist
-    if(output.toInt()!=listID){
-        //delete the artist
-        sprintf(filter, "doc('database/playlist.xml')/playlistRoot/playlist[ID!=%d]", listID);
-        query.setQuery(filter);
-        query.evaluateTo(&output);
-        //output now has all <songOnAlbum> nodes
-        write_file.setFileName("database/playlist.xml");
-        write_file.open(QIODevice::ReadWrite);
-        write_file.resize(0);
-        out << "<playlistRoot>\n" << output << "</playlistRoot>";
-        write_file.close();
-        //reload the memory object
-        write_file.open(QIODevice::ReadOnly|QIODevice::Text);
-        playlist.setContent(&write_file);
-        write_file.close();
-    }
+
 }
