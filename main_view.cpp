@@ -9,6 +9,8 @@
 #include "collection.h"
 #include "playlist.h"
 
+#include "error.h"
+
 Main_View::Main_View(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -216,9 +218,17 @@ void Main_View::select_center_item(QModelIndex index)
 
 void Main_View::delete_playlist_from_library()
 {
+
     QModelIndexList indexes = lib_list->selectionModel()->selection().indexes();
     for (int i = 0; i < indexes.count(); ++i)
     {
+        // if this playlist is currently playing
+        if (Media_Manager::get()->get_library()->get_children()[indexes[i].row()]->get_is_playing())
+        {
+            Error::print_error_msg_str("Can't delete current playing playlist.");
+            continue;
+        }
+
         // if this collection is in the table currently
         if (Media_Manager::get()->get_library()->get_children()[indexes[i].row()] == Media_Manager::get()->get_center())
         {
