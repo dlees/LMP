@@ -1151,7 +1151,7 @@ void Database::delete_playlist(int listID){
     write_file.close();
 
     //delete all the entries in songsInPlaylist.xml involving that playlist
-    sprintf(filter, "doc('database/songsInPlaylist.xml')/SIPRoot/songInPlaylist[listID!=%d]", listID);
+    sprintf(filter, "doc('database/songsInPlaylist.xml')/SIPRoot/songInPlaylist[playlistID!=%d]", listID);
     query.setQuery(filter);
     query.evaluateTo(&output);
     //output now has all <playlist> nodes
@@ -1175,7 +1175,7 @@ void Database::delete_from_playlist(int songID, int listID){
     QTextStream out(&write_file);
 
     //delete song from songsInPlaylist
-    sprintf(filter, "doc('database/songsInPlaylist.xml')/SIPRoot/songInPlaylist[not(songID=%d and listID=%d)]", songID, listID);
+    sprintf(filter, "doc('database/songsInPlaylist.xml')/SIPRoot/songInPlaylist[not(songID=%d and playlistID=%d)]", songID, listID);
     query.setQuery(filter);
     query.evaluateTo(&output);
     //output now has all <songInPlaylist> nodes

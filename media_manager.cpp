@@ -127,8 +127,8 @@ void Media_Manager::new_playlist(QStringList *filenames, QString name)
 
     set_center(new_pl);
 
-
-    switch_playlist(new_pl);
+    if (playing.is_paused())
+        switch_playlist(new_pl);
 }
 
 
