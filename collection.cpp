@@ -120,10 +120,9 @@ void Collection::remove(int index)
     }
 
 
-    beginRemoveRows(QModelIndex(), index-1, index);
+    beginRemoveRows(QModelIndex(), index, index);
     children.removeAt(index);
     endRemoveRows();
-    emit data_changed();
 }
 
 const QList<Music_Item *> &Collection::get_children() const

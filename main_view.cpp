@@ -88,6 +88,9 @@ Main_View::Main_View(QWidget *parent)
     // tell playlist of change
     connect(Media_Manager::get(), SIGNAL(playlist_changed(Collection*)),
             this, SLOT(update_playlist(Collection *)));
+
+    lib_list->setCurrentIndex(Media_Manager::get()->get_library()->index(0,0));
+
 }
 
 QAction *Main_View::add_menu_item(char name[], bool enabled)
@@ -151,6 +154,9 @@ void Main_View::new_create_playlist_files(QString name)
     Media_Manager::get()->new_playlist(files, name);
 
     playlist->setModel(Media_Manager::get()->get_playlist());
+
+    lib_list->setCurrentIndex(Media_Manager::get()->get_library()->index(
+                                  Media_Manager::get()->get_library()->count()-1,0));
 }
 
 void Main_View::add_files()
