@@ -39,6 +39,9 @@ void Library::load_songs()
         song = new Song(songI.songName, songI.songID, songI.fileName, songI.seconds,
                         0, songI.created, songI.artistName, songI.albumName);
         add_song(song);
+
+        if (songI.songID > Music_Item::max_id)
+            Music_Item::max_id = songI.songID;
     }
 }
 
@@ -55,19 +58,31 @@ void Library::load_playlists()
     foreach(playlistI, *listsInfo){
         foreach(ID, playlistI.songIDs){
             songList.append(get_song(ID));
+
         }
         playlist = new Playlist(playlistI.name, playlistI.ID, songList);
         add_playlist(playlist);
+
+        if (playlistI.ID > Music_Item::max_id)
+            Music_Item::max_id = playlistI.ID;
     }
 }
 
 Song *Library::get_song(const QString& filename)
 {
-    // TODO: check to see if it already exists
+    Song *new_song;
+    QMap<QString, Song*>::Iterator i;
 
-
-    Song *new_song = new Song(filename);
-    add_song(new_song);
+    // if the filename already exists
+    if ((i = filename_to_song.find(filename)) != filename_to_song.end())
+    {
+        new_song = i.value();
+    }
+    else
+    {   // make a new Song
+        new_song = new Song(filename);
+        add_song(new_song);
+    }
     return new_song;
 }
 
@@ -83,6 +98,7 @@ void Library::add_song(Song *song)
 {
     songs->add(song);
     id_to_item.insert(song->get_id(), song);
+    filename_to_song.insert(song->get_filename(), song);
 }
 
 void Library::add_playlist(Playlist *list)

@@ -39,6 +39,7 @@ private:
     Collection *playlists;
 
     QMap<int, Music_Item*> id_to_item;
+    QMap<QString, Song*> filename_to_song;
 };
 
 #endif // LIBRARY_H

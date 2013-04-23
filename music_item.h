@@ -47,6 +47,7 @@ public:
 
     virtual QList<QVariant> get_column_data() const = 0;
 
+    static int max_id;
 protected:
     QString name;
 
@@ -55,7 +56,6 @@ private:
 
     int id;
 
-    static int max_id;
 };
 
 #endif // MUSIC_ITEM_H
