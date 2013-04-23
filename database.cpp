@@ -1109,6 +1109,27 @@ void Database::add_to_playlist(int songID, int listID){
     }
 }
 
+void Database::delete_playlist(int listID){
+    QXmlQuery query;
+    QString output;
+    char filter[256];
+    QFile write_file;
+    QTextStream out(&write_file);
+
+    sprintf(filter, "doc('database/playlist.xml')/playlistRoot/playlist[not(ID=%d)]", listID);
+    query.setQuery(filter);
+    query.evaluateTo(&output);
+    //output now has all <playlist> nodes
+    write_file.setFileName("database/playlist.xml");
+    write_file.open(QIODevice::ReadWrite);
+    write_file.resize(0);
+    out << "<playlistRoot>/n" << output << "</playlistRoot>";
+    write_file.close();
+    //reload the memory object
+    write_file.open(QIODevice::ReadOnly|QIODevice::Text);
+    playlist.setContent(&write_file);
+}
+
 void Database::delete_from_playlist(int songID, int listID){
 
     QXmlQuery query;
