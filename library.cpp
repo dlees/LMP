@@ -56,10 +56,12 @@ void Library::load_playlists()
 
     PlaylistInfo playlistI;
     foreach(playlistI, *listsInfo){
+        songList.clear();
+
         foreach(ID, playlistI.songIDs){
             songList.append(get_song(ID));
-
         }
+
         playlist = new Playlist(playlistI.name, playlistI.ID, songList);
         add_playlist(playlist);
 
