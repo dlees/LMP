@@ -8,7 +8,6 @@
 #include "pane.h"
 #include "collection.h"
 #include "playlist.h"
-
 #include "error.h"
 
 Main_View::Main_View(QWidget *parent)
@@ -48,7 +47,7 @@ Main_View::Main_View(QWidget *parent)
 // Playlist Pane
     playlist = new QListView();
     playlist->setModel(Media_Manager::get()->get_playlist());
-    playlistPane = new Pane("Current Playlist", playlist);
+    playlistPane = new Pane("Current Playlist: All Songs", playlist);
     connect(playlist, SIGNAL(doubleClicked(QModelIndex)),
             this, SLOT(select_song(QModelIndex)));
     playlist->setDragEnabled(true);
@@ -144,6 +143,11 @@ void Main_View::new_create_playlist_files(QString name)
 {
     QStringList *files = get_files();
 
+    if (!files->size()) {
+        Error::print_error_msg_str("No file selected!");
+        return;
+    }
+
     Media_Manager::get()->new_playlist(files, name);
 
     playlist->setModel(Media_Manager::get()->get_playlist());
@@ -155,8 +159,10 @@ void Main_View::add_files()
     QString *file = new QString(QFileDialog::getOpenFileName(this, tr("Select Music Files"),
         QDesktopServices::storageLocation(QDesktopServices::MusicLocation)));
 
-    if (!file)
+    if (!file->size()) {
+        Error::print_error_msg_str("No file selected!");
         return;
+    }
 
     qDebug() << *file << endl;
     Media_Manager::get()->play_new(*file);
@@ -192,7 +198,7 @@ void Main_View::select_lib_item(QModelIndex index)
 }
 
 void Main_View::open_playlist_from_lib(QModelIndex index)
-{    
+{
     // start playing any thing in this index
     Media_Manager::get()->get_library()->select_child(index.row());
 
@@ -218,17 +224,9 @@ void Main_View::select_center_item(QModelIndex index)
 
 void Main_View::delete_playlist_from_library()
 {
-
     QModelIndexList indexes = lib_list->selectionModel()->selection().indexes();
     for (int i = 0; i < indexes.count(); ++i)
     {
-        // if this playlist is currently playing
-        if (Media_Manager::get()->get_library()->get_children()[indexes[i].row()]->get_is_playing())
-        {
-            Error::print_error_msg_str("Can't delete current playing playlist.");
-            continue;
-        }
-
         // if this collection is in the table currently
         if (Media_Manager::get()->get_library()->get_children()[indexes[i].row()] == Media_Manager::get()->get_center())
         {
