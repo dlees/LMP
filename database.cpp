@@ -812,6 +812,7 @@ void Database::delete_song(int ID){
     //output now has all <song> nodes
     write_file.setFileName("database/song.xml");
     write_file.open(QIODevice::ReadWrite);
+    write_file.resize(0);
     out << "<songRoot>\n" << output << "\n</songRoot>";
     write_file.close();
     //reload the memory object
@@ -832,6 +833,7 @@ void Database::delete_song(int ID){
     //output now has all <songOnAlbum> nodes
     write_file.setFileName("database/songsOnAlbum.xml");
     write_file.open(QIODevice::ReadWrite);
+    write_file.resize(0);
     out << "<SOARoot>\n" << output << "</SOARoot>";
     write_file.close();
     //reload the memory object
@@ -858,6 +860,7 @@ void Database::delete_song(int ID){
         //output now has all <songOnAlbum> nodes
         write_file.setFileName("database/album.xml");
         write_file.open(QIODevice::ReadWrite);
+        write_file.resize(0);
         out << "<albumRoot>\n" << output << "</albumRoot>";
         write_file.close();
         //reload the memory object
@@ -879,6 +882,7 @@ void Database::delete_song(int ID){
         //output now has all <songOnAlbum> nodes
         write_file.setFileName("database/artist.xml");
         write_file.open(QIODevice::ReadWrite);
+        write_file.resize(0);
         out << "<artistRoot>\n" << output << "</artistRoot>";
         write_file.close();
         //reload the memory object
@@ -1143,6 +1147,21 @@ void Database::delete_playlist(int listID){
     write_file.open(QIODevice::ReadOnly|QIODevice::Text);
     playlist.setContent(&write_file);
     write_file.close();
+
+    //delete all the entries in songsInPlaylist.xml involving that playlist
+    sprintf(filter, "doc('database/songsInPlaylist.xml')/SIPRoot/songInPlaylist[listID!=%d]", listID);
+    query.setQuery(filter);
+    query.evaluateTo(&output);
+    //output now has all <playlist> nodes
+    write_file.setFileName("database/songsInPlaylist.xml");
+    write_file.open(QIODevice::ReadWrite);
+    write_file.resize(0);
+    out << "<SIPRoot>/n" << output << "</SIPRoot>";
+    write_file.close();
+    //reload the memory object
+    write_file.open(QIODevice::ReadOnly|QIODevice::Text);
+    songsInPlaylist.setContent(&write_file);
+    write_file.close();
 }
 
 void Database::delete_from_playlist(int songID, int listID){
@@ -1160,6 +1179,7 @@ void Database::delete_from_playlist(int songID, int listID){
     //output now has all <song> nodes
     write_file.setFileName("database/songsInPlaylist.xml");
     write_file.open(QIODevice::ReadWrite);
+    write_file.resize(0);
     out << "<SIPRoot>\n" << output << "\n</SIPRoot>";
     write_file.close();
     //reload the memory object
@@ -1180,6 +1200,7 @@ void Database::delete_from_playlist(int songID, int listID){
         //output now has all <songOnAlbum> nodes
         write_file.setFileName("database/playlist.xml");
         write_file.open(QIODevice::ReadWrite);
+        write_file.resize(0);
         out << "<playlistRoot>\n" << output << "</playlistRoot>";
         write_file.close();
         //reload the memory object
