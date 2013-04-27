@@ -17,7 +17,8 @@ Mini_Mode::Mini_Mode(QWidget *parent)
 
     Mini_Mode_Controller *play_controller = new Mini_Mode_Controller();
 
-    MainMode = new QPushButton("+");
+    MainMode = new QToolButton(this);
+    MainMode->setIcon(style()->standardIcon(QStyle::SP_TitleBarMaxButton));
     MainMode->setToolTip("Switch to MaxiMode");
 
     QHBoxLayout *temp = new QHBoxLayout();

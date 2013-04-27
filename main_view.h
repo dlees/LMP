@@ -57,7 +57,7 @@ private:
 
     QMenu *fileMenu;
     QMenu *editMenu;
-    QPushButton *MiniMode;
+    QToolButton *MiniMode;
     QListView *playlist;
     QTableView *table;
     QListView *lib_list;

@@ -33,7 +33,7 @@ private:
 
     QMenu *fileMenu;
     QMenu *editMenu;
-    QPushButton *MainMode;
+    QToolButton *MainMode;
 };
 
 

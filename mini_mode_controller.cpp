@@ -23,8 +23,6 @@ Mini_Mode_Controller::Mini_Mode_Controller()
     main_layout->addLayout(inner_layout);
 
     setLayout(main_layout);
-    setFrameStyle(QFrame::Panel | QFrame::Raised);
-    setLineWidth(1);
     setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 /*
     connect(Playing_Song::get().get_media_object(), SIGNAL(tick(qint64)),

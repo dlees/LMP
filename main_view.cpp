@@ -19,9 +19,9 @@ Main_View::Main_View(QWidget *parent)
 
     // 1st row containing "Playlist name", searchbar, minimode button
     //QLineEdit *search = new QLineEdit("search");
-    MiniMode = new QPushButton("-");
+    MiniMode = new QToolButton(this);
+    MiniMode->setIcon(style()->standardIcon(QStyle::SP_TitleBarMinButton));
     MiniMode->setToolTip("Switch to MiniMode");
-    //MiniMode->setMaximumWidth(20);
 
     //2nd row containing Splitter of 3 panes
 // Library Pane
