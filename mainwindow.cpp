@@ -13,7 +13,6 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-
     mainView = new Main_View();
     miniView = new Mini_Mode();
 
@@ -23,8 +22,11 @@ MainWindow::MainWindow(QWidget *parent)
     mainView->setMinimumWidth(500);
     mainView->setMinimumHeight(400);
 
-    miniSize.setWidth(335);
-    miniSize.setHeight(90);
+    // How big miniMode is
+    miniSize.setWidth(230);
+    miniSize.setHeight(60);
+    //miniSize.setWidth(335);
+    //miniSize.setHeight(90);
 
     create_menu();
 
@@ -40,7 +42,6 @@ MainWindow::MainWindow(QWidget *parent)
             this, SLOT(switch_view_to_mini()));
     connect(miniView, SIGNAL(to_main_mode()),
             this, SLOT(switch_view_to_main()));
-
 }
 
 void MainWindow::create_menu()
@@ -145,6 +146,10 @@ void MainWindow::switch_view_to_mini()
 
     this->resize(miniSize);
 
+    this->setWindowTitle("LMP");
+    this->menuBar()->hide();
+    this->setWindowFlags(Qt::WindowStaysOnTopHint);
+    this->show();
 }
 
 void MainWindow::switch_view_to_main()
@@ -158,4 +163,8 @@ void MainWindow::switch_view_to_main()
     this->setCentralWidget(mainView);
 
     this->resize(mainSize);
+    this->setWindowTitle("Lucidity Music Player");
+    this->menuBar()->show();
+    this->setWindowFlags(0);
+    this->show();
 }

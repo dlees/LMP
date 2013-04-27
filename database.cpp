@@ -1089,7 +1089,7 @@ void Database::edit_playlist_name(int listID, QString newName){
     playlistE.appendChild(listIDE);
 
     QDomElement nameE = playlist.createElement("name");
-    sprintf(temp, "%d", newName);
+    sprintf(temp, "%d", newName.toStdString().c_str());
     QDomText nameT = playlist.createTextNode(temp);
     nameE.appendChild(nameT);
     playlistE.appendChild(nameE);

@@ -7,15 +7,12 @@ Button_Container::Button_Container(int w, int h)
     setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     playPause = new QToolButton(this);
-    //playPause->setIcon(QIcon(":/buttons/pause.png"));
-    //playPause->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
     set_icon_play();
     playPause->setGeometry(0, 0, 10, 20);
     connect(playPause, SIGNAL(clicked()),
             Media_Manager::get(), SLOT(play_cur()));
 
     prev = new QToolButton(this);
-    //prev->setIcon(QIcon(":/buttons/prev.png"));
     prev->setIcon(style()->standardIcon(QStyle::SP_MediaSkipBackward));
     prev->setGeometry(0, 0, 10, 20);
     connect(prev, SIGNAL(clicked()),
@@ -23,7 +20,6 @@ Button_Container::Button_Container(int w, int h)
     prev->setToolTip("Skip to Previous Song");
 
     next = new QToolButton(this);
-    //next->setIcon(QIcon(":/buttons/next.png"));
     next->setIcon(style()->standardIcon(QStyle::SP_MediaSkipForward));
     next->setGeometry(0, 0, 10, 20);
     connect(next, SIGNAL(clicked()),
@@ -56,6 +52,8 @@ Button_Container::Button_Container(int w, int h)
     addWidget(playPause);
     addWidget(hotspot_next);
     addWidget(next);
+
+
 }
 
 void Button_Container::set_icon_play()
