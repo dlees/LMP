@@ -30,7 +30,8 @@ SOURCES += main.cpp\
     main_view.cpp \
     mini_mode.cpp \
     mini_mode_controller.cpp \
-    hotspots.cpp
+    hotspots.cpp \
+    qcustomplot.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -50,7 +51,8 @@ HEADERS  += mainwindow.h \
     main_view.h \
     mini_mode.h \
     mini_mode_controller.h \
-    hotspots.h
+    hotspots.h \
+    qcustomplot.h
 
 OTHER_FILES +=
 

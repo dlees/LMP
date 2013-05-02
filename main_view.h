@@ -4,6 +4,7 @@
 
 #include <QMainWindow>
 #include <QtGui>
+#include "qcustomplot.h"
 
 class Pane;
 class Collection;
@@ -22,6 +23,10 @@ signals:
     void got_name(QString name);
 
 public slots:
+    void create_library_pane();
+    void create_center_pane();
+    void create_playlist_pane();
+    void create_graph();
     void play();
     void open_and_play();
     void add_files();
@@ -62,8 +67,11 @@ private:
     QTableView *table;
     QListView *lib_list;
 
+    Pane *libraryPane;
     Pane *centerPane;
     Pane *playlistPane;
+
+    QCustomPlot *customPlot;
 };
 
 

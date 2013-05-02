@@ -17,50 +17,21 @@ Main_View::Main_View(QWidget *parent)
 
     Play_Controller *play_controller = new Play_Controller();
 
-    // 1st row containing "Playlist name", searchbar, minimode button
     //QLineEdit *search = new QLineEdit("search");
     MiniMode = new QToolButton(this);
     MiniMode->setText("-");
     MiniMode->setToolTip("Switch to MiniMode");
 
-    //2nd row containing Splitter of 3 panes
-// Library Pane
-    lib_list = new QListView();
-    Pane *libraryPane = new Pane("Library", lib_list);
-    lib_list->setModel(Media_Manager::get()->get_library());
-    connect(lib_list, SIGNAL(clicked(QModelIndex)),
-            this, SLOT(select_lib_item(QModelIndex)));
-    connect(lib_list, SIGNAL(doubleClicked(QModelIndex)),
-            this, SLOT(open_playlist_from_lib(QModelIndex)));
-
-// Center Table
-    table = new QTableView();
-    table->setSelectionBehavior(QAbstractItemView::SelectRows);
-    table->setSortingEnabled(true);
-    table->setShowGrid(false);
-    table->setModel(Media_Manager::get()->get_playlist());
-    table->setColumnWidth(0, 200);
-    centerPane = new Pane("Default Playlist", table);
-    connect(table, SIGNAL(doubleClicked(QModelIndex)),
-            this, SLOT(select_center_item(QModelIndex)));
-
-// Playlist Pane
-    playlist = new QListView();
-    playlist->setModel(Media_Manager::get()->get_playlist());
-    playlistPane = new Pane("Current Playlist: All Songs", playlist);
-    connect(playlist, SIGNAL(doubleClicked(QModelIndex)),
-            this, SLOT(select_song(QModelIndex)));
-    playlist->setDragEnabled(true);
-    playlist->viewport()->setAcceptDrops(true);
-    playlist->setDropIndicatorShown(true);
-
+    // Splitter to hold the center panes
     splitter = new QSplitter(Qt::Horizontal);
-    splitter->addWidget(libraryPane);
-    splitter->addWidget(centerPane);
-    splitter->addWidget(playlistPane);
-    splitter->setStretchFactor(0, 1);
-    splitter->setStretchFactor(1, 2);
-    splitter->setStretchFactor(2, 1);
+
+    //2nd row containing Splitter of 3 panes
+    create_library_pane();
+    create_center_pane();
+    create_playlist_pane();
+
+    //QCustomPlot
+    create_graph();
 
     QGridLayout *center_layout = new QGridLayout;
     //center_layout->addWidget(search, 0, 0, Qt::AlignLeft);
@@ -91,6 +62,72 @@ Main_View::Main_View(QWidget *parent)
 
     lib_list->setCurrentIndex(Media_Manager::get()->get_library()->index(0,0));
 
+}
+
+void Main_View::create_library_pane()
+{
+    lib_list = new QListView();
+    libraryPane = new Pane("Library", lib_list);
+    lib_list->setModel(Media_Manager::get()->get_library());
+    connect(lib_list, SIGNAL(clicked(QModelIndex)),
+            this, SLOT(select_lib_item(QModelIndex)));
+    connect(lib_list, SIGNAL(doubleClicked(QModelIndex)),
+            this, SLOT(open_playlist_from_lib(QModelIndex)));
+
+    // Add to splitter
+    splitter->addWidget(libraryPane);
+}
+
+void Main_View::create_center_pane()
+{
+    table = new QTableView();
+    table->setSelectionBehavior(QAbstractItemView::SelectRows);
+    table->setSortingEnabled(true);
+    table->setShowGrid(false);
+    table->setModel(Media_Manager::get()->get_playlist());
+    table->setColumnWidth(0, 200);
+    centerPane = new Pane("Default Playlist", table);
+    connect(table, SIGNAL(doubleClicked(QModelIndex)),
+            this, SLOT(select_center_item(QModelIndex)));
+
+    // Add to splitter
+    splitter->addWidget(centerPane);
+}
+
+void Main_View::create_playlist_pane()
+{
+    playlist = new QListView();
+    playlist->setModel(Media_Manager::get()->get_playlist());
+    playlistPane = new Pane("Current Playlist: All Songs", playlist);
+    connect(playlist, SIGNAL(doubleClicked(QModelIndex)),
+            this, SLOT(select_song(QModelIndex)));
+    playlist->setDragEnabled(true);
+    playlist->viewport()->setAcceptDrops(true);
+    playlist->setDropIndicatorShown(true);
+
+    // Add to splitter
+    splitter->addWidget(playlistPane);
+}
+
+void Main_View::create_graph()
+{
+    QVector<double> x(101), y(101);
+    for (int i = 0; i < 101; i++) {
+        x[i] = i/50.0 -1;
+        y[i] = x[i]*x[i];
+    }
+    customPlot = new QCustomPlot();
+    customPlot->addGraph();
+    customPlot->graph(0)->setData(x,y);
+    customPlot->xAxis->setLabel("x");
+    customPlot->yAxis->setLabel("y");
+    // set axes ranges, so we see all data:
+    customPlot->xAxis->setRange(-1, 1);
+    customPlot->yAxis->setRange(0, 1);
+    customPlot->replot();
+
+    // Add to splitter
+    splitter->addWidget(customPlot);
 }
 
 QAction *Main_View::add_menu_item(char name[], bool enabled)
