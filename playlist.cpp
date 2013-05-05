@@ -34,7 +34,7 @@ void Playlist::add(Music_Item *item)
 
     foreach (song, songs)
     {
-        Collection::add(song);
+        Collection::add(song);        
     }
     cur = Collection::count() - 1;
 }
