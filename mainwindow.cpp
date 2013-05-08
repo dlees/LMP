@@ -26,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
     miniSize.setWidth(230);
     miniSize.setHeight(60);
 
+
     create_menu();
 
     this->setCentralWidget(mainView);
