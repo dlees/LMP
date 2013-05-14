@@ -31,7 +31,7 @@ Main_View::Main_View(QWidget *parent)
     create_playlist_pane();
 
     //QCustomPlot
-    create_graph();
+//    create_graph();
 
     QGridLayout *center_layout = new QGridLayout;
     //center_layout->addWidget(search, 0, 0, Qt::AlignLeft);
