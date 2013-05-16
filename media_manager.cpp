@@ -76,7 +76,7 @@ void Media_Manager::next()
 
 void Media_Manager::add_cur_to_playlist()
 {
-    add_to_playlist(playing.get_cur_song());
+    center->add(playing.get_cur_song());
 }
 
 void Media_Manager::add_to_playlist(Song *song)

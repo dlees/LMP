@@ -68,8 +68,8 @@ void MainWindow::create_menu()
 
  // Playlist Menu
     plMenu = menuBar()->addMenu(tr("&Playlists"));
-  //  connect(add_menu_item((char*)"Create Empty Playlist", true, plMenu), SIGNAL(triggered()),
-  //          Media_Manager::get(), SLOT(new_playlist()));
+    connect(add_menu_item((char*)"Create Empty Playlist", true, plMenu), SIGNAL(triggered()),
+            Media_Manager::get(), SLOT(new_playlist()));
     connect(add_menu_item((char*)"Create Playlist From Files...", true, plMenu), SIGNAL(triggered()),
             mainView, SLOT(create_playlist_files()));
 
@@ -78,7 +78,7 @@ void MainWindow::create_menu()
             mainView, SLOT(delete_playlist_from_library()));
 
     plMenu->addSeparator();
-    connect(add_menu_item((char*)"Add current song to current playlist", true, plMenu), SIGNAL(triggered()),
+    connect(add_menu_item((char*)"Add current song to table playlist", true, plMenu), SIGNAL(triggered()),
             Media_Manager::get(), SLOT(add_cur_to_playlist()));
     connect(add_menu_item((char*)"Add selected songs in table to current playlist", true, plMenu), SIGNAL(triggered()),
             mainView, SLOT(add_selected_to_playlist()));

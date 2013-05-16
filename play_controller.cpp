@@ -60,8 +60,6 @@ Play_Controller::Play_Controller()
                 this, SLOT(set_song(Song *)));
     connect(&Playing_Song::get(), SIGNAL(new_total_duration(int)),
                 this, SLOT(set_total_value(int)));
-    //connect(&Playing_Song::get(), SIGNAL(song_changed(Song *, int)),
-      //      this, SLOT(set_new_song(Song *, int)));
     connect(&Playing_Song::get(), SIGNAL(hs_added()),
             this, SLOT(set_hs_text()));
 

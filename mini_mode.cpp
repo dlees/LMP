@@ -22,7 +22,7 @@ Mini_Mode::Mini_Mode(QWidget *parent)
     MainMode->setToolTip("Switch to MaxiMode");
 
     QHBoxLayout *temp = new QHBoxLayout();
-    //temp->setContentsMargins(0,0,0,0);
+    temp->setContentsMargins(0,0,0,0); // this line makes it so the Button Container doesnt get vertically smaller
     temp->addWidget(MainMode);
     temp->addWidget(play_controller);
     /*temp->addWidget(MainMode,0,10,1,1,Qt::AlignLeft);
