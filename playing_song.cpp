@@ -161,7 +161,8 @@ void Playing_Song::prev_hs()
     }
     catch (Error &e)
     {
-        e.print_error_msg();
+        //e.print_error_msg();
+        change_position(0);
     }
 }
 
