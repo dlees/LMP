@@ -16,7 +16,7 @@ Media_Manager::Media_Manager()
     connect(&playing, SIGNAL(started_playing()),
             this, SLOT(started_playing_slot()));
     connect(&playing, SIGNAL(AlmostDone_PlaySong()),
-            this, SLOT(next()));
+            this, SLOT(play_cur()));
 }
 
 void Media_Manager::play_cur()
