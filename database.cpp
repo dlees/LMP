@@ -244,7 +244,9 @@ void Database::save_sec_count(int ID, qint64 start, qint64 end)
     time(&rawTime);
     QDomElement timeE = secCount.createElement("timestamp");
     timeinfo = localtime(&rawTime);
-    QDomText timeT = secCount.createTextNode(asctime(timeinfo));
+    char *ascitime = asctime(timeinfo);
+    ascitime[strlen(ascitime)-1] = '\0';
+    QDomText timeT = secCount.createTextNode(ascitime);
     timeE.appendChild(timeT);
     secCountE.appendChild(timeE);
 
