@@ -7,7 +7,7 @@
 #include "database.h"
 #include "error.h"
 
-const int min_secs_c = 0;
+const int min_milli_secs_c = 1000;
 
 Playing_Song::Playing_Song()
     : cur_playing(0),
@@ -56,7 +56,7 @@ void Playing_Song::update_position()
     // don't update if it's paused, there is no song,
     // or it hasn't been a second yet
     // this logic should be changed to the oposite way! 381!
-    if (!paused && song_exists() && cur_time - start_time > min_secs_c)
+    if (!paused && song_exists() && cur_time - start_time > min_milli_secs_c)
     {
         long start_sec = position;
         position += cur_time - start_time;
@@ -113,23 +113,32 @@ void Playing_Song::set_song(Song* song_)
 }
 
 // throws error if past total duration
-void Playing_Song::change_position(int new_pos)
+void Playing_Song::change_position(int new_pos_millisecs)
 {
-    if (new_pos > totalDuration)
-        throw new Error("Cant Seek to that position");
+    if (new_pos_millisecs > totalDuration || new_pos_millisecs < 0)
+        throw new Error("Cant Seek to that position:" + QString(new_pos_millisecs));
 
     update_position();
 
-    mp.move_to(new_pos);
+    mp.move_to(new_pos_millisecs);
 
-    position = new_pos;
+    position = new_pos_millisecs;
 }
 
-void Playing_Song::change_pos_relative(int relative_pos)
+// This Has a Glitch!!!
+void Playing_Song::change_pos_relative(int relative_seconds)
 {
-    // watch this!!! We might want to insert qint64s and change those..
-    change_position((int)(get_position()*1000) + relative_pos);
-    // gotta check this!!!!
+    try
+    {
+        // watch this!!! We might want to insert qint64s and change those..
+        change_position((int)(get_position()*1000) + relative_seconds);
+        // gotta check this!!!!
+    }
+    catch (Error &e)
+    {
+        qDebug() << e.msg;
+    }
+
 }
 
 void Playing_Song::set_hs()
@@ -166,7 +175,7 @@ void Playing_Song::prev_hs()
     }
 }
 
-void Playing_Song::remove_hs()
+void Playing_Song::remove_next_hs()
 {
     try
     {

@@ -23,6 +23,7 @@ public slots:
     void quit();
     void switch_view_to_mini();
     void switch_view_to_main();
+    void keyPressEvent(QKeyEvent *);
 
 private:
     void create_menu();

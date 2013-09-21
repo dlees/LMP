@@ -321,3 +321,4 @@ void Main_View::update_playlist(Collection *collection)
     playlist->setModel(Media_Manager::get()->get_playlist());
     playlistPane->set_title("Current Playlist: " +collection->get_name());
 }
+

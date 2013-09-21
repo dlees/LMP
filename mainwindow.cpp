@@ -3,6 +3,7 @@
 #include <QtGui>
 
 #include "media_manager.h"
+#include "playing_song.h"
 #include "button_container.h"
 #include "play_controller.h"
 #include "pane.h"
@@ -41,6 +42,8 @@ MainWindow::MainWindow(QWidget *parent)
             this, SLOT(switch_view_to_mini()));
     connect(miniView, SIGNAL(to_main_mode()),
             this, SLOT(switch_view_to_main()));
+
+
 }
 
 void MainWindow::create_menu()
@@ -166,4 +169,59 @@ void MainWindow::switch_view_to_main()
     this->menuBar()->show();
     this->setWindowFlags(0);
     this->show();
+}
+
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Z)
+    {
+        Playing_Song::get().prev_hs();
+    }
+    else if (event->key() == Qt::Key_X)
+    {
+        Playing_Song::get().next_hs();
+    }
+    else if (event->key() == Qt::Key_C)
+    {
+        Playing_Song::get().set_hs();
+    }
+    else if (event->key() == Qt::Key_V)
+    {
+        Playing_Song::get().remove_next_hs();
+    }
+    else if (event->key() == Qt::Key_F)
+    {
+        Media_Manager::get()->first();
+    }
+    else if (event->key() == Qt::Key_R)
+    {
+        Playing_Song::get().change_position(0);
+    }
+    //Glitchy
+//    else if (event->key() == Qt::Key_A)
+//    {
+//        Playing_Song::get().change_pos_relative(-5);
+//    }
+//    else if (event->key() == Qt::Key_S)
+//    {
+//        Playing_Song::get().change_pos_relative(5);
+//    }
+
+    else if (event->key() == Qt::Key_MediaPlay)
+    {
+        Media_Manager::get()->play_cur();
+    }
+    else if (event->key() == Qt::Key_MediaStop)
+    {
+        Media_Manager::get()->play_cur();
+    }
+    else if (event->key() == Qt::Key_MediaNext)
+    {
+        Media_Manager::get()->next();
+    }
+    else if (event->key() == Qt::Key_MediaPrevious)
+    {
+        Media_Manager::get()->prev();
+    }
+
 }

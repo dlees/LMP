@@ -67,7 +67,7 @@ public slots:
     void set_hs();
     void next_hs();
     void prev_hs();
-    void remove_hs();
+    void remove_next_hs();
     std::vector<int> get_hs_list();
 
 private slots:
