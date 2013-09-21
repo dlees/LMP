@@ -213,7 +213,10 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     }
     else if (event->key() == Qt::Key_MediaStop)
     {
-        Media_Manager::get()->play_cur();
+        if (centralWidget() == mainView)
+            switch_view_to_mini();
+        else
+            switch_view_to_main();
     }
     else if (event->key() == Qt::Key_MediaNext)
     {
@@ -223,5 +226,6 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     {
         Media_Manager::get()->prev();
     }
+
 
 }
