@@ -53,6 +53,7 @@ public slots:
     void delete_playlist_from_library();
 
     void remove_selected_song();
+    void remove_selected_from_table();
 
 private:
     QStringList* get_files();

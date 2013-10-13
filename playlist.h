@@ -3,6 +3,13 @@
 
 #include "collection.h"
 
+
+/*
+    A playlist is a collection of only songs
+    This is something to keep in mind.
+
+*/
+
 class Playlist : public Collection
 {
 public:

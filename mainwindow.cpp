@@ -11,9 +11,13 @@
 #include "main_view.h"
 #include "mini_mode.h"
 
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
+    // wont work in windows :(
+    //QCoreApplication::setAttribute(AA_CaptureMultimediaKeys, true);
+
     mainView = new Main_View();
     miniView = new Mini_Mode();
 
@@ -89,6 +93,8 @@ void MainWindow::create_menu()
     plMenu->addSeparator();
     connect(add_menu_item((char*)"Remove selected song from current playlist", true, plMenu), SIGNAL(triggered()),
             mainView, SLOT(remove_selected_song()));
+    connect(add_menu_item((char*)"Remove selected item from table playlist", true, plMenu), SIGNAL(triggered()),
+            mainView, SLOT(remove_selected_from_table()));
 
 }
 

@@ -297,7 +297,15 @@ void Main_View::remove_selected_song()
     {
         Media_Manager::get()->get_playlist()->remove(indexes[i].row());
     }
+}
 
+void Main_View::remove_selected_from_table()
+{
+    QModelIndexList indexes = table->selectionModel()->selectedRows();
+    for (int i = 0; i < indexes.count(); ++i)
+    {
+        Media_Manager::get()->get_center()->remove(indexes[i].row());
+    }
 }
 
 void Main_View::add_selected_to_playlist()
