@@ -1,6 +1,7 @@
 #include "media_manager.h"
 
 #include "song.h"
+#include "catalog.h"
 #include "library.h"
 #include "playlist.h"
 #include "collection.h"
@@ -137,6 +138,16 @@ void Media_Manager::set_center(Collection *new_center)
     center = new_center;
 
     emit center_changed(new_center);
+}
+
+void Media_Manager::create_catalog(const QString &name)
+{
+    lib.add_catalog(new Catalog(name));
+}
+
+void Media_Manager::add_to_catalog(const QString &catalog_name, Music_Item *item)
+{
+    lib.get_catalog(catalog_name)->add(item);
 }
 
 Collection *Media_Manager::get_playlist()

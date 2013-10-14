@@ -55,6 +55,9 @@ public slots:
     void remove_selected_song();
     void remove_selected_from_table();
 
+    void create_catalog();
+    void add_selected_lib_list_to_catalog();
+
 private:
     QStringList* get_files();
     QAction *add_menu_item(char name[], bool enabled);
@@ -74,6 +77,5 @@ private:
 
     QCustomPlot *customPlot;
 };
-
 
 #endif // MAIN_VIEW_H

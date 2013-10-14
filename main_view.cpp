@@ -330,3 +330,56 @@ void Main_View::update_playlist(Collection *collection)
     playlistPane->set_title("Current Playlist: " +collection->get_name());
 }
 
+void Main_View::create_catalog()
+{
+    QMessageBox *msgBox = new QMessageBox(this);
+    msgBox->resize(300, 200);
+
+    QLineEdit *text = new QLineEdit(msgBox);
+    text->setMinimumWidth(200);
+    text->setAlignment(Qt::AlignHCenter);
+    msgBox->setInformativeText("Catalog Name:");
+    QHBoxLayout *layout = new QHBoxLayout(msgBox);
+    layout->addWidget(text);
+
+    msgBox->setLayout(layout);
+    msgBox->setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
+    msgBox->setDefaultButton(QMessageBox::Ok);
+    text->setFocus();
+    int ret = msgBox->exec();
+
+    if (ret == QMessageBox::Ok && text->text() != "")
+        Media_Manager::get()->create_catalog(text->text());
+
+    delete msgBox;
+}
+
+void Main_View::add_selected_lib_list_to_catalog()
+{
+    QMessageBox *msgBox = new QMessageBox(this);
+    msgBox->resize(300, 200);
+
+    QLineEdit *text = new QLineEdit(msgBox);
+    text->setMinimumWidth(200);
+    text->setAlignment(Qt::AlignHCenter);
+    msgBox->setInformativeText("Catalog Name:");
+    QHBoxLayout *layout = new QHBoxLayout(msgBox);
+    layout->addWidget(text);
+
+    msgBox->setLayout(layout);
+    msgBox->setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
+    msgBox->setDefaultButton(QMessageBox::Ok);
+    text->setFocus();
+    int ret = msgBox->exec();
+
+    if (ret == QMessageBox::Ok && text->text() != "")
+    {
+        QModelIndexList indexes = lib_list->selectionModel()->selection().indexes();
+        for (int i = 0; i < indexes.count(); ++i)
+        {
+            Music_Item *item = Media_Manager::get()->get_library()->get_children()[indexes[i].row()];
+            Media_Manager::get()->add_to_catalog(text->text(), item);
+        }
+    }
+}
+

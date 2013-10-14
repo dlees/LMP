@@ -3,12 +3,15 @@
 #include "media_manager.h"
 #include "song.h"
 #include "error.h"
+#include "database.h"
 
 
 Playlist::Playlist(const QString &name)
     : Collection(name),
       cur(0)
 {
+    if (!(get_name() == "Library" || get_name() == "All Songs"))
+        Database::get()->new_playlist(get_name(), get_id(), false);
 }
 
 Playlist::Playlist(Collection *col)

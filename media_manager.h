@@ -77,6 +77,9 @@ public slots:
     void became_paused_slot() {emit became_paused();}
     void started_playing_slot() {emit started_playing();}
 
+    void create_catalog(const QString &);
+    void add_to_catalog(const QString &, Music_Item *);
+
 signals:
     void became_paused();
     void started_playing();
@@ -94,5 +97,6 @@ private:
     Library lib;
     Collection *center;
 };
+
 
 #endif // MEDIA_MANAGER_H

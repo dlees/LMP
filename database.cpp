@@ -331,6 +331,9 @@ QList<PlaylistInfo>* Database::get_all_list_info(){
                 ID = listReader->readElementText().toInt();
                 curList->ID = ID;
             }
+            if(listReader->name() == "is_catalog"){
+                curList->is_catalog = true;
+            }
             if(listReader->name() == "name"){
                 curList->name = listReader->readElementText();
                 //map of playlist ID to main list position
@@ -1025,8 +1028,9 @@ void Database::delete_hotspot(int songID, qint64 hotspot){
     write_file.close();
 }
 
-void Database::new_playlist(const QString &name, int ID){
+void Database::new_playlist(const QString &name, int ID, bool is_catalog){
 
+    qDebug() << "Database: " << name << endl;
     char temp[256];
     QXmlQuery query;
     QString output = "-1";
@@ -1043,6 +1047,14 @@ void Database::new_playlist(const QString &name, int ID){
         QDomText IDT = playlist.createTextNode(temp);
         IDE.appendChild(IDT);
         playlistE.appendChild(IDE);
+
+        if (is_catalog)
+        {
+            QDomElement is_cat_E = playlist.createElement("is_catalog");
+            QDomText is_cat_T = playlist.createTextNode("true");
+            is_cat_E.appendChild(is_cat_T);
+            playlistE.appendChild(is_cat_E);
+        }
 
         QDomElement nameE = playlist.createElement("name");
         QDomText nameT = playlist.createTextNode(name);

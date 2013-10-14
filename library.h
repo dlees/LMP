@@ -5,8 +5,10 @@
 
 #include "QMap"
 
+class Music_Item;
 class Song;
 class Playlist;
+class Catalog;
 
 class Library : public Collection
 {
@@ -21,7 +23,9 @@ public:
     // creates it if it needs to
     Song *get_song(const QString &filename);
 
-    Song *get_song(int id);
+    Catalog *get_catalog(const QString &name);
+
+    Music_Item *get_item(int id);
 
     virtual void remove(int);
 
@@ -29,6 +33,7 @@ public:
 //    void add_artist(Artist *);
 //    void add_album(Album *);
     void add_playlist(Playlist *);
+    void add_catalog(Catalog *);
 
     // doesn't remove from this
     // returns true if it has been deleted
@@ -42,6 +47,7 @@ private:
 
     QMap<int, Music_Item*> id_to_item;
     QMap<QString, Song*> filename_to_song;
+    QMap<QString, Catalog*> name_to_catalog;
 };
 
 #endif // LIBRARY_H

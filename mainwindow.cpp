@@ -58,8 +58,6 @@ void MainWindow::create_menu()
     connect(add_menu_item((char*)"&Exit", true, fileMenu), SIGNAL(triggered()),
             mainView, SLOT(quit()));
 
-//    editMenu = menuBar()->addMenu(tr("&Edit"));
-
     viewMenu = menuBar()->addMenu(tr("&View"));
     connect(add_menu_item((char*)"Mini", true, viewMenu), SIGNAL(triggered()),
             this, SLOT(switch_view_to_mini()));
@@ -93,8 +91,15 @@ void MainWindow::create_menu()
     plMenu->addSeparator();
     connect(add_menu_item((char*)"Remove selected song from current playlist", true, plMenu), SIGNAL(triggered()),
             mainView, SLOT(remove_selected_song()));
-    connect(add_menu_item((char*)"Remove selected item from table playlist", true, plMenu), SIGNAL(triggered()),
+    connect(add_menu_item((char*)"Remove selected items from table playlist", true, plMenu), SIGNAL(triggered()),
             mainView, SLOT(remove_selected_from_table()));
+
+ // Catalog Menu
+    QMenu *catalogMenu = menuBar()->addMenu(tr("&Catalogs"));
+    connect(add_menu_item((char*)"Create Catalog...", true, catalogMenu), SIGNAL(triggered()),
+            mainView, SLOT(create_catalog()));
+    connect(add_menu_item((char*)"Add selected Playlist to a Catalog...", true, catalogMenu), SIGNAL(triggered()),
+            mainView, SLOT(add_selected_lib_list_to_catalog()));
 
 }
 

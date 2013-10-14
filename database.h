@@ -9,6 +9,8 @@ struct PlaylistInfo{
     QList<int> songIDs;
     int ID;
     QString name;
+    bool is_catalog;
+    PlaylistInfo() : is_catalog(false){}
 };
 
 struct HotspotInfo{
@@ -64,7 +66,7 @@ public:
     // **NOTE: All Music Items have unique ID's, so there won't be conflictions
     QList<int> find(const QString &str);
 
-    void new_playlist(const QString &name, int ID);
+    void new_playlist(const QString &name, int ID, bool is_catalog);
     void add_to_playlist(int songID, int listID);
     void delete_from_playlist(int songID, int listID);
     void delete_playlist(int listID);

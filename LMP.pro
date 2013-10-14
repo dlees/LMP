@@ -31,7 +31,8 @@ SOURCES += main.cpp\
     mini_mode.cpp \
     mini_mode_controller.cpp \
     hotspots.cpp \
-    qcustomplot.cpp
+    qcustomplot.cpp \
+    catalog.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -52,7 +53,8 @@ HEADERS  += mainwindow.h \
     mini_mode.h \
     mini_mode_controller.h \
     hotspots.h \
-    qcustomplot.h
+    qcustomplot.h \
+    catalog.h
 
 OTHER_FILES +=
 

@@ -4,6 +4,7 @@
 #include "song.h"
 #include "database.h"
 #include "playlist.h"
+#include "catalog.h"
 
 #include "error.h"
 
@@ -48,22 +49,32 @@ void Library::load_songs()
 // load playlists from the database
 void Library::load_playlists()
 {
-    Playlist *playlist;
+    Collection *playlist;
     QList<PlaylistInfo> *listsInfo;
     listsInfo = Database::get()->get_all_list_info();
     QList<Music_Item*> songList;
     int ID = 0;
 
     PlaylistInfo playlistI;
-    foreach(playlistI, *listsInfo){
+    foreach(playlistI, *listsInfo)
+    {
         songList.clear();
 
-        foreach(ID, playlistI.songIDs){
-            songList.append(get_song(ID));
+        foreach(ID, playlistI.songIDs)
+        {
+            songList.append(get_item(ID));
         }
 
-        playlist = new Playlist(playlistI.name, playlistI.ID, songList);
-        add_playlist(playlist);
+        if (playlistI.is_catalog)
+        {
+            playlist = new Catalog(playlistI.name, playlistI.ID, songList);
+            add_catalog(static_cast<Catalog*>(playlist));
+        }
+        else //its a playlist
+        {
+            playlist = new Playlist(playlistI.name, playlistI.ID, songList);
+            add_playlist(static_cast<Playlist*>(playlist));
+        }
 
         if (playlistI.ID > Music_Item::max_id)
             Music_Item::max_id = playlistI.ID;
@@ -88,12 +99,27 @@ Song *Library::get_song(const QString& filename)
     return new_song;
 }
 
-Song *Library::get_song(int id)
+Catalog *Library::get_catalog(const QString &name)
 {
-    return static_cast<Song*>(id_to_item[id]);
+    Catalog *catalog;
+    QMap<QString, Catalog*>::Iterator i;
 
-    //static_cast is ok because we know it is going to
-    // be a song
+    // if the catalog already exists
+    if ((i = name_to_catalog.find(name)) != name_to_catalog.end())
+    {
+        catalog = i.value();
+    }
+    else
+    {   // make a new catalog
+        catalog = new Catalog(name);
+        add_catalog(catalog);
+    }
+    return catalog;
+}
+
+Music_Item *Library::get_item(int id)
+{
+    return id_to_item[id];
 }
 
 void Library::add_song(Song *song)
@@ -109,6 +135,15 @@ void Library::add_playlist(Playlist *list)
 //    playlists->add(list);
 
     id_to_item.insert(list->get_id(), list);
+
+}
+
+void Library::add_catalog(Catalog *list)
+{
+    add(list);
+    id_to_item.insert(list->get_id(), list);
+
+    name_to_catalog.insert(list->get_name(), list);
 }
 
 void Library::remove(int i)

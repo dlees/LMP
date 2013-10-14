@@ -9,8 +9,6 @@
 Collection::Collection(const QString &name)
     : Music_Item(name), tree_model(0)
 {
-    if (!(name == "Library" || name == "All Songs"))
-        Database::get()->new_playlist(get_name(), get_id());
 }
 
 Collection::Collection(const QString &name_, int id_,
@@ -44,6 +42,12 @@ bool Collection::contains(Music_Item* item)
 
 void Collection::add(Music_Item *item)
 {
+    if (item->get_id() == this->get_id())
+    {
+        Error::print_error_msg_str("Cannot insert Catalog into itself!");
+        return;
+    }
+
     if (contains(item))
     {
         Error::print_error_msg_str(get_name() + " already contains "
@@ -55,15 +59,18 @@ void Collection::add(Music_Item *item)
     {
         connect(song, SIGNAL(data_changed()),
                 this, SLOT(data_updated()));
-
-        if (get_name() != "All Songs")
-            Database::get()->add_to_playlist(song->get_id(), this->get_id());
     }
 
+
+    if (this->get_name() != "All Songs" && this->get_id() != 0 && this->get_name() != "Library")
+        Database::get()->add_to_playlist(item->get_id(), this->get_id());
+
     if (Collection *col = dynamic_cast<Collection*>(item))
+    {
         connect(col, SIGNAL(data_changed()),
                 this, SLOT(data_updated()));
 
+    }
 
     beginInsertRows(QModelIndex(), count(), count());
     children.push_back(item);
