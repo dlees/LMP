@@ -162,6 +162,20 @@ QStringList* Main_View::get_files()
     return files;
 }
 
+void Main_View::add_files()
+{
+    //Single file
+    QString *file = new QString(get_files()->at(0));
+
+    if (!file->size()) {
+        Error::print_error_msg_str("No file selected!");
+        return;
+    }
+
+    qDebug() << *file << endl;
+    Media_Manager::get()->play_new(*file);
+}
+
 void Main_View::create_playlist_files()
 {
     QString name;
@@ -196,20 +210,6 @@ void Main_View::new_create_playlist_files(QString name)
                                   Media_Manager::get()->get_library()->count()-1,0));
 }
 
-void Main_View::add_files()
-{
-    //Single file
-    QString *file = new QString(QFileDialog::getOpenFileName(this, tr("Select Music Files"),
-        QDesktopServices::storageLocation(QDesktopServices::MusicLocation)));
-
-    if (!file->size()) {
-        Error::print_error_msg_str("No file selected!");
-        return;
-    }
-
-    qDebug() << *file << endl;
-    Media_Manager::get()->play_new(*file);
-}
 
 void Main_View::quit()
 {

@@ -42,7 +42,7 @@ bool Collection::contains(Music_Item* item)
 
 void Collection::add(Music_Item *item)
 {
-    if (item->get_id() == this->get_id())
+    if (item->get_id() == get_id())
     {
         Error::print_error_msg_str("Cannot insert Catalog into itself!");
         return;
@@ -61,9 +61,10 @@ void Collection::add(Music_Item *item)
                 this, SLOT(data_updated()));
     }
 
-
-    if (this->get_name() != "All Songs" && this->get_id() != 0 && this->get_name() != "Library")
-        Database::get()->add_to_playlist(item->get_id(), this->get_id());
+    // without the check for id==0, this adds playlists to the collection
+    // with id 0 on startup causing it to crash.
+    if (get_name() != "All Songs" && get_id() != 0 && get_name() != "Library")
+        Database::get()->add_to_playlist(item->get_id(), get_id());
 
     if (Collection *col = dynamic_cast<Collection*>(item))
     {
@@ -125,7 +126,7 @@ void Collection::remove(int index)
         if (get_name() != "All Songs")
         {
             qDebug() << "Removing" << song->get_name() << "from" << get_name();
-            Database::get()->delete_from_playlist(song->get_id(), this->get_id());
+            Database::get()->delete_from_playlist(song->get_id(), get_id());
         }
     }
 
