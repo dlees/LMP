@@ -150,6 +150,11 @@ void Media_Manager::add_to_catalog(const QString &catalog_name, Music_Item *item
     lib.get_catalog(catalog_name)->add(item);
 }
 
+void Media_Manager::change_rating_cur_song(int rating)
+{
+    Playing_Song::get().get_cur_song()->change_rating(rating);
+}
+
 Collection *Media_Manager::get_playlist()
 {
     return cur_list;

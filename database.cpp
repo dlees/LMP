@@ -199,58 +199,77 @@ Database::Database(){
     //any other initialization goes here
 }
 
+void Database::save_cur_timestamp(QDomDocument &document, QDomElement &entry)
+{
+    time_t rawTime;
+    struct tm * timeinfo;
+    time(&rawTime);
+    QDomElement timeE = document.createElement("timestamp");
+    timeinfo = localtime(&rawTime);
+    char *ascitime = asctime(timeinfo);
+    ascitime[strlen(ascitime)-1] = '\0';
+    QDomText timeT = document.createTextNode(ascitime);
+    timeE.appendChild(timeT);
+    entry.appendChild(timeE);
+}
+
+template <class T>
+void save_field(QDomDocument &document, QDomElement &entry, const QString &field_name, T field_value)
+{
+    char buffer[64];  //for fake itoa
+
+    QDomElement field = document.createElement(field_name);
+    sprintf(buffer, "%d", field_value);
+    QDomText startT = document.createTextNode(buffer);
+    field.appendChild(startT);
+    entry.appendChild(field);
+}
+
+QDomElement Database::create_entry(QDomDocument &doc, const QString &entry_name,
+                                   const QString &root_name)
+{
+    QDomElement secCountE = doc.createElement(entry_name);
+    doc.elementsByTagName(root_name).at(0).appendChild(secCountE);
+
+    return secCountE;
+}
+
 void Database::save_sec_count(int ID, qint64 start, qint64 end)
 {
     qDebug() << ID << " : " << start << "->" << end;
 
     // Stores the second count. Saves the song,
     // the second of the song started and stopped playing at
-            // If whole song numbers would be 0 and song.length
+    // If whole song numbers would be 0 and song.length
     // stores the time this insert was recorded
     // end_sec - start_sec = number of seconds played since last insert
 
-    /*	---Text file example---
-     * 	721 (the id for Friday.mp3)
-     * 	0	17000
-     * 	Tue Sep 25 00:11:34 2012
-     * 	|~|
-     */
+    QDomElement secCountE = create_entry(secCount, "secCount", "secRoot");
 
-    char temp[64];  //for fake itoa
+    save_field(secCount, secCountE, "ID", ID);
 
-    QDomElement secCountE = secCount.createElement("secCount");
-    secCount.elementsByTagName("secRoot").at(0).appendChild(secCountE);
+    save_field(secCount, secCountE, "startTime", start);
+    save_field(secCount, secCountE, "endTime", end);
 
-    QDomElement idE = secCount.createElement("ID");
-    sprintf(temp, "%d", ID);
-    QDomText idT = secCount.createTextNode(temp);
-    idE.appendChild(idT);
-    secCountE.appendChild(idE);
-
-    QDomElement startE = secCount.createElement("startTime");
-    sprintf(temp, "%d", start);
-    QDomText startT = secCount.createTextNode(temp);
-    startE.appendChild(startT);
-    secCountE.appendChild(startE);
-
-    QDomElement endE = secCount.createElement("endTime");
-    sprintf(temp, "%d", end);
-    QDomText endT = secCount.createTextNode(temp);
-    endE.appendChild(endT);
-    secCountE.appendChild(endE);
-
-    time_t rawTime;
-    struct tm * timeinfo;
-    time(&rawTime);
-    QDomElement timeE = secCount.createElement("timestamp");
-    timeinfo = localtime(&rawTime);
-    char *ascitime = asctime(timeinfo);
-    ascitime[strlen(ascitime)-1] = '\0';
-    QDomText timeT = secCount.createTextNode(ascitime);
-    timeE.appendChild(timeT);
-    secCountE.appendChild(timeE);
+    save_cur_timestamp(secCount, secCountE);
 
     saveFile(secCount, "database/secCount.xml");
+}
+
+void Database::save_rating_count(int ID, int rating)
+{
+    QDomDocument &doc = secCount;
+    const QString &xml_file = "database/secCount.xml";
+
+    QDomElement entry = create_entry(doc, "ratingCount", "secRoot");
+
+    save_field(doc, entry, "ID", ID);
+
+    save_field(doc, entry, "rating", rating);
+
+    save_cur_timestamp(doc, entry);
+
+    saveFile(doc, xml_file);
 }
 
 QList<HotspotInfo>* Database::get_hotspot_info(){

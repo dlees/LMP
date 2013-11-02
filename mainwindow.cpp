@@ -101,6 +101,33 @@ void MainWindow::create_menu()
     connect(add_menu_item((char*)"Add selected Playlist to a Catalog...", true, catalogMenu), SIGNAL(triggered()),
             mainView, SLOT(add_selected_lib_list_to_catalog()));
 
+ // Ratings Menu
+    QMenu *ratingsMenu = menuBar()->addMenu(tr("&Ratings"));
+
+    QSignalMapper *ratingsMapper = new QSignalMapper(this);
+    QAction *rating1 = add_menu_item((char*)"Rate Current Song: 1 Star", true, ratingsMenu);
+    QAction *rating2 = add_menu_item((char*)"Rate Current Song: 2 Stars", true, ratingsMenu);
+    QAction *rating3 = add_menu_item((char*)"Rate Current Song: 3 Stars", true, ratingsMenu);
+    QAction *rating4 = add_menu_item((char*)"Rate Current Song: 4 Stars", true, ratingsMenu);
+    QAction *rating5 = add_menu_item((char*)"Rate Current Song: 5 Stars", true, ratingsMenu);
+    QAction *rating6 = add_menu_item((char*)"Rate Current Song: SuperStared", true, ratingsMenu);
+
+    connect(rating1 , SIGNAL(triggered()), ratingsMapper, SLOT(map()));
+    connect(rating2 , SIGNAL(triggered()), ratingsMapper, SLOT(map()));
+    connect(rating3 , SIGNAL(triggered()), ratingsMapper, SLOT(map()));
+    connect(rating4 , SIGNAL(triggered()), ratingsMapper, SLOT(map()));
+    connect(rating5 , SIGNAL(triggered()), ratingsMapper, SLOT(map()));
+    connect(rating6 , SIGNAL(triggered()), ratingsMapper, SLOT(map()));
+
+    ratingsMapper->setMapping(rating1, 1);
+    ratingsMapper->setMapping(rating2, 2);
+    ratingsMapper->setMapping(rating3, 3);
+    ratingsMapper->setMapping(rating4, 4);
+    ratingsMapper->setMapping(rating5, 5);
+    ratingsMapper->setMapping(rating6, 6);
+
+    connect(ratingsMapper, SIGNAL(mapped(int)), Media_Manager::get(), SLOT(change_rating_cur_song(int)));
+
 }
 
 QAction *MainWindow::add_menu_item(char name[], bool enabled, QMenu *menu)
@@ -207,6 +234,30 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     else if (event->key() == Qt::Key_R)
     {
         Playing_Song::get().change_position(0);
+    }
+    else if (event->key() == Qt::Key_1)
+    {
+        Media_Manager::get()->change_rating_cur_song(1);
+    }
+    else if (event->key() == Qt::Key_2)
+    {
+        Media_Manager::get()->change_rating_cur_song(2);
+    }
+    else if (event->key() == Qt::Key_3)
+    {
+        Media_Manager::get()->change_rating_cur_song(3);
+    }
+    else if (event->key() == Qt::Key_4)
+    {
+        Media_Manager::get()->change_rating_cur_song(4);
+    }
+    else if (event->key() == Qt::Key_5)
+    {
+        Media_Manager::get()->change_rating_cur_song(5);
+    }
+    else if (event->key() == Qt::Key_6)
+    {
+        Media_Manager::get()->change_rating_cur_song(6);
     }
     //Glitchy
 //    else if (event->key() == Qt::Key_A)

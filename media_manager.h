@@ -80,6 +80,8 @@ public slots:
     void create_catalog(const QString &);
     void add_to_catalog(const QString &, Music_Item *);
 
+    void change_rating_cur_song(int rating);
+
 signals:
     void became_paused();
     void started_playing();

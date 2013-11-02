@@ -73,6 +73,13 @@ public:
     void edit_playlist_name(int listID, QString newName);
     QList<PlaylistInfo> *get_all_list_info();
 
+    void setup_rating_count();
+    void save_rating_count(int ID, int rating);
+
+
+    // saves current timestamp in a field called "timestamp"
+    void save_cur_timestamp(QDomDocument &document, QDomElement &entry);
+    QDomElement create_entry(QDomDocument &document, const QString &entry_name, const QString &root_name);
 private:
     QDomDocument song;
     QDomDocument playlist;

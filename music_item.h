@@ -36,6 +36,7 @@ public:
     bool get_is_playing()
         {return is_playing;}
 
+    virtual void change_rating(int new_rating);
 
     // select this item
     virtual void select()
@@ -55,6 +56,8 @@ private:
     bool is_playing;
 
     int id;
+
+    int cur_rating;
 
 };
 
