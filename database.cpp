@@ -14,23 +14,48 @@
 
 using namespace std;
 
-SongInfo::SongInfo(){
+
+void Database::save_cur_timestamp(QDomDocument &document, QDomElement &entry)
+{
+    time_t rawTime;
+    struct tm * timeinfo;
+    time(&rawTime);
+    QDomElement timeE = document.createElement("timestamp");
+    timeinfo = localtime(&rawTime);
+    char *ascitime = asctime(timeinfo);
+    ascitime[strlen(ascitime)-1] = '\0';
+    QDomText timeT = document.createTextNode(ascitime);
+    timeE.appendChild(timeT);
+    entry.appendChild(timeE);
+}
+
+template <class T>
+void save_field(QDomDocument &document, QDomElement &entry, const QString &field_name, T field_value)
+{
+    char buffer[64];  //for fake itoa
+
+    QDomElement field = document.createElement(field_name);
+    sprintf(buffer, "%d", field_value);
+    QDomText startT = document.createTextNode(buffer);
+    field.appendChild(startT);
+    entry.appendChild(field);
+}
+
+QDomElement Database::create_entry(QDomDocument &doc, const QString &entry_name,
+                                   const QString &root_name)
+{
+    QDomElement secCountE = doc.createElement(entry_name);
+    doc.elementsByTagName(root_name).at(0).appendChild(secCountE);
+
+    return secCountE;
+}
+
+SongInfo::SongInfo() : rating(2){
     songID = seconds = 0;
     albumName = songName = artistName = fileName = "";
 }
 
-SongInfo::SongInfo(const SongInfo &other){
-    //copy constructor up in dis bitch
-    albumName = other.albumName;
-    artistName = other.artistName;
-    created = other.created;
-    fileName = other.fileName;
-    seconds = other.seconds;
-    songID = other.songID;
-    songName = other.songName;
-}
-
-void Database::saveFile(QDomDocument document, QString filename){
+void Database::saveFile(QDomDocument &document, const QString &filename){
 
     QFile outFile(filename);
     outFile.open(QIODevice::WriteOnly|QIODevice::Text);
@@ -40,6 +65,26 @@ void Database::saveFile(QDomDocument document, QString filename){
     outFile.close();
     outFile.open(QIODevice::ReadOnly|QIODevice::Text);
     document.setContent(&outFile);
+}
+
+void Database::load_file(const string &filename, QDomDocument &document, const QString &root_name)
+{
+    ofstream temp;
+
+    ifstream fin(filename.data());
+    if(!fin){
+        temp.open(filename.data());
+        temp.close();
+    }
+    //load file
+    QFile qfile(filename.data());
+    document.setContent(&qfile);
+    if(!fin){
+        QDomElement root = document.createElement(root_name);
+        document.appendChild(root);
+        saveFile(document, filename.data());
+    }
+    qfile.close();
 }
 
 Database::Database(){
@@ -117,20 +162,10 @@ Database::Database(){
     artistFile.close();
 
     //SecCount
-    ifstream secStream("database/secCount.xml");
-    if(!secStream){
-        temp.open("database/secCount.xml");
-        temp.close();
-    }
-    //load file
-    QFile secFile("database/secCount.xml");
-    secCount.setContent(&secFile);
-    if(!secStream){
-        QDomElement root = secCount.createElement("secRoot");
-        secCount.appendChild(root);
-        saveFile(secCount, "database/secCount.xml");
-    }
-    secFile.close();
+    load_file("database/secCount.xml", secCount, "secRoot");
+
+    //RatingCount
+    load_file("database/ratingCount.xml", ratingCount, "rateRoot");
 
     //SongsInPlaylist
     ifstream SIPStream("database/songsInPlaylist.xml");
@@ -199,41 +234,6 @@ Database::Database(){
     //any other initialization goes here
 }
 
-void Database::save_cur_timestamp(QDomDocument &document, QDomElement &entry)
-{
-    time_t rawTime;
-    struct tm * timeinfo;
-    time(&rawTime);
-    QDomElement timeE = document.createElement("timestamp");
-    timeinfo = localtime(&rawTime);
-    char *ascitime = asctime(timeinfo);
-    ascitime[strlen(ascitime)-1] = '\0';
-    QDomText timeT = document.createTextNode(ascitime);
-    timeE.appendChild(timeT);
-    entry.appendChild(timeE);
-}
-
-template <class T>
-void save_field(QDomDocument &document, QDomElement &entry, const QString &field_name, T field_value)
-{
-    char buffer[64];  //for fake itoa
-
-    QDomElement field = document.createElement(field_name);
-    sprintf(buffer, "%d", field_value);
-    QDomText startT = document.createTextNode(buffer);
-    field.appendChild(startT);
-    entry.appendChild(field);
-}
-
-QDomElement Database::create_entry(QDomDocument &doc, const QString &entry_name,
-                                   const QString &root_name)
-{
-    QDomElement secCountE = doc.createElement(entry_name);
-    doc.elementsByTagName(root_name).at(0).appendChild(secCountE);
-
-    return secCountE;
-}
-
 void Database::save_sec_count(int ID, qint64 start, qint64 end)
 {
     qDebug() << ID << " : " << start << "->" << end;
@@ -258,10 +258,10 @@ void Database::save_sec_count(int ID, qint64 start, qint64 end)
 
 void Database::save_rating_count(int ID, int rating)
 {
-    QDomDocument &doc = secCount;
-    const QString &xml_file = "database/secCount.xml";
+    QDomDocument &doc = ratingCount;
+    const QString &xml_file = "database/ratingCount.xml";
 
-    QDomElement entry = create_entry(doc, "ratingCount", "secRoot");
+    QDomElement entry = create_entry(doc, "ratingCount", "rateRoot");
 
     save_field(doc, entry, "ID", ID);
 
@@ -410,9 +410,9 @@ QList<SongInfo>* Database::get_all_song_info(){
     //returns a list of structs of this info in this order:
     //ID, name, filename, created, seconds, album, artist
 
-    QList<SongInfo> *ret = new QList< SongInfo >;
+    QList<SongInfo> *song_list = new QList< SongInfo >;
     int i = 0;
-    SongInfo *curList;
+    SongInfo *curSong = 0;
     QMap<int, int> songIDToList;
     QString temp;
 
@@ -430,25 +430,26 @@ QList<SongInfo>* Database::get_all_song_info(){
             if(songReader->name() == "song"){
                 //we're in a new song
                 //add a new list to our list list
-                curList = 0;
-                curList = new SongInfo;
+                if (curSong)
+                    delete curSong;
+                curSong = new SongInfo;
             }
             if(songReader->name() == "ID"){
                 temp = songReader->readElementText();
-                curList->songID = temp.toInt();
+                curSong->songID = temp.toInt();
                 songIDToList[temp.toInt()] = i++;
             }
             if(songReader->name() == "name"){
-                curList->songName = songReader->readElementText();
+                curSong->songName = songReader->readElementText();
             }
             if(songReader->name() == "filepath"){
-                curList->fileName = songReader->readElementText();
+                curSong->fileName = songReader->readElementText();
             }
             if(songReader->name() == "created"){
                 QDateTime temp;
-                curList->created = temp.fromString(songReader->readElementText());
+                curSong->created = temp.fromString(songReader->readElementText());
                 //last one
-                ret->append(*curList);
+                song_list->append(*curSong);
             }
         }
     }
@@ -457,18 +458,67 @@ QList<SongInfo>* Database::get_all_song_info(){
     delete songFile;
     delete songReader;
 
-    //now we have a map between songIDs and positions in the list
-    //and the lists in the list have id, name, filepath and created
-    //we still need seconds, artist, and album
+    //RATINGS!
 
+    QFile *ratingFile = new QFile("database/ratingCount.xml");
+    ratingFile->open(QIODevice::ReadOnly | QIODevice::Text);
+    QXmlStreamReader *ratingReader = new QXmlStreamReader(ratingFile);
+
+    QMap<int, int> songIDToRating;
+
+    int ID = 0;
+
+    while(!ratingReader->atEnd() && !ratingReader->hasError()){
+        //read next
+        QXmlStreamReader::TokenType token = ratingReader->readNext();
+        if(token==QXmlStreamReader::StartDocument){
+            continue;
+        }
+        if(token==QXmlStreamReader::StartElement){
+            if(ratingReader->name() == "ratingCount"){
+                //in a new count
+                continue;
+            }
+            if(ratingReader->name() == "ID"){
+                temp = ratingReader->readElementText();
+                ID = temp.toInt();
+            }
+            if(ratingReader->name() == "rating"){
+                temp = ratingReader->readElementText();
+                songIDToRating[ID] = (temp.toInt());
+            }
+        }
+    }
+    //put all the counts from the map into the list
+    QMap<int, int>::iterator id_rating_iter;
+    int listPos = 0;
+    //QString* stringPtr;
+    for(id_rating_iter = songIDToRating.begin();
+        id_rating_iter != songIDToRating.end();
+        id_rating_iter++) {
+        listPos = songIDToList[id_rating_iter.key()];
+        SongInfo tempInfo;
+        tempInfo = song_list->takeAt(listPos);
+        tempInfo.rating = id_rating_iter.value();
+
+
+        song_list->insert(listPos, tempInfo);
+
+    }
+
+    ratingFile->close();
+    ratingReader->clear();
+    delete ratingFile;
+    delete ratingReader;
+
+// Seconds
     QFile *secFile = new QFile("database/secCount.xml");
     secFile->open(QIODevice::ReadOnly | QIODevice::Text);
     QXmlStreamReader *secReader = new QXmlStreamReader(secFile);
 
     QMap<int, int> songIDToSeconds;
     int startTime = 0;
-    int ID = 0;
-
+    ID = 0;
     //iterate through songIDToList, put all the IDs and 0 into the songIDToSeconds map
     QMap<int, int>::iterator iter;
     iter = songIDToList.begin();
@@ -505,23 +555,18 @@ QList<SongInfo>* Database::get_all_song_info(){
         }
     }
     //put all the counts from the map into the list
-    QMap<int, int>::iterator it;
-    int listPos = 0;
+    QMap<int, int>::iterator id_sec_iter;
+    listPos = 0;
     //QString* stringPtr;
-    for(it = songIDToSeconds.begin(); it!=songIDToSeconds.end(); it++) {
-        listPos = songIDToList[it.key()];
+    for(id_sec_iter = songIDToSeconds.begin(); id_sec_iter!=songIDToSeconds.end(); id_sec_iter++) {
+        listPos = songIDToList[id_sec_iter.key()];
         SongInfo tempInfo;
-        tempInfo = ret->takeAt(listPos);
-        tempInfo.seconds = it.value();
-        ret->insert(listPos, tempInfo);
-
+        tempInfo = song_list->takeAt(listPos);
+        tempInfo.seconds = id_sec_iter.value();
+        song_list->insert(listPos, tempInfo);
     }
 
-    secFile->close();
-    secReader->clear();
-    delete secFile;
-    delete secReader;
-
+/*
     //albums
     //need a map called albumIDToSong
     //also need to insert album name
@@ -589,9 +634,9 @@ QList<SongInfo>* Database::get_all_song_info(){
                 listPos = songIDToList[ID];
 
                 SongInfo tempInfo;
-                tempInfo = ret->takeAt(listPos);
+                tempInfo = song_list->takeAt(listPos);
                 tempInfo.albumName = name;
-                ret->insert(listPos, tempInfo);
+                song_list->insert(listPos, tempInfo);
             }
         }
     }
@@ -668,9 +713,9 @@ QList<SongInfo>* Database::get_all_song_info(){
                 listPos = songIDToList[ID];
 
                 SongInfo tempInfo;
-                tempInfo = ret->takeAt(listPos);
+                tempInfo = song_list->takeAt(listPos);
                 tempInfo.artistName = name;
-                ret->insert(listPos, tempInfo);
+                song_list->insert(listPos, tempInfo);
 
                 //ret[listPos].artistName = name;
 
@@ -686,8 +731,8 @@ QList<SongInfo>* Database::get_all_song_info(){
     aRelReader->clear();
     delete aRelFile;
     delete aRelReader;
-
-    return ret;
+*/
+    return song_list;
 }
 
 void Database::add_song(int songID, const QString &filename,const QString &name, const QDateTime& created,

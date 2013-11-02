@@ -2,6 +2,7 @@
 
 #include <QtGui>
 
+#include "stardelegate.h"
 #include "media_manager.h"
 #include "button_container.h"
 #include "play_controller.h"
@@ -89,6 +90,8 @@ void Main_View::create_center_pane()
     centerPane = new Pane("Default Playlist", table);
     connect(table, SIGNAL(doubleClicked(QModelIndex)),
             this, SLOT(select_center_item(QModelIndex)));
+
+    table->setItemDelegate(new StarDelegate);
 
     // Add to splitter
     splitter->addWidget(centerPane);

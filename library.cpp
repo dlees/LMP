@@ -38,7 +38,8 @@ void Library::load_songs()
     SongInfo songI;
     foreach(songI, *songsInfo){
         song = new Song(songI.songName, songI.songID, songI.fileName, songI.seconds,
-                        0, songI.created, songI.artistName, songI.albumName);
+                        songI.rating, songI.created, songI.artistName, songI.albumName);
+
         add_song(song);
 
         if (songI.songID > Music_Item::max_id)

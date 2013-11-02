@@ -17,7 +17,6 @@ Song::Song(const QString &filename_)
     : Music_Item(filename_),
       filename(filename_),
       seconds(0),
-      rating(3),
       created(QDateTime::currentDateTime())
 
 {
@@ -41,9 +40,9 @@ Song::Song(const QString &name_, int id_,
      const QString &filename_, int seconds_,
      int rating_, QDateTime created_,
      const QString &artist_, const QString &album_)
-    : Music_Item(name_, id_),
+    : Music_Item(name_, id_, rating_),
       filename(filename_), seconds(seconds_),
-      rating(rating_), created(created_),
+      created(created_),
       artist(artist_), album(album_)
 {    
     mediaObject = new Phonon::MediaObject;
@@ -118,6 +117,11 @@ void Song::stop_playing()
 void Song::start_playing()
 {
     Music_Item::start_playing();
+    emit data_changed();
+}
+
+void Song::emit_data_changed()
+{
     emit data_changed();
 }
 

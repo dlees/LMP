@@ -21,13 +21,13 @@ struct HotspotInfo{
 class SongInfo{
 public:
     SongInfo();
-    SongInfo(const SongInfo& other);
     //ID, name, filename, created, seconds, album, artist
     int songID;
     QString songName;
     QString fileName;
     QDateTime created;
     int seconds;
+    int rating;
     QString albumName;
     QString artistName;
 };
@@ -47,7 +47,6 @@ public:
     void add_song(int ID, const QString &filename, const QString &name, const QDateTime &created,
                   const QString &artistName = "noName", const QString &albumName = "noAName", int albumID = 43, int artistID = 42);
     void delete_song(int ID);
-    QList<SongInfo> *get_all_song_info();
 
     void add_hotspot(int songID, qint64 hotspot);
     void delete_hotspot(int songID, qint64 hotspot);
@@ -67,10 +66,14 @@ public:
     QList<int> find(const QString &str);
 
     void new_playlist(const QString &name, int ID, bool is_catalog);
+    void delete_playlist(int listID);
+
     void add_to_playlist(int songID, int listID);
     void delete_from_playlist(int songID, int listID);
-    void delete_playlist(int listID);
+
     void edit_playlist_name(int listID, QString newName);
+
+    QList<SongInfo> *get_all_song_info();
     QList<PlaylistInfo> *get_all_list_info();
 
     void setup_rating_count();
@@ -80,6 +83,8 @@ public:
     // saves current timestamp in a field called "timestamp"
     void save_cur_timestamp(QDomDocument &document, QDomElement &entry);
     QDomElement create_entry(QDomDocument &document, const QString &entry_name, const QString &root_name);
+
+    void load_file(const std::string &filename, QDomDocument &document, const QString &root_name);
 private:
     QDomDocument song;
     QDomDocument playlist;
@@ -90,9 +95,10 @@ private:
     QDomDocument songsOnAlbum;
     QDomDocument albumsByArtist;
     QDomDocument hotspots;
+    QDomDocument ratingCount;
 
     Database();
-    void saveFile(QDomDocument, QString);
+    void saveFile(QDomDocument &, const QString &);
 };
 
 #endif // DATABASE_H

@@ -150,13 +150,13 @@ const QList<Music_Item *> &Collection::get_children() const
     return children;
 }
 
-int Collection::total_secs() const
+int Collection::total_millisecs() const
 {
     Music_Item *item;
     int sum = 0;
 
     foreach (item, children)
-        sum += item->total_secs();
+        sum += item->total_millisecs();
 
     return sum;
 }
@@ -198,7 +198,7 @@ int Collection::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     if (!children.count())
-        return 3;
+        return 4;
 
     return children[0]->get_column_data().size();
 }
@@ -230,11 +230,11 @@ QVariant Collection::headerData(int section, Qt::Orientation orientation, int ro
         switch (section) {
             case 0:
                 return tr("Name");
-
             case 1:
-                return tr("Seconds");                
-
+                return tr("Seconds");
             case 2:
+                return tr("Rating");
+            case 3:
                 return tr("Artist");
 
             default:
@@ -270,3 +270,20 @@ void Collection::stop_playing()
     Music_Item::stop_playing();
     emit data_changed();
 }
+
+void Collection::emit_data_changed()
+{
+    emit data_changed();
+}
+/*
+int Collection::get_rating() const
+{
+    Music_Item *item;
+    int sum = 0;
+    int count = const_cast<Collection*>(this)->get_leaves().size();
+
+    foreach (item, children)
+        sum += item->get_rating();
+
+    return sum/count;
+}*/

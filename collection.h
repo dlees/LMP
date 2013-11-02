@@ -27,8 +27,8 @@ public:
     int count()
         {return children.size();}
 
-    virtual int total_secs() const;
-    virtual QLinkedList<Song*> get_leaves();
+    virtual int total_millisecs() const;
+    virtual QLinkedList<Song*> get_leaves() ;
 
     QStandardItemModel *get_model();
 
@@ -52,6 +52,10 @@ public:
 
     virtual void start_playing();
     virtual void stop_playing();
+
+    virtual void emit_data_changed();
+
+  //  virtual int get_rating() const;
 
 public slots:
     void data_updated();

@@ -30,7 +30,7 @@ public:
 
     void add_secs(int amt);
 
-    virtual int total_secs() const
+    virtual int total_millisecs() const
         { return seconds; }
 
     virtual QLinkedList<Song *> get_leaves();
@@ -43,6 +43,7 @@ public:
 
     virtual void stop_playing();
     virtual void start_playing();
+    virtual void emit_data_changed();
 
 signals:
     // anytime our data is changed
@@ -55,7 +56,6 @@ private slots:
 private:
     QString filename;
     int seconds;
-    int rating; // rating out of 5
     QDateTime created;
 
     Phonon::MediaObject *mediaObject;

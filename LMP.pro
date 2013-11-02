@@ -32,7 +32,9 @@ SOURCES += main.cpp\
     mini_mode_controller.cpp \
     hotspots.cpp \
     qcustomplot.cpp \
-    catalog.cpp
+    catalog.cpp \
+    star_rating.cpp \
+    stardelegate.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -54,7 +56,9 @@ HEADERS  += mainwindow.h \
     mini_mode_controller.h \
     hotspots.h \
     qcustomplot.h \
-    catalog.h
+    catalog.h \
+    star_rating.h \
+    stardelegate.h
 
 OTHER_FILES +=
 

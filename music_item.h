@@ -6,14 +6,15 @@
 
 #include <QtGui>
 
+#include "star_rating.h"
+
 class Song;
 
 class Music_Item
 {
 public:
     Music_Item(const QString &name);
-    Music_Item(const QString &name_, int id_)
-        : name(name_), is_playing(false), id(id_) {}
+    Music_Item(const QString &name_, int id_, int rating = 2);
 
     virtual ~Music_Item() = 0;
 
@@ -23,7 +24,7 @@ public:
     int get_id() const
         { return id; }
 
-    virtual int total_secs() const = 0;
+    virtual int total_millisecs() const = 0;
     virtual QLinkedList<Song*> get_leaves() = 0;
 
     // have Media Manager start playing this item
@@ -48,7 +49,16 @@ public:
 
     virtual QList<QVariant> get_column_data() const = 0;
 
+    virtual void emit_data_changed() = 0;
+
     static int max_id;
+
+    // template method pattern, composite pattern
+    Star_Rating get_star_rating() const;
+    virtual int get_rating() const;
+
+
+
 protected:
     QString name;
 
@@ -58,6 +68,7 @@ private:
     int id;
 
     int cur_rating;
+
 
 };
 
