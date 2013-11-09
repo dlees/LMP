@@ -8,14 +8,14 @@ Music_Item::Music_Item(const QString &name_)
     : name(name_),
       is_playing(false),
       id(++max_id),
-      cur_rating(2)
+      star_rating(2, 6)
 {
 
 }
 
 Music_Item::Music_Item(const QString &name_, int id_, int rating)
     : name(name_), is_playing(false),
-      id(id_), cur_rating(rating){}
+      id(id_), star_rating(rating, 6){}
 
 Music_Item::~Music_Item()
 {
@@ -36,23 +36,19 @@ QList<QVariant> Music_Item::get_column_data() const
     return QList<QVariant>()
             << (is_playing?"->":"") + get_name()
             << (total_millisecs()/1000)
-            << qVariantFromValue(get_star_rating())
+           // << qVariantFromValue(star_rating)
                ;
 }
 
 void Music_Item::change_rating(int new_rating)
 {
     Database::get()->save_rating_count(get_id(), new_rating);
-    cur_rating = new_rating;
+    star_rating.setStarCount(new_rating);
     emit_data_changed();
 }
 
 Star_Rating Music_Item::get_star_rating() const
 {
-    return Star_Rating(get_rating(), 6);
+    return star_rating;
 }
 
-int Music_Item::get_rating() const
-{
-    return cur_rating;
-}

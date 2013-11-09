@@ -94,7 +94,8 @@ void Main_View::create_center_pane()
             this, SLOT(select_center_item(QModelIndex)));
 
     table->setItemDelegate(new StarDelegate);
-
+//    table->setEditTriggers(QAbstractItemView::DoubleClicked
+//                           | QAbstractItemView::SelectedClicked);
     // Add to splitter
     splitter->addWidget(centerPane);
 

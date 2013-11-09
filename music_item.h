@@ -53,11 +53,7 @@ public:
 
     static int max_id;
 
-    // template method pattern, composite pattern
-    Star_Rating get_star_rating() const;
-    virtual int get_rating() const;
-
-
+    virtual Star_Rating get_star_rating() const;
 
 protected:
     QString name;
@@ -67,9 +63,7 @@ private:
 
     int id;
 
-    int cur_rating;
-
-
+    Star_Rating star_rating;
 };
 
 #endif // MUSIC_ITEM_H

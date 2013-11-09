@@ -123,11 +123,11 @@ void Collection::remove(int index)
         disconnect(song, SIGNAL(data_changed()),
                 this, SLOT(data_updated()));
 
-        if (get_name() != "All Songs")
-        {
-            qDebug() << "Removing" << song->get_name() << "from" << get_name();
-            Database::get()->delete_from_playlist(song->get_id(), get_id());
-        }
+//        if (get_name() != "All Songs")
+//        {
+//            qDebug() << "Removing" << song->get_name() << "from" << get_name();
+//            Database::get()->delete_from_playlist(song->get_id(), get_id());
+//        }
     }
 
     if (Collection *col = dynamic_cast<Collection*>(children[index]))
@@ -135,8 +135,8 @@ void Collection::remove(int index)
         disconnect(col, SIGNAL(data_changed()),
                 this, SLOT(data_updated()));
 
-        if (get_name() == "Library")
-            Database::get()->delete_playlist(col->get_id());
+//        if (get_name() == "Library")
+//            Database::get()->delete_playlist(col->get_id());
     }
 
 

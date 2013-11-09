@@ -1,6 +1,6 @@
 #include "star_rating.h"
 
-const float PaintingScaleFactor = 10;
+const float PaintingScaleFactor = 15;
 
 Star_Rating::Star_Rating(int starCount, int maxStarCount)
  {

@@ -1,6 +1,9 @@
 #include "stardelegate.h"
 
 #include "star_rating.h"
+#include "stareditor.h"
+
+// http://harmattan-dev.nokia.com/docs/platform-api-reference/xml/daily-docs/libqt4/itemviews-stardelegate.html
 
 void StarDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
                          const QModelIndex &index) const
@@ -35,6 +38,7 @@ QWidget *StarDelegate::createEditor(QWidget *parent,
                                       const QModelIndex &index) const
 
   {
+    qDebug() << "Create Editor";
       if (qVariantCanConvert<Star_Rating>(index.data())) {
           StarEditor *editor = new StarEditor(parent);
           connect(editor, SIGNAL(editingFinished()),
@@ -43,4 +47,37 @@ QWidget *StarDelegate::createEditor(QWidget *parent,
       } else {
           return QStyledItemDelegate::createEditor(parent, option, index);
       }
-  }*/
+  }
+
+void StarDelegate::commitAndCloseEditor()
+{
+    StarEditor *editor = qobject_cast<StarEditor *>(sender());
+    emit commitData(editor);
+    emit closeEditor(editor);
+}
+
+void StarDelegate::setEditorData(QWidget *editor,
+                                 const QModelIndex &index) const
+{
+    qDebug() << "Set Model Data: Star_Rating";
+    if (qVariantCanConvert<Star_Rating>(index.data())) {
+        Star_Rating starRating = qVariantValue<Star_Rating>(index.data());
+        StarEditor *starEditor = qobject_cast<StarEditor *>(editor);
+        starEditor->setStarRating(starRating);
+    } else {
+        QStyledItemDelegate::setEditorData(editor, index);
+    }
+}
+
+void StarDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
+                                const QModelIndex &index) const
+{
+    qDebug() << "Set Model Data: Star_Rating";
+    if (qVariantCanConvert<Star_Rating>(index.data())) {
+        StarEditor *starEditor = qobject_cast<StarEditor *>(editor);
+        model->setData(index, qVariantFromValue(starEditor->starRating()));
+    } else {
+        QStyledItemDelegate::setModelData(editor, model, index);
+    }
+}
+*/

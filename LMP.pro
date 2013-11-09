@@ -34,7 +34,8 @@ SOURCES += main.cpp\
     qcustomplot.cpp \
     catalog.cpp \
     star_rating.cpp \
-    stardelegate.cpp
+    stardelegate.cpp \
+    stareditor.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -58,7 +59,8 @@ HEADERS  += mainwindow.h \
     qcustomplot.h \
     catalog.h \
     star_rating.h \
-    stardelegate.h
+    stardelegate.h \
+    stareditor.h
 
 OTHER_FILES +=
 
