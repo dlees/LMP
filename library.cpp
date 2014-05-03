@@ -56,38 +56,88 @@ void Library::load_songs()
 // load playlists from the database
 void Library::load_playlists()
 {
-    Collection *playlist;
     QList<PlaylistInfo> *listsInfo;
     listsInfo = Database::get()->get_all_list_info();
 
-    QList<Music_Item*> songList;
-    int ID = 0;
-
-    PlaylistInfo playlistI;
-    foreach(playlistI, *listsInfo)
+    QList<int> item_ids;
+    QMap<int, PlaylistInfo> all_playlists_info;
+    foreach(PlaylistInfo info, *listsInfo)
     {
-        songList.clear();
-
-        foreach(ID, playlistI.songIDs)
-        {
-            songList.append(get_item(ID));
-        }
-
-        if (playlistI.is_catalog)
-        {
-            playlist = new Catalog(playlistI.name, playlistI.ID, songList);
-            add_catalog(static_cast<Catalog*>(playlist));
-        }
-        else //its a playlist
-        {
-            playlist = new Playlist(playlistI.name, playlistI.ID, songList);
-            add_playlist(static_cast<Playlist*>(playlist));
-        }
-
-        if (playlistI.ID > Music_Item::max_id)
-            Music_Item::max_id = playlistI.ID;
+       item_ids.append(info.ID);
+       all_playlists_info.insert(info.ID, info);
     }
+
+    // We don't need the list that this returns, so just delete it
+    delete load_playlists(item_ids, all_playlists_info);
+
     qDebug() << "Playlists Loaded";
+}
+
+/* This will load all of the playlist ids
+ * REQUIRES: Songs to be loaded
+ *
+ * Remember to delete the list of items that this returns
+**/
+QList<Music_Item*> *Library::load_playlists(const QList<int> &item_ids, const QMap<int, PlaylistInfo> &all_playlists_info)
+{
+    QList<Music_Item*> *items = new QList<Music_Item*>;
+    foreach(int id, item_ids)
+    {
+        // Check to see if this item already exists
+        // This will pick up any songs or previously created collections
+        if (id_to_item.contains(id))
+        {
+            items->push_back(id_to_item.find(id).value());
+        }
+        else // the item doesn't exist, let's create it
+        {
+            const PlaylistInfo &playlistI = all_playlists_info.value(id);
+            if (playlistI.is_catalog)
+            {
+                items->push_back(load_catalog(playlistI, all_playlists_info));
+            }
+            else //its a playlist
+            {
+                items->push_back(load_playlist(playlistI));
+            }
+
+            if (playlistI.ID > Music_Item::max_id)
+                Music_Item::max_id = playlistI.ID;
+        }
+    }
+    return items;
+}
+
+Catalog *Library::load_catalog(const PlaylistInfo &catalog_info, const QMap<int, PlaylistInfo> &all_playlists_info)
+{
+    // go load all playlists that the catalog depends on
+    QList<int> item_ids;
+    foreach(int ID, catalog_info.songIDs)
+    {
+       item_ids.append(ID);
+    }
+
+    QList<Music_Item*> *items = load_playlists(item_ids, all_playlists_info);
+
+    Catalog *catalog = new Catalog(catalog_info.name, catalog_info.ID, *items);
+    add_catalog(catalog);
+
+    delete items;
+    return catalog;
+}
+
+Playlist *Library::load_playlist(const PlaylistInfo& playlistI)
+{
+    QList<Music_Item*> songList;
+    foreach(int ID, playlistI.songIDs)
+    {
+        songList.append(get_item(ID));
+    }
+
+    Playlist *playlist = new Playlist(playlistI.name, playlistI.ID, songList);
+    add_playlist(playlist);
+
+    return playlist;
 }
 
 Song *Library::get_song(const QString& filename)
@@ -141,10 +191,8 @@ void Library::add_song(Song *song)
 void Library::add_playlist(Playlist *list)
 {
     add(list);
-//    playlists->add(list);
 
     id_to_item.insert(list->get_id(), list);
-
 }
 
 void Library::add_catalog(Catalog *list)

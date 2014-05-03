@@ -10,6 +10,8 @@ class Song;
 class Playlist;
 class Catalog;
 
+struct PlaylistInfo;
+
 class Library : public Collection
 {
 public:
@@ -43,11 +45,14 @@ public:
 
 private:
     Collection *songs;
-    Collection *playlists;
 
     QMap<int, Music_Item*> id_to_item;
     QMap<QString, Song*> filename_to_song;
     QMap<QString, Catalog*> name_to_catalog;
+
+    Playlist *load_playlist(const PlaylistInfo& playlistI);
+    Catalog *load_catalog(const PlaylistInfo &catalog_info, const QMap<int, PlaylistInfo> &all_playlists_info);
+    QList<Music_Item*> *load_playlists(const QList<int> &item_ids, const QMap<int, PlaylistInfo> &all_playlists_info);
 };
 
 #endif // LIBRARY_H
