@@ -31,7 +31,6 @@ MainWindow::MainWindow(QWidget *parent)
     miniSize.setWidth(230);
     miniSize.setHeight(60);
 
-
     create_menu();
 
     this->setCentralWidget(mainView);
@@ -69,7 +68,7 @@ void MainWindow::create_menu()
     connect(add_menu_item((char*)"Add hotspot", true, hsMenu), SIGNAL(triggered()),
             &Playing_Song::get(), SLOT(set_hs()));
     connect(add_menu_item((char*)"Delete next hotspot", true, hsMenu), SIGNAL(triggered()),
-            &Playing_Song::get(), SLOT(remove_hs()));
+            &Playing_Song::get(), SLOT(remove_next_hs()));
 
  // Playlist Menu
     plMenu = menuBar()->addMenu(tr("&Playlists"));

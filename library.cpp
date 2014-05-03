@@ -17,14 +17,18 @@ Library::Library()
       songs(new Playlist("All Songs"))
 {
     add(songs);
-//    add(new Collection("Artists"));
-//    add(new Collection("Albums"));
-//    add(playlists);
-
 
 // Load stuff from database
-    load_songs();
-    load_playlists();
+    try
+    {
+        load_songs();
+        load_playlists();
+    }
+    catch (Error &msg)
+    {
+        msg.print_error_msg();
+        throw msg;
+    }
 }
 
 // load songs from the database
@@ -45,6 +49,8 @@ void Library::load_songs()
         if (songI.songID > Music_Item::max_id)
             Music_Item::max_id = songI.songID;
     }
+
+    qDebug() << "Songs Loaded";
 }
 
 // load playlists from the database
@@ -53,6 +59,7 @@ void Library::load_playlists()
     Collection *playlist;
     QList<PlaylistInfo> *listsInfo;
     listsInfo = Database::get()->get_all_list_info();
+
     QList<Music_Item*> songList;
     int ID = 0;
 
@@ -80,6 +87,7 @@ void Library::load_playlists()
         if (playlistI.ID > Music_Item::max_id)
             Music_Item::max_id = playlistI.ID;
     }
+    qDebug() << "Playlists Loaded";
 }
 
 Song *Library::get_song(const QString& filename)

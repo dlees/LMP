@@ -12,6 +12,8 @@
 #include <iostream>
 #include <fstream>
 
+#include "Error.h"
+
 using namespace std;
 
 
@@ -559,179 +561,21 @@ QList<SongInfo>* Database::get_all_song_info(){
     listPos = 0;
     //QString* stringPtr;
     for(id_sec_iter = songIDToSeconds.begin(); id_sec_iter!=songIDToSeconds.end(); id_sec_iter++) {
+
         listPos = songIDToList[id_sec_iter.key()];
+
         SongInfo tempInfo;
+
+        if (listPos >= song_list->size())
+            throw Error(QString("SongID: ") + QString::number(id_sec_iter.key()) + QString(" is not in song list!"));
+
         tempInfo = song_list->takeAt(listPos);
+
         tempInfo.seconds = id_sec_iter.value();
         song_list->insert(listPos, tempInfo);
+
     }
 
-/*
-    //albums
-    //need a map called albumIDToSong
-    //also need to insert album name
-
-    QFile *albumFile = new QFile("database/album.xml");
-    albumFile->open(QIODevice::ReadOnly | QIODevice::Text);
-    QXmlStreamReader *albumReader = new QXmlStreamReader(albumFile);
-
-    QMap<int, QString> albumIDToName;
-    QString name;
-
-    while(!albumReader->atEnd() && !albumReader->hasError()){
-        //read next
-        QXmlStreamReader::TokenType token = albumReader->readNext();
-        if(token==QXmlStreamReader::StartDocument){
-            continue;
-        }
-        if(token==QXmlStreamReader::StartElement){
-            if(albumReader->name() == "album"){
-                //in a new count
-                continue;
-            }
-            if(albumReader->name() == "name"){
-                name = albumReader->readElementText();
-            }
-            if(albumReader->name() == "ID"){
-                temp = albumReader->readElementText();
-                albumIDToName[temp.toInt()] = name;
-            }
-        }
-    }
-
-    albumFile->close();
-    albumReader->clear();
-    delete albumFile;
-    delete albumReader;
-
-    QFile *albFile = new QFile("database/songsOnAlbum.xml");
-    albFile->open(QIODevice::ReadOnly | QIODevice::Text);
-    QXmlStreamReader *albReader = new QXmlStreamReader(albFile);
-
-    QMap<int, int> albumIDToSong;
-
-    while(!albReader->atEnd() && !albReader->hasError()){
-        //read next
-        QXmlStreamReader::TokenType token = albReader->readNext();
-        if(token==QXmlStreamReader::StartDocument){
-            continue;
-        }
-        if(token==QXmlStreamReader::StartElement){
-            if(albReader->name() == "songOnAlbum"){
-                //in a new thing
-                continue;
-            }
-            if(albReader->name() == "songID"){
-                temp = albReader->readElementText();
-                ID = temp.toInt();
-            }
-            if(albReader->name() == "albumID"){
-                temp = albReader->readElementText();
-                albumIDToSong[temp.toInt()] = ID;
-
-                //put the album name in the list
-                name = albumIDToName[temp.toInt()];
-                listPos = songIDToList[ID];
-
-                SongInfo tempInfo;
-                tempInfo = song_list->takeAt(listPos);
-                tempInfo.albumName = name;
-                song_list->insert(listPos, tempInfo);
-            }
-        }
-    }
-    albFile->close();
-    albReader->clear();
-    delete albFile;
-    delete albReader;
-
-    //now for the artists
-    //we still have that map of ids to positions, which will come in handy
-    //we might as well just create a map of artists to ids first
-    //I really hope this doesn't end up taking like 5 minutes
-
-    QFile *artFile = new QFile("database/artist.xml");
-    artFile->open(QIODevice::ReadOnly | QIODevice::Text);
-    QXmlStreamReader *artReader = new QXmlStreamReader(artFile);
-
-    QMap<int, QString> artIDToName;
-
-    while(!artReader->atEnd() && !artReader->hasError()){
-        //read next
-        QXmlStreamReader::TokenType token = artReader->readNext();
-        if(token==QXmlStreamReader::StartDocument){
-            continue;
-        }
-        if(token==QXmlStreamReader::StartElement){
-            if(artReader->name() == "artist"){
-                //in a new count
-                continue;
-            }
-            if(artReader->name() == "name"){
-                name = artReader->readElementText();
-            }
-            if(artReader->name() == "ID"){
-                temp = artReader->readElementText();
-                artIDToName[temp.toInt()] = name;
-            }
-        }
-    }
-
-    artFile->close();
-    artReader->clear();
-    delete artFile;
-    delete artReader;
-
-    //now get the album/artist relationship, and add to the list
-    //this function is going to be way too long, but c'est la vie.
-    QFile *aRelFile = new QFile("database/albumsByArtist.xml");
-    aRelFile->open(QIODevice::ReadOnly | QIODevice::Text);
-    QXmlStreamReader *aRelReader = new QXmlStreamReader(aRelFile);
-
-    int albumID;
-
-    while(!aRelReader->atEnd() && !aRelReader->hasError()){
-        //read next
-        QXmlStreamReader::TokenType token = aRelReader->readNext();
-        if(token==QXmlStreamReader::StartDocument){
-            continue;
-        }
-        if(token==QXmlStreamReader::StartElement){
-            if(aRelReader->name() == "albumByArtist"){
-                //in a new ABA
-                continue;
-            }
-            if(aRelReader->name() == "albumID"){
-                temp = aRelReader->readElementText();
-                albumID = temp.toInt();
-            }
-            if(aRelReader->name() == "artistID"){
-                temp = aRelReader->readElementText();
-                //put the artist name in the list
-                ID = albumIDToSong[albumID];
-                name = artIDToName[temp.toInt()];
-                listPos = songIDToList[ID];
-
-                SongInfo tempInfo;
-                tempInfo = song_list->takeAt(listPos);
-                tempInfo.artistName = name;
-                song_list->insert(listPos, tempInfo);
-
-                //ret[listPos].artistName = name;
-
-                //have to take it out to change it
-                //QList<QString> tempList;
-                //tempList = ret->takeAt(listPos);
-                //tempList.append(name);
-                //ret->insert(listPos, tempList);
-            }
-        }
-    }
-    aRelFile->close();
-    aRelReader->clear();
-    delete aRelFile;
-    delete aRelReader;
-*/
     return song_list;
 }
 

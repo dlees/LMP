@@ -103,6 +103,8 @@ void Song::set_song_data(Phonon::State, Phonon::State oldstate)
     if (mediaObject->metaData("ARTIST").size())
         artist = mediaObject->metaData("ARTIST").at(0);
 
+    qDebug() << name << " metadata set";
+
     delete mediaObject;
 
     emit data_changed();

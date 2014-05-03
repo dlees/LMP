@@ -77,6 +77,8 @@ void Main_View::create_library_pane()
 
     // Add to splitter
     splitter->addWidget(libraryPane);
+
+    qDebug() << "Library Pane Created";
 }
 
 void Main_View::create_center_pane()
@@ -95,6 +97,8 @@ void Main_View::create_center_pane()
 
     // Add to splitter
     splitter->addWidget(centerPane);
+
+    qDebug() << "Center Pane Created";
 }
 
 void Main_View::create_playlist_pane()
@@ -110,6 +114,8 @@ void Main_View::create_playlist_pane()
 
     // Add to splitter
     splitter->addWidget(playlistPane);
+
+    qDebug() << "Playlist Pane Created";
 }
 
 void Main_View::create_graph()
