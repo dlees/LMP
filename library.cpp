@@ -68,17 +68,18 @@ void Library::load_playlists()
     }
 
     // We don't need the list that this returns, so just delete it
-    delete load_playlists(item_ids, all_playlists_info);
+    delete get_items(item_ids, all_playlists_info);
 
     qDebug() << "Playlists Loaded";
 }
 
-/* This will load all of the playlist ids
+/* This will return a list of all the music items for the item_ids passed in.
+ * If an id for a collection doesn't exist, it will be created by the data in the map
  * REQUIRES: Songs to be loaded
  *
  * Remember to delete the list of items that this returns
 **/
-QList<Music_Item*> *Library::load_playlists(const QList<int> &item_ids, const QMap<int, PlaylistInfo> &all_playlists_info)
+QList<Music_Item*> *Library::get_items(const QList<int> &item_ids, const QMap<int, PlaylistInfo> &all_playlists_info)
 {
     QList<Music_Item*> *items = new QList<Music_Item*>;
     foreach(int id, item_ids)

@@ -52,7 +52,7 @@ private:
 
     Playlist *load_playlist(const PlaylistInfo& playlistI);
     Catalog *load_catalog(const PlaylistInfo &catalog_info, const QMap<int, PlaylistInfo> &all_playlists_info);
-    QList<Music_Item*> *load_playlists(const QList<int> &item_ids, const QMap<int, PlaylistInfo> &all_playlists_info);
+    QList<Music_Item*> *get_items(const QList<int> &item_ids, const QMap<int, PlaylistInfo> &all_playlists_info);
 };
 
 #endif // LIBRARY_H
