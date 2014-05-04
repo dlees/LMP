@@ -7,7 +7,11 @@ Catalog::Catalog(const QString &name)
     Database::get()->new_playlist(get_name(), get_id(), true);
 }
 
-Catalog::Catalog(const QString &name, int id_,
-         const QList<Music_Item*> &items)
-    : Collection(name, id_, items)
+Catalog::Catalog(const QString &name, int id_)
+    : Collection(name, id_)
 {}
+
+void Catalog::insert_items_no_db(const QList<Music_Item *> &items)
+{
+    Collection::insert_items_no_db(items);
+}

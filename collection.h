@@ -11,6 +11,7 @@ class Collection : public QAbstractTableModel, public Music_Item
     Q_OBJECT
 public:
     Collection(const QString &name);
+    Collection(const QString &name_, int id_);
     Collection(const QString &name_, int id_,
                const QList<Music_Item*> &items);
 
@@ -56,6 +57,9 @@ public:
     virtual void emit_data_changed();
 
   //  virtual int get_rating() const;
+
+protected:
+    void insert_items_no_db(const QList<Music_Item*> &items);
 
 public slots:
     void data_updated();

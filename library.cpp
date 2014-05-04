@@ -111,18 +111,18 @@ QList<Music_Item*> *Library::get_items(const QList<int> &item_ids, const QMap<in
 
 Catalog *Library::load_catalog(const PlaylistInfo &catalog_info, const QMap<int, PlaylistInfo> &all_playlists_info)
 {
+    Catalog *catalog = new Catalog(catalog_info.name, catalog_info.ID);
+    add_catalog(catalog);
+
     // go load all playlists that the catalog depends on
     QList<int> item_ids;
     foreach(int ID, catalog_info.songIDs)
     {
        item_ids.append(ID);
     }
-
     QList<Music_Item*> *items = load_playlists(item_ids, all_playlists_info);
 
-    Catalog *catalog = new Catalog(catalog_info.name, catalog_info.ID, *items);
-    add_catalog(catalog);
-
+    catalog->insert_items_no_db(*items);
     delete items;
     return catalog;
 }

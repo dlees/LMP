@@ -11,9 +11,19 @@ Collection::Collection(const QString &name)
 {
 }
 
+Collection::Collection(const QString &name_, int id_)
+    : Music_Item(name_, id_)
+{
+}
+
 Collection::Collection(const QString &name_, int id_,
            const QList<Music_Item*> &items)
     : Music_Item(name_, id_)
+{
+    insert_items_no_db(items);
+}
+
+void Collection::insert_items_no_db(const QList<Music_Item*> &items)
 {
     Music_Item *item;
     foreach (item, items)
