@@ -93,6 +93,7 @@ Database::Database(){
     //load or create all files/tables
 
     songs_db_changed = false;
+    song_in_playlist_changed = false;
 
     ofstream temp;
     if(!QDir("database").exists()){
@@ -212,6 +213,11 @@ void Database::save_sec_count(int ID, qint64 start, qint64 end)
     {
         save_songs();
         songs_db_changed = false;
+    }
+    if (song_in_playlist_changed)
+    {
+        saveFile(songsInPlaylist, "database/songsInPlaylist.xml");
+        song_in_playlist_changed = false;
     }
 }
 
@@ -865,7 +871,7 @@ void Database::add_to_playlist(int songID, int listID){
         LIDE.appendChild(LIDT);
         SIPE.appendChild(LIDE);
 
-        saveFile(songsInPlaylist, "database/songsInPlaylist.xml");
+        song_in_playlist_changed = true;
     }
 }
 

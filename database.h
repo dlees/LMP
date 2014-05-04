@@ -101,6 +101,7 @@ private:
     void saveFile(QDomDocument &, const QString &);
 
     bool songs_db_changed;
+    bool song_in_playlist_changed;
 
 };
 
