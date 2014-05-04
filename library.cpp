@@ -67,8 +67,9 @@ void Library::load_playlists()
        all_playlists_info.insert(info.ID, info);
     }
 
-    // We don't need the list that this returns, so just delete it
-    delete get_items(item_ids, all_playlists_info);
+    QList<Music_Item*> *items = get_items(item_ids, all_playlists_info);
+    insert_items_no_db(*items);
+    delete items;
 
     qDebug() << "Playlists Loaded";
 }
@@ -111,6 +112,8 @@ QList<Music_Item*> *Library::get_items(const QList<int> &item_ids, const QMap<in
 
 Catalog *Library::load_catalog(const PlaylistInfo &catalog_info, const QMap<int, PlaylistInfo> &all_playlists_info)
 {
+    // doing this first without the items may prevent cycle problems if I
+    // ever support them.
     Catalog *catalog = new Catalog(catalog_info.name, catalog_info.ID);
     add_catalog(catalog);
 
@@ -120,7 +123,7 @@ Catalog *Library::load_catalog(const PlaylistInfo &catalog_info, const QMap<int,
     {
        item_ids.append(ID);
     }
-    QList<Music_Item*> *items = load_playlists(item_ids, all_playlists_info);
+    QList<Music_Item*> *items = get_items(item_ids, all_playlists_info);
 
     catalog->insert_items_no_db(*items);
     delete items;
@@ -191,14 +194,12 @@ void Library::add_song(Song *song)
 
 void Library::add_playlist(Playlist *list)
 {
-    add(list);
 
     id_to_item.insert(list->get_id(), list);
 }
 
 void Library::add_catalog(Catalog *list)
 {
-    add(list);
     id_to_item.insert(list->get_id(), list);
 
     name_to_catalog.insert(list->get_name(), list);
