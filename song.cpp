@@ -44,7 +44,11 @@ Song::Song(const QString &name_, int id_,
       filename(filename_), seconds(seconds_),
       created(created_),
       artist(artist_), album(album_)
-{    
+{
+    // if the name doesn't look like a filename
+    if (!name.contains(":\\") && !name.contains(":/"))
+        return;
+
     mediaObject = new Phonon::MediaObject;
 
     mediaObject->setCurrentSource(filename_);
@@ -99,11 +103,15 @@ void Song::set_song_data(Phonon::State, Phonon::State oldstate)
 
     if (mediaObject->metaData("TITLE").size())
         name = mediaObject->metaData("TITLE").at(0);
+    else
+        return;
 
     if (mediaObject->metaData("ARTIST").size())
         artist = mediaObject->metaData("ARTIST").at(0);
 
     qDebug() << name << " metadata set";
+
+    Database::get()->update_song_name(get_id(), name);
 
     delete mediaObject;
 

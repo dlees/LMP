@@ -44,6 +44,8 @@ public:
     // save a sec count to the database
     void save_sec_count(int ID, qint64 start, qint64 end);
 
+    void update_song_name(int ID, const QString &new_name);
+
     void add_song(int ID, const QString &filename, const QString &name, const QDateTime &created,
                   const QString &artistName = "noName", const QString &albumName = "noAName", int albumID = 43, int artistID = 42);
     void delete_song(int ID);
@@ -88,12 +90,8 @@ public:
 private:
     QDomDocument song;
     QDomDocument playlist;
-    QDomDocument album;
-    QDomDocument artist;
     QDomDocument secCount;
     QDomDocument songsInPlaylist;
-    QDomDocument songsOnAlbum;
-    QDomDocument albumsByArtist;
     QDomDocument hotspots;
     QDomDocument ratingCount;
 
