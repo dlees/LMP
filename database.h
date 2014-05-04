@@ -50,6 +50,7 @@ public:
                   const QString &artistName = "noName", const QString &albumName = "noAName", int albumID = 43, int artistID = 42);
     void delete_song(int ID);
 
+
     void add_hotspot(int songID, qint64 hotspot);
     void delete_hotspot(int songID, qint64 hotspot);
     QList<HotspotInfo> *get_hotspot_info();
@@ -81,6 +82,7 @@ public:
     void setup_rating_count();
     void save_rating_count(int ID, int rating);
 
+    void save_songs();
 
     // saves current timestamp in a field called "timestamp"
     void save_cur_timestamp(QDomDocument &document, QDomElement &entry);

@@ -10,6 +10,7 @@
 #include "collection.h"
 #include "playlist.h"
 #include "error.h"
+#include "database.h"
 
 Main_View::Main_View(QWidget *parent)
     : QMainWindow(parent)
@@ -222,6 +223,7 @@ void Main_View::new_create_playlist_files(QString name)
 
 void Main_View::quit()
 {
+    Database::get()->save_songs();
     QApplication::quit();
 }
 

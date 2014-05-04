@@ -93,6 +93,12 @@ QList<Music_Item*> *Library::get_items(const QList<int> &item_ids, const QMap<in
         }
         else // the item doesn't exist, let's create it
         {
+            if (!all_playlists_info.contains(id))
+            {
+                qDebug() << "There is no info for id:" << id << " in the DB.";
+                continue;
+            }
+
             const PlaylistInfo &playlistI = all_playlists_info.value(id);
             if (playlistI.is_catalog)
             {

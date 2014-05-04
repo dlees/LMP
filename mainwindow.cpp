@@ -10,6 +10,7 @@
 #include "collection.h"
 #include "main_view.h"
 #include "mini_mode.h"
+#include "database.h"
 
 
 MainWindow::MainWindow(QWidget *parent)

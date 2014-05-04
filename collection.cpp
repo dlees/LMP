@@ -28,6 +28,9 @@ void Collection::insert_items_no_db(const QList<Music_Item*> &items)
     Music_Item *item;
     foreach (item, items)
     {
+        if (!item)
+            throw Error ("Collection.cpp: Cannot find an item while constructing " + get_name() + "!");
+
         if (Song *song = dynamic_cast<Song*>(item))
         {
             connect(song, SIGNAL(data_changed()),

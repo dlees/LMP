@@ -516,7 +516,7 @@ QList<SongInfo>* Database::get_all_song_info(){
         SongInfo tempInfo;
 
         if (listPos >= song_list->size())
-            throw Error(QString("SongID: ") + QString::number(id_sec_iter.key()) + QString(" is not in song list!"));
+            throw Error(QString("Database.cpp: SongID: ") + QString::number(id_sec_iter.key()) + QString(" is not in song list!"));
 
         tempInfo = song_list->takeAt(listPos);
 
@@ -544,11 +544,9 @@ void Database::update_song_name(int ID, const QString &new_name)
             nameE.appendChild(nameT);
 
             song_list.at(i).replaceChild(nameE, song_list.at(i).firstChildElement("name"));
+            return;
         }
-
     }
-
-    saveFile(song, "database/song.xml");
 }
 
 void Database::add_song(int songID, const QString &filename,const QString &name, const QDateTime& created,
@@ -593,7 +591,6 @@ void Database::add_song(int songID, const QString &filename,const QString &name,
             QDomText createdT = song.createTextNode(created.toString());
             createdE.appendChild(createdT);
             songE.appendChild(createdE);
-
         }
     }
 }
@@ -621,6 +618,12 @@ void Database::delete_song(int ID){
     song.setContent(&write_file);
     write_file.close();
 
+}
+
+void Database::save_songs()
+{
+    qDebug() << "Saving Songs";
+    saveFile(song, "database/song.xml");
 }
 
 int Database::find_filename(const QString &name){
