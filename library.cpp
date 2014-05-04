@@ -115,7 +115,13 @@ Catalog *Library::load_catalog(const PlaylistInfo &catalog_info, const QMap<int,
     // doing this first without the items may prevent cycle problems if I
     // ever support them.
     Catalog *catalog = new Catalog(catalog_info.name, catalog_info.ID);
-    add_catalog(catalog);
+
+    // In this version, we aren't adding the catalog to the library
+    // until all of the collections have been created.
+    // in the future we should have the library pane show a catalog instead of the library.
+    //add_catalog(catalog);
+    id_to_item.insert(catalog->get_id(), catalog);
+    name_to_catalog.insert(catalog->get_name(), catalog);
 
     // go load all playlists that the catalog depends on
     QList<int> item_ids;
@@ -139,7 +145,10 @@ Playlist *Library::load_playlist(const PlaylistInfo& playlistI)
     }
 
     Playlist *playlist = new Playlist(playlistI.name, playlistI.ID, songList);
-    add_playlist(playlist);
+
+    // see the comment in the load_catalog fxn
+    //add_playlist(playlist);
+    id_to_item.insert(playlist->get_id(), playlist);
 
     return playlist;
 }
@@ -194,12 +203,13 @@ void Library::add_song(Song *song)
 
 void Library::add_playlist(Playlist *list)
 {
-
+    add(list);
     id_to_item.insert(list->get_id(), list);
 }
 
 void Library::add_catalog(Catalog *list)
 {
+    add(list);
     id_to_item.insert(list->get_id(), list);
 
     name_to_catalog.insert(list->get_name(), list);
