@@ -364,7 +364,6 @@ QList<SongInfo>* Database::get_all_song_info(){
     QList<SongInfo> *song_list = new QList< SongInfo >;
     int i = 0;
     SongInfo *curSong = 0;
-    QMap<int, int> songIDToList;
     QString temp;
 
     QFile *songFile = new QFile("database/song.xml");
@@ -388,7 +387,6 @@ QList<SongInfo>* Database::get_all_song_info(){
             if(songReader->name() == "ID"){
                 temp = songReader->readElementText();
                 curSong->songID = temp.toInt();
-                songIDToList[temp.toInt()] = i++;
             }
             if(songReader->name() == "name"){
                 curSong->songName = songReader->readElementText();
@@ -401,6 +399,7 @@ QList<SongInfo>* Database::get_all_song_info(){
                 curSong->created = temp.fromString(songReader->readElementText());
                 //last one
                 song_list->append(*curSong);
+
             }
         }
     }
@@ -408,6 +407,12 @@ QList<SongInfo>* Database::get_all_song_info(){
     songReader->clear();
     delete songFile;
     delete songReader;
+
+    QMap<int, int> songIDToList;
+    for (int i = 0; i < song_list->size(); i++)
+    {
+        songIDToList.insert(song_list->at(i).songID, i);
+    }
 
     //RATINGS!
 
@@ -444,10 +449,9 @@ QList<SongInfo>* Database::get_all_song_info(){
     QMap<int, int>::iterator id_rating_iter;
     int listPos = 0;
     //QString* stringPtr;
-    for(id_rating_iter = songIDToRating.begin();
-        id_rating_iter != songIDToRating.end();
-        id_rating_iter++) {
+    for(id_rating_iter = songIDToRating.begin(); id_rating_iter != songIDToRating.end(); id_rating_iter++) {
         listPos = songIDToList[id_rating_iter.key()];
+
         SongInfo tempInfo;
         tempInfo = song_list->takeAt(listPos);
         tempInfo.rating = id_rating_iter.value();
@@ -505,6 +509,7 @@ QList<SongInfo>* Database::get_all_song_info(){
             }
         }
     }
+
     //put all the counts from the map into the list
     QMap<int, int>::iterator id_sec_iter;
     listPos = 0;
