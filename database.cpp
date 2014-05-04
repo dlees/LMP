@@ -92,6 +92,8 @@ void Database::load_file(const string &filename, QDomDocument &document, const Q
 Database::Database(){
     //load or create all files/tables
 
+    songs_db_changed = false;
+
     ofstream temp;
     if(!QDir("database").exists()){
         QDir().mkdir("database");
@@ -205,6 +207,12 @@ void Database::save_sec_count(int ID, qint64 start, qint64 end)
     save_cur_timestamp(secCount, secCountE);
 
     saveFile(secCount, "database/secCount.xml");
+
+    if (songs_db_changed)
+    {
+        save_songs();
+        songs_db_changed = false;
+    }
 }
 
 void Database::save_rating_count(int ID, int rating)
@@ -549,6 +557,7 @@ void Database::update_song_name(int ID, const QString &new_name)
             nameE.appendChild(nameT);
 
             song_list.at(i).replaceChild(nameE, song_list.at(i).firstChildElement("name"));
+            songs_db_changed = true;
             return;
         }
     }
@@ -596,8 +605,11 @@ void Database::add_song(int songID, const QString &filename,const QString &name,
             QDomText createdT = song.createTextNode(created.toString());
             createdE.appendChild(createdT);
             songE.appendChild(createdE);
+
+            songs_db_changed = true;
         }
     }
+
 }
 
 void Database::delete_song(int ID){

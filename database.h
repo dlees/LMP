@@ -99,6 +99,9 @@ private:
 
     Database();
     void saveFile(QDomDocument &, const QString &);
+
+    bool songs_db_changed;
+
 };
 
 #endif // DATABASE_H
