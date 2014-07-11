@@ -211,27 +211,27 @@ void MainWindow::switch_view_to_main()
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
-    if (event->key() == Qt::Key_Z)
+    if (event->key() == Qt::Key_Z || event->key() == Qt::Key_F3)
     {
         Playing_Song::get().prev_hs();
     }
-    else if (event->key() == Qt::Key_X)
+    else if (event->key() == Qt::Key_X || event->key() == Qt::Key_F4)
     {
         Playing_Song::get().next_hs();
     }
-    else if (event->key() == Qt::Key_C)
+    else if (event->key() == Qt::Key_C || event->key() == Qt::Key_F5)
     {
         Playing_Song::get().set_hs();
     }
-    else if (event->key() == Qt::Key_V)
+    else if (event->key() == Qt::Key_V || event->key() == Qt::Key_F6)
     {
         Playing_Song::get().remove_next_hs();
     }
-    else if (event->key() == Qt::Key_F)
+    else if (event->key() == Qt::Key_F || event->key() == Qt::Key_F7)
     {
         Media_Manager::get()->first();
     }
-    else if (event->key() == Qt::Key_R)
+    else if (event->key() == Qt::Key_R || event->key() == Qt::Key_F8)
     {
         Playing_Song::get().change_position(0);
     }
@@ -243,19 +243,19 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     {
         Media_Manager::get()->change_rating_cur_song(2);
     }
-    else if (event->key() == Qt::Key_3)
+    else if (event->key() == Qt::Key_3 || event->key() == Qt::Key_F9)
     {
         Media_Manager::get()->change_rating_cur_song(3);
     }
-    else if (event->key() == Qt::Key_4)
+    else if (event->key() == Qt::Key_4 || event->key() == Qt::Key_F10)
     {
         Media_Manager::get()->change_rating_cur_song(4);
     }
-    else if (event->key() == Qt::Key_5)
+    else if (event->key() == Qt::Key_5 || event->key() == Qt::Key_F11)
     {
         Media_Manager::get()->change_rating_cur_song(5);
     }
-    else if (event->key() == Qt::Key_6)
+    else if (event->key() == Qt::Key_6 || event->key() == Qt::Key_F12)
     {
         Media_Manager::get()->change_rating_cur_song(6);
     }
@@ -273,18 +273,18 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     {
         Media_Manager::get()->play_cur();
     }
-    else if (event->key() == Qt::Key_MediaStop)
+    else if (event->key() == Qt::Key_MediaStop || event->key() == Qt::Key_Escape)
     {
         if (centralWidget() == mainView)
             switch_view_to_mini();
         else
             switch_view_to_main();
     }
-    else if (event->key() == Qt::Key_MediaNext)
+    else if (event->key() == Qt::Key_MediaNext || event->key() == Qt::Key_F2)
     {
         Media_Manager::get()->next();
     }
-    else if (event->key() == Qt::Key_MediaPrevious)
+    else if (event->key() == Qt::Key_MediaPrevious || event->key() == Qt::Key_F1)
     {
         Media_Manager::get()->prev();
     }
