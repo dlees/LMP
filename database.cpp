@@ -190,7 +190,7 @@ Database::Database(){
 
 void Database::save_sec_count(int ID, qint64 start, qint64 end)
 {
-    qDebug() << ID << " : " << start << "->" << end;
+    qDebug() << "Save Sec count:" << ID << " : " << start << "->" << end;
 
     // Stores the second count. Saves the song,
     // the second of the song started and stopped playing at

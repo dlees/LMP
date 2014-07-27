@@ -14,11 +14,11 @@ Music_Player::Music_Player()
     Phonon::createPath(curSong, curAudio);
 
     curSong->setTickInterval(1000);
-    curSong->setPrefinishMark(10);
+    curSong->setPrefinishMark(1);
     volumeSlider->setAudioOutput(curAudio);
     volumeSlider->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
 
-    connect(curSong, SIGNAL(prefinishMarkReached(qint32)),
+    connect(curSong, SIGNAL(finished()),
             this, SLOT(almostDone()));
 
 }

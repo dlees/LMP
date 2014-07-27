@@ -59,6 +59,7 @@ public:
 
     ~Music_Player();
 
+    Phonon::MediaObject *curSong;
 public slots:
     void almostDone();
 
@@ -66,7 +67,6 @@ signals:
     void almost_done();
 
 private:
-    Phonon::MediaObject *curSong;
     Phonon::VolumeSlider *volumeSlider;
 };
 
