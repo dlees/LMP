@@ -59,7 +59,7 @@ void Playing_Song::update_position()
     if (!paused && song_exists() && cur_time - start_time > min_milli_secs_c)
     {
         long start_sec = position;
-        position += cur_time - start_time;
+        position = mp.curSong->currentTime();
         long end_sec = position;
 
         start_time = cur_time;
@@ -72,12 +72,7 @@ void Playing_Song::update_position()
 
 qint64 Playing_Song::get_position()
 {
-    if (get_media_object()->state() != Phonon::PlayingState)
-    {
-        return position;
-    }
-    qint64 cur_time = QDateTime::currentMSecsSinceEpoch();
-    return position + cur_time - start_time;
+    return  mp.curSong->currentTime();
 }
 
 // changes the curSong to the song
