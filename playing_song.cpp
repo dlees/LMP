@@ -41,8 +41,8 @@ void Playing_Song::play()
 
 void Playing_Song::pause()
 {
-    update_position();
     mp.pause_song();
+    update_position();
     paused = true;
 
     emit became_paused();
