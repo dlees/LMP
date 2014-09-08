@@ -371,11 +371,8 @@ QList<PlaylistInfo>* Database::get_all_list_info(){
     return ret;
 }
 
-QList<SongInfo>* Database::get_all_song_info(){
-    //returns a list of structs of this info in this order:
-    //ID, name, filename, created, seconds, album, artist
-
-    QList<SongInfo> *song_list = new QList< SongInfo >;
+void Database::parse_song_db(QList<SongInfo> *song_list)
+{
     SongInfo *curSong = 0;
     QString temp;
 
@@ -420,22 +417,16 @@ QList<SongInfo>* Database::get_all_song_info(){
     songReader->clear();
     delete songFile;
     delete songReader;
+}
 
-    QMap<int, int> songIDToList;
-    for (int i = 0; i < song_list->size(); i++)
-    {
-        songIDToList.insert(song_list->at(i).songID, i);
-    }
-
-    //RATINGS!
-
+void Database::parse_rating_db(QMap<int, int> &songIDToRating)
+{
     QFile *ratingFile = new QFile("database/ratingCount.xml");
     ratingFile->open(QIODevice::ReadOnly | QIODevice::Text);
     QXmlStreamReader *ratingReader = new QXmlStreamReader(ratingFile);
 
-    QMap<int, int> songIDToRating;
-
     int ID = 0;
+    QString temp;
 
     while(!ratingReader->atEnd() && !ratingReader->hasError()){
         //read next
@@ -458,43 +449,20 @@ QList<SongInfo>* Database::get_all_song_info(){
             }
         }
     }
-    //put all the counts from the map into the list
-    QMap<int, int>::iterator id_rating_iter;
-    int listPos = 0;
-    //QString* stringPtr;
-    for(id_rating_iter = songIDToRating.begin(); id_rating_iter != songIDToRating.end(); id_rating_iter++) {
-        listPos = songIDToList[id_rating_iter.key()];
-
-        SongInfo tempInfo;
-        tempInfo = song_list->takeAt(listPos);
-        tempInfo.rating = id_rating_iter.value();
-
-
-        song_list->insert(listPos, tempInfo);
-
-    }
-
     ratingFile->close();
     ratingReader->clear();
     delete ratingFile;
     delete ratingReader;
+}
 
-// Seconds
+void Database::parse_sec_count_db(QMap<int, int> &songIDToSeconds)
+{
     QFile *secFile = new QFile("database/secCount.xml");
     secFile->open(QIODevice::ReadOnly | QIODevice::Text);
     QXmlStreamReader *secReader = new QXmlStreamReader(secFile);
-
-    QMap<int, int> songIDToSeconds;
+    int ID = 0;
+    QString temp;
     int startTime = 0;
-    ID = 0;
-    //iterate through songIDToList, put all the IDs and 0 into the songIDToSeconds map
-    QMap<int, int>::iterator iter;
-    iter = songIDToList.begin();
-    for (iter = songIDToList.begin(); iter!=songIDToList.end(); iter++) {
-        songIDToSeconds[iter.key()] = 0;
-    }
-
-    iter = songIDToList.begin();
     while(!secReader->atEnd() && !secReader->hasError()){
         //read next
         QXmlStreamReader::TokenType token = secReader->readNext();
@@ -516,12 +484,60 @@ QList<SongInfo>* Database::get_all_song_info(){
             }
             if(secReader->name() == "endTime"){
                 temp = secReader->readElementText();
-                int ti;
-                ti = songIDToSeconds[ID];
-                songIDToSeconds[ID] = ti + (temp.toInt() - startTime);
+                if (songIDToSeconds.find(ID) == songIDToSeconds.end())
+                    songIDToSeconds[ID] = 0;
+
+                int total = songIDToSeconds[ID];
+                songIDToSeconds[ID] = total + (temp.toInt() - startTime);
             }
         }
     }
+    secFile->close();
+    secReader->clear();
+    delete secFile;
+    delete secReader;
+}
+
+QList<SongInfo>* Database::get_all_song_info(){
+    //returns a list of structs of this info in this order:
+    //ID, name, filename, created, seconds, album, artist
+
+    QList<SongInfo> *song_list = new QList< SongInfo >;
+    parse_song_db(song_list);
+
+    QMap<int, int> songIDToList;
+    for (int i = 0; i < song_list->size(); i++)
+    {
+        songIDToList.insert(song_list->at(i).songID, i);
+    }
+
+    //RATINGS!
+
+    QMap<int, int> songIDToRating;
+
+    parse_rating_db(songIDToRating);
+
+    //put all the counts from the map into the list
+    QMap<int, int>::iterator id_rating_iter;
+    int listPos = 0;
+    //QString* stringPtr;
+    for(id_rating_iter = songIDToRating.begin(); id_rating_iter != songIDToRating.end(); id_rating_iter++) {
+        listPos = songIDToList[id_rating_iter.key()];
+
+        SongInfo tempInfo;
+        tempInfo = song_list->takeAt(listPos);
+        tempInfo.rating = id_rating_iter.value();
+
+
+        song_list->insert(listPos, tempInfo);
+
+    }
+
+
+    // Seconds
+    QMap<int, int> songIDToSeconds;
+
+    parse_sec_count_db(songIDToSeconds);
 
     //put all the counts from the map into the list
     QMap<int, int>::iterator id_sec_iter;
@@ -548,7 +564,7 @@ QList<SongInfo>* Database::get_all_song_info(){
 
 void Database::update_song_name(int ID, const QString &new_name)
 {
-    qDebug() << ID << " : new_name : " << new_name;
+    qDebug() << "Database:" << ID << " : new_name : " << new_name;
 
     QDomNode song_root = song.elementsByTagName("songRoot").at(0);
     QDomNodeList song_list = song_root.childNodes();

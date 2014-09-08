@@ -89,6 +89,10 @@ public:
     QDomElement create_entry(QDomDocument &document, const QString &entry_name, const QString &root_name);
 
     void load_file(const std::string &filename, QDomDocument &document, const QString &root_name);
+
+    void parse_song_db(QList<SongInfo> *song_list);
+    void parse_rating_db(QMap<int, int> &songIDToRating);
+    void parse_sec_count_db(QMap<int, int> &songIDToSeconds);
 private:
     QDomDocument song;
     QDomDocument playlist;

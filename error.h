@@ -7,7 +7,7 @@
 
 struct Error
 {
-    Error(QString msg_) : msg(msg_) {qDebug() << msg;}
+    Error(QString msg_) : msg(msg_) {qWarning() << msg;}
 
     QString msg;
 
