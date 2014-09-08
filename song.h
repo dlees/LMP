@@ -30,7 +30,7 @@ public:
 
     void add_secs(int amt);
 
-    virtual int total_millisecs() const
+    virtual int get_milliseconds() const
         { return seconds; }
 
     virtual QLinkedList<Song *> get_leaves();

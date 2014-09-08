@@ -3,10 +3,11 @@
 
 #include <QString>
 #include <QMessageBox>
+#include <QDebug>
 
 struct Error
 {
-    Error(QString msg_) : msg(msg_) {}
+    Error(QString msg_) : msg(msg_) {qDebug() << msg;}
 
     QString msg;
 

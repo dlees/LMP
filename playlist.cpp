@@ -40,6 +40,7 @@ void Playlist::add(Music_Item *item)
         Collection::add(song);        
     }
     cur = Collection::count() - 1;
+    qDebug() << "Playlist: Added songs to collection";
 }
 
 void Playlist::select_child(int i)

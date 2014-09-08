@@ -182,7 +182,7 @@ void Main_View::add_files()
         return;
     }
 
-    qDebug() << *file << endl;
+    qDebug() << *file;
     Media_Manager::get()->play_new(*file);
 }
 
@@ -394,3 +394,40 @@ void Main_View::add_selected_lib_list_to_catalog()
     }
 }
 
+#include "datalist.h"
+#include "datalistdecorator.h"
+
+void Main_View::create_auto_playlist()
+{
+
+    DataList *datalist = Media_Manager::get()->get_center()->convert_to_secCount_datalist();
+
+    try {
+    create_decorator_combiner()
+            ->build(filter_decorator("value", 20000))
+            ->build(sort_decorator("value"))
+            ->build(create_playlist_decorator("Auto Playlist"))
+        ->decorate(datalist);
+    } catch (Error &e) {
+        e.print_error_msg();
+    }
+
+    delete datalist;
+}
+
+void Main_View::add_good_to_table()
+{
+    DataList *datalist = Media_Manager::get()->get_playlist()->convert_to_rating_datalist();
+
+    try {
+    create_decorator_combiner()
+            ->build(filter_decorator("value", 3)) //filter out ratings less than 3
+            ->build(sort_decorator("value")) // sort by greatest rating
+            ->build(add_to_collection_decorator(Media_Manager::get()->get_center()))
+        ->decorate(datalist);
+    } catch (Error &e) {
+        e.print_error_msg();
+    }
+
+    delete datalist;
+}

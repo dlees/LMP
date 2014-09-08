@@ -66,7 +66,8 @@ public slots:
 
     // creates a new playlist
     void new_playlist();
-    void new_playlist(QStringList*, QString);
+    void new_playlist(QStringList*, const QString &);
+    void new_playlist(const std::vector<int> &, const std::string &);
 
     Collection *get_playlist();
     Collection *get_center();
@@ -82,6 +83,7 @@ public slots:
 
     void change_rating_cur_song(int rating);
 
+    Music_Item *get_music_item(int id);
 signals:
     void became_paused();
     void started_playing();

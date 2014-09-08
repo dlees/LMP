@@ -163,13 +163,13 @@ const QList<Music_Item *> &Collection::get_children() const
     return children;
 }
 
-int Collection::total_millisecs() const
+int Collection::get_milliseconds() const
 {
     Music_Item *item;
     int sum = 0;
 
     foreach (item, children)
-        sum += item->total_millisecs();
+        sum += item->get_milliseconds();
 
     return sum;
 }
@@ -184,6 +184,35 @@ QLinkedList<Song*> Collection::get_leaves()
         leaves += item->get_leaves();
 
     return leaves;
+}
+
+#include "datalist.h"
+#include "datapoint.h"
+
+DataList *Collection::convert_to_secCount_datalist()
+{
+    DataList *list = DataList::get_instance();
+
+    foreach (Music_Item *item , children)
+    {
+        list->add_data_point(
+                    DataPoint::get_instance(item->get_name().toStdString(),
+                                            item->get_id(), DataValue::get_instance(item->get_milliseconds()/1000), 0));
+    }
+    return list;
+}
+
+DataList *Collection::convert_to_rating_datalist()
+{
+    DataList *list = DataList::get_instance();
+
+    foreach (Music_Item *item , children)
+    {
+        list->add_data_point(
+                    DataPoint::get_instance(item->get_name().toStdString(),
+                                            item->get_id(), DataValue::get_instance(item->get_rating()), 0));
+    }
+    return list;
 }
 
 void Collection::begin_playing()

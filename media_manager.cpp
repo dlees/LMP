@@ -103,14 +103,30 @@ void Media_Manager::new_playlist()
     lib.add_playlist(new Playlist());
 }
 
-void Media_Manager::new_playlist(QStringList *filenames, QString name)
+void Media_Manager::new_playlist(QStringList *filenames, const QString &name)
 {
     Playlist *new_pl = new Playlist(name);
-    QString filename;
 
-    foreach (filename, *filenames)
+    foreach (QString filename, *filenames)
     {
         new_pl->add(lib.get_song(filename));
+    }
+
+    lib.add_playlist(new_pl);
+
+    set_center(new_pl);
+
+    if (playing.is_paused())
+        switch_playlist(new_pl);
+}
+
+void Media_Manager::new_playlist(const std::vector<int> &song_ids, const std::string &name)
+{
+    Playlist *new_pl = new Playlist(QString::fromStdString(name));
+
+    foreach (int id, song_ids)
+    {
+        new_pl->add(lib.get_item(id));
     }
 
     lib.add_playlist(new_pl);
@@ -142,6 +158,11 @@ void Media_Manager::add_to_catalog(const QString &catalog_name, Music_Item *item
 void Media_Manager::change_rating_cur_song(int rating)
 {
     Playing_Song::get().get_cur_song()->change_rating(rating);
+}
+
+Music_Item *Media_Manager::get_music_item(int id)
+{
+    return lib.get_item(id);
 }
 
 Collection *Media_Manager::get_playlist()

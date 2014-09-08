@@ -376,7 +376,6 @@ QList<SongInfo>* Database::get_all_song_info(){
     //ID, name, filename, created, seconds, album, artist
 
     QList<SongInfo> *song_list = new QList< SongInfo >;
-    int i = 0;
     SongInfo *curSong = 0;
     QString temp;
 
@@ -762,9 +761,9 @@ void Database::delete_hotspot(int songID, qint64 hotspot){
     write_file.close();
 }
 
-void Database::new_playlist(const QString &name, int ID, bool is_catalog){
+void Database::new_playlist(const QString &name, int ID, bool is_catalog) {
+    qDebug() << "Database: Adding new Playlist:" << name;
 
-    qDebug() << "Database: " << name << endl;
     char temp[256];
     QXmlQuery query;
     QString output = "-1";
@@ -846,11 +845,9 @@ void Database::edit_playlist_name(int listID, QString newName){
 }
 
 void Database::add_to_playlist(int songID, int listID){
-
     char temp[256];
     QXmlQuery query;
     QString output = "-1";
-    cout << "Adding " << songID << " to " << listID << endl;
     sprintf(temp, "doc('database/songsInPlaylist.xml')/SIPRoot/songInPlaylist[songID=%d and playlistID=%d]/songID/text()", songID, listID);
     query.setQuery(temp);
     query.evaluateTo(&output);
@@ -873,6 +870,8 @@ void Database::add_to_playlist(int songID, int listID){
 
         song_in_playlist_changed = true;
     }
+
+    qDebug() << "Database: Added" << songID << "to" << listID;
 }
 
 void Database::delete_playlist(int listID){

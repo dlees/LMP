@@ -24,7 +24,7 @@ public:
     int get_id() const
         { return id; }
 
-    virtual int total_millisecs() const = 0;
+    virtual int get_milliseconds() const = 0;
     virtual QLinkedList<Song*> get_leaves() = 0;
 
     // have Media Manager start playing this item

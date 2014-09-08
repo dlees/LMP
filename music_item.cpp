@@ -35,7 +35,7 @@ QList<QVariant> Music_Item::get_column_data() const
 {
     return QList<QVariant>()
             << (is_playing?"->":"") + get_name()
-            << (total_millisecs()/1000)
+            << (get_milliseconds()/1000)
             << qVariantFromValue(get_star_rating())
                ;
 }

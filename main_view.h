@@ -58,6 +58,8 @@ public slots:
     void create_catalog();
     void add_selected_lib_list_to_catalog();
 
+    void create_auto_playlist();
+    void add_good_to_table();
 private:
     QStringList* get_files();
     QAction *add_menu_item(char name[], bool enabled);

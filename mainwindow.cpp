@@ -77,6 +77,8 @@ void MainWindow::create_menu()
             Media_Manager::get(), SLOT(new_playlist()));
     connect(add_menu_item((char*)"Create Playlist From Files...", true, plMenu), SIGNAL(triggered()),
             mainView, SLOT(create_playlist_files()));
+    connect(add_menu_item((char*)"Create Auto Playlist", true, plMenu), SIGNAL(triggered()),
+            mainView, SLOT(create_auto_playlist()));
 
     plMenu->addSeparator();
     connect(add_menu_item((char*)"Delete Selected Playlist in Library", true, plMenu), SIGNAL(triggered()),
@@ -87,6 +89,8 @@ void MainWindow::create_menu()
             Media_Manager::get(), SLOT(add_cur_to_playlist()));
     connect(add_menu_item((char*)"Add selected songs in table to current playlist", true, plMenu), SIGNAL(triggered()),
             mainView, SLOT(add_selected_to_playlist()));
+    connect(add_menu_item((char*)"Add good songs in Cur List to Table List", true, plMenu), SIGNAL(triggered()),
+            mainView, SLOT(add_good_to_table()));
 
     plMenu->addSeparator();
     connect(add_menu_item((char*)"Remove selected song from current playlist", true, plMenu), SIGNAL(triggered()),
@@ -164,7 +168,7 @@ void MainWindow::add_files()
 
     foreach (QString filename, files)
     {
-        qDebug() << filename << endl;
+        qDebug() << filename;
     }
     Media_Manager::get()->play_new(files.at(0));
 }

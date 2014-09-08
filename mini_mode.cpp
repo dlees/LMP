@@ -84,7 +84,7 @@ void Mini_Mode::add_files()
 
     foreach (QString filename, files)
     {
-        qDebug() << filename << endl;
+        qDebug() << filename;
     }
     Media_Manager::get()->play_new(files.at(0));
 }

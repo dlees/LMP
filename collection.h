@@ -6,6 +6,8 @@
 #include <QList>
 #include <QtGui>
 
+class DataList;
+
 class Collection : public QAbstractTableModel, public Music_Item
 {
     Q_OBJECT
@@ -28,8 +30,11 @@ public:
     int count()
         {return children.size();}
 
-    virtual int total_millisecs() const;
+    virtual int get_milliseconds() const;
     virtual QLinkedList<Song*> get_leaves() ;
+
+    DataList *convert_to_secCount_datalist();
+    DataList *convert_to_rating_datalist();
 
     QStandardItemModel *get_model();
 
