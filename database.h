@@ -93,6 +93,7 @@ public:
     void parse_song_db(QList<SongInfo> *song_list);
     void parse_rating_db(QMap<int, int> &songIDToRating);
     void parse_sec_count_db(QMap<int, int> &songIDToSeconds);
+    void save_sec_count_threaded(int ID, qint64 start, qint64 end);
 private:
     QDomDocument song;
     QDomDocument playlist;

@@ -8,9 +8,12 @@
 #include <QMap>
 #include <QtXmlPatterns/QXmlQuery>
 #include <QtXmlPatterns/qxmlquery.h>
+#include <QtConcurrentRun>
+
 #include <ctime>
 #include <iostream>
 #include <fstream>
+
 
 #include "Error.h"
 
@@ -188,8 +191,12 @@ Database::Database(){
     //any other initialization goes here
 }
 
-void Database::save_sec_count(int ID, qint64 start, qint64 end)
+
+QMutex sec_count_mutex;
+void Database::save_sec_count_threaded(int ID, qint64 start, qint64 end)
 {
+    sec_count_mutex.lock();
+
     qDebug() << "Save Sec count:" << ID << " : " << start << "->" << end;
 
     // Stores the second count. Saves the song,
@@ -219,6 +226,12 @@ void Database::save_sec_count(int ID, qint64 start, qint64 end)
         saveFile(songsInPlaylist, "database/songsInPlaylist.xml");
         song_in_playlist_changed = false;
     }
+    sec_count_mutex.unlock();
+}
+
+void Database::save_sec_count(int ID, qint64 start, qint64 end)
+{
+    QtConcurrent::run(this, &Database::save_sec_count_threaded, start, ID, end);
 }
 
 void Database::save_rating_count(int ID, int rating)
