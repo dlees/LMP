@@ -231,7 +231,7 @@ void Database::save_sec_count_threaded(int ID, qint64 start, qint64 end)
 
 void Database::save_sec_count(int ID, qint64 start, qint64 end)
 {
-    QtConcurrent::run(this, &Database::save_sec_count_threaded, start, ID, end);
+    QtConcurrent::run(this, &Database::save_sec_count_threaded, ID, start, end);
 }
 
 void Database::save_rating_count(int ID, int rating)
