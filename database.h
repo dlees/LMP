@@ -101,6 +101,7 @@ public:
 
     DataList *get_sec_count_data();
     void save_rating_count_threaded(int ID, int rating);
+    void save_changed_dbs();
 private:
     QDomDocument song;
     QDomDocument playlist;
@@ -114,6 +115,7 @@ private:
 
     bool songs_db_changed;
     bool song_in_playlist_changed;
+    bool playlist_changed;
 
 };
 

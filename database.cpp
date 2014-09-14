@@ -192,6 +192,25 @@ Database::Database(){
 }
 
 
+void Database::save_changed_dbs()
+{
+    if (songs_db_changed)
+    {
+        save_songs();
+        songs_db_changed = false;
+    }
+    if (song_in_playlist_changed)
+    {
+        saveFile(songsInPlaylist, "database/songsInPlaylist.xml");
+        song_in_playlist_changed = false;
+    }
+    if (playlist_changed)
+    {
+        saveFile(playlist, "database/playlist.xml");
+        playlist_changed = false;
+    }
+}
+
 void Database::save_sec_count_threaded(int ID, qint64 start, qint64 end)
 {
 
@@ -214,16 +233,7 @@ void Database::save_sec_count_threaded(int ID, qint64 start, qint64 end)
 
     saveFile(secCount, "database/secCount.xml");
 
-    if (songs_db_changed)
-    {
-        save_songs();
-        songs_db_changed = false;
-    }
-    if (song_in_playlist_changed)
-    {
-        saveFile(songsInPlaylist, "database/songsInPlaylist.xml");
-        song_in_playlist_changed = false;
-    }
+    save_changed_dbs();
 }
 
 void Database::save_sec_count(int ID, qint64 start, qint64 end)
@@ -916,7 +926,7 @@ void Database::new_playlist(const QString &name, int ID, bool is_catalog) {
         nameE.appendChild(nameT);
         playlistE.appendChild(nameE);
 
-        saveFile(playlist, "database/playlist.xml");
+        playlist_changed = true;
     }
 }
 
@@ -963,7 +973,7 @@ void Database::edit_playlist_name(int listID, QString newName){
     nameE.appendChild(nameT);
     playlistE.appendChild(nameE);
 
-    saveFile(playlist, "database/playlist.xml");
+    playlist_changed = true;
 }
 
 void Database::add_to_playlist(int songID, int listID){
