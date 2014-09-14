@@ -83,8 +83,9 @@ DataList *PlaylistCreatorDecorator::decorate(DataList *datalist)
     return datalist;
 }
 
-#include "songvalueproxy.h"
 #include "playlist.h"
+/*
+#include "songvalueproxy.h"
 DataList *ProxiedPlaylistCreatorDecorator::decorate(DataList *datalist)
 {
     Collection *col = new Playlist(QString::fromStdString(name));
@@ -102,7 +103,7 @@ DataList *ProxiedPlaylistCreatorDecorator::decorate(DataList *datalist)
         col->add(new_song);
     }
     return datalist;
-}
+}*/
 
 DataList *AddToCollection::decorate(DataList *datalist)
 {
