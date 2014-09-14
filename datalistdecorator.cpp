@@ -26,14 +26,19 @@ DataListDecorator *add_to_collection_decorator(Collection *pl)
 }
 
 
-DataListDecorator *filter_decorator(const string &name, int value)
+DataListDecorator *filter_decorator(const string &comp, int value)
 {
-    return new FilterByValue(value);
+    return new FilterByValue(comp, value);
 }
 
 DataListDecorator *sort_decorator(const string &name)
 {
     return new SortByValue;
+}
+
+DataListDecorator *aggregator_decorator(const string &type)
+{
+    return new TotalUp;
 }
 
 
@@ -78,7 +83,27 @@ DataList *PlaylistCreatorDecorator::decorate(DataList *datalist)
     return datalist;
 }
 
+#include "songvalueproxy.h"
 #include "playlist.h"
+DataList *ProxiedPlaylistCreatorDecorator::decorate(DataList *datalist)
+{
+    Collection *col = new Playlist(QString::fromStdString(name));
+    Media_Manager::get()->get_library()->add(col);
+
+    for (datalist_iter_t iter = datalist->begin() ;
+         iter != datalist->end() ; ++iter) {
+        Music_Item *song = (Media_Manager::get()->get_music_item((*iter)->get_id()));
+
+        qDebug() << "Adding Song" << song->get_name() << "to new playlist with " << song->get_rating() <<
+                    ":" << (*iter)->get_value()->get_value() ;
+
+        Music_Item *new_song = new SongValueProxy(song, 5, (*iter)->get_value()->get_value());
+
+        col->add(new_song);
+    }
+    return datalist;
+}
+
 DataList *AddToCollection::decorate(DataList *datalist)
 {
     vector<int> song_ids = convert_to_song_ids(datalist);
@@ -93,11 +118,18 @@ DataList *AddToCollection::decorate(DataList *datalist)
 #include "datapointcomparers.h"
 DataList *FilterByValue::decorate(DataList *datalist)
 {
-    DataPointComparer *comparer = get_DataPointComparer("value", "less than");
+    DataPointComparer *comparer = get_DataPointComparer("value", comparison);
     datalist->filter_value(value, comparer);
     delete comparer;
     return datalist;
 }
+DataList *FilterByTime::decorate(DataList *datalist)
+{
+    datalist->filter_time(start_time, end_time);
+
+    return datalist;
+}
+
 
 DataList *SortByValue::decorate(DataList *datalist)
 {
@@ -106,4 +138,50 @@ DataList *SortByValue::decorate(DataList *datalist)
     delete comparer;
     return datalist;
 }
+
+DataList *TotalUp::decorate(DataList *datalist)
+{
+    std::map<int, int> labelToSum;
+
+    for (datalist_iter_t iter = datalist->begin() ;
+         iter != datalist->end() ; ++iter) {
+        DataPoint *point = *iter;
+        int ID = point->get_id();
+
+        if (labelToSum.find(ID) == labelToSum.end())
+            labelToSum[ID] = 0;
+
+        int total = labelToSum[ID];
+
+        labelToSum[ID] = total + point->get_value()->get_value();
+    }
+
+    DataList *newList = DataList::get_instance();
+    for (map<int,int>::iterator map_iter = labelToSum.begin() ;
+         map_iter != labelToSum.end() ; ++map_iter)
+    {
+        newList->add_data_point(DataPoint::get_instance(
+             "name", map_iter->first, DataValue::get_instance(map_iter->second), 0));
+    }
+    delete datalist;
+    return newList;
+}
+
+
+
+DataList *LogDatalist::decorate(DataList *datalist)
+{
+    for (datalist_iter_t iter = datalist->begin() ;
+         iter != datalist->end() ; ++iter) {
+        DataPoint *point = *iter;
+
+        qDebug() <<
+            "ID:" << point->get_id() <<
+            "Name:" << QString::fromStdString(point->get_name()) <<
+            "Value:" << point->get_value()->get_value() <<
+            "Time:"<< point->get_time() ;
+    }
+    return datalist;
+}
+
 

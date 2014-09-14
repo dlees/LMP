@@ -37,11 +37,7 @@ public:
 
     int size() {return data.size();}
 
-    ~DataList(){
-        foreach (DataPoint *datapoint, data){
-            delete datapoint;
-        }
-    }
+    virtual ~DataList();
 
 protected:
     DataList();

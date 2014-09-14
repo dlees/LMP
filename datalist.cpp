@@ -48,11 +48,27 @@ public:
     }
 
     void filter_time(time_t start_time, time_t end_time) {
-        DataPoint *point_to_compare =
+        DataPoint *end_time_point =
                 DataPoint::get_instance("",0, 0 ,end_time);
+        DataPoint *start_time_point =
+                DataPoint::get_instance("",0, 0 ,start_time);
 
         // Need to remove twice, one for before start time, one for after end time
+        DataPointComparer *less_than_time = get_DataPointComparer("time", "less than");
+        DataPointComparer *greater_than_time = get_DataPointComparer("time", "greater than");
 
+        qDebug() << "filter time:" << start_time << "-" << end_time;
+
+        DataPointPredicateDeleter predicate(less_than_time, start_time_point);
+        DataPointPredicateDeleter predicate2(greater_than_time, end_time_point);
+
+        data.erase(remove_if(data.begin(), data.end(), predicate), data.end());
+        data.erase(remove_if(data.begin(), data.end(), predicate2), data.end());
+
+        delete less_than_time;
+        delete greater_than_time;
+        delete end_time_point;
+        delete start_time_point;
 
     }
 
@@ -72,6 +88,12 @@ private:
 };
 
 DataList *DataList::get_instance() {return new TimeSortedDataList;}
+
+DataList::~DataList(){
+    foreach (DataPoint *datapoint, data){
+        delete datapoint;
+    }
+}
 
 DataList::DataList()
 {

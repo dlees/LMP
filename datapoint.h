@@ -30,7 +30,7 @@ public:
     const DataValue *get_value() const {return value;}
     time_t get_time() const {return time;}
 
-    ~DataPoint() {
+    virtual ~DataPoint() {
         delete value;
     }
 
