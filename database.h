@@ -100,6 +100,7 @@ public:
     void map_id_to_seconds(int endTime, QMap<int, int> &songIDToSeconds, int startTime, int ID);
 
     DataList *get_sec_count_data();
+    void save_rating_count_threaded(int ID, int rating);
 private:
     QDomDocument song;
     QDomDocument playlist;

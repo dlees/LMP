@@ -192,10 +192,8 @@ Database::Database(){
 }
 
 
-QMutex sec_count_mutex;
 void Database::save_sec_count_threaded(int ID, qint64 start, qint64 end)
 {
-    sec_count_mutex.lock();
 
     qDebug() << "Save Sec count:" << ID << " : " << start << "->" << end;
 
@@ -226,15 +224,18 @@ void Database::save_sec_count_threaded(int ID, qint64 start, qint64 end)
         saveFile(songsInPlaylist, "database/songsInPlaylist.xml");
         song_in_playlist_changed = false;
     }
-    sec_count_mutex.unlock();
 }
 
 void Database::save_sec_count(int ID, qint64 start, qint64 end)
 {
+    static QMutex sec_count_mutex;
+
+    sec_count_mutex.lock();
     QtConcurrent::run(this, &Database::save_sec_count_threaded, ID, start, end);
+    sec_count_mutex.unlock();
 }
 
-void Database::save_rating_count(int ID, int rating)
+void Database::save_rating_count_threaded(int ID, int rating)
 {
     QDomDocument &doc = ratingCount;
     const QString &xml_file = "database/ratingCount.xml";
@@ -248,6 +249,16 @@ void Database::save_rating_count(int ID, int rating)
     save_cur_timestamp(doc, entry);
 
     saveFile(doc, xml_file);
+}
+
+
+void Database::save_rating_count(int ID, int rating)
+{
+    static QMutex rating_count_mutex;
+
+    rating_count_mutex.lock();
+    save_rating_count_threaded(ID, rating);
+    rating_count_mutex.unlock();
 }
 
 QList<HotspotInfo>* Database::get_hotspot_info(){

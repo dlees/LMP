@@ -44,6 +44,9 @@ void Media_Manager::play_new(QString filename)
 
 void Media_Manager::play_new(Song *song)
 {    
+    if (playing.get_cur_song() != 0 && playing.get_cur_song()->get_rating() > 5)
+        change_rating_cur_song(5);
+
     playing.replace_song(song);
     playing.play();
 }
