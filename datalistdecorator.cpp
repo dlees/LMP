@@ -9,8 +9,11 @@ DataListDecorator::DataListDecorator()
 {
 }
 
-DataListDecorator *create_playlist_decorator(const std::string &name)
+DataListDecorator *create_playlist_decorator(const std::string &name, bool is_catalog)
 {
+    if (is_catalog)
+        return new CatalogCreatorDecorator(name);
+
     return new PlaylistCreatorDecorator(name);
 }
 
@@ -74,6 +77,7 @@ vector<int> convert_to_song_ids(DataList *datalist)
     return song_ids;
 }
 
+#include "catalog.h"
 DataList *PlaylistCreatorDecorator::decorate(DataList *datalist)
 {
     vector<int> song_ids = convert_to_song_ids(datalist);
@@ -82,6 +86,23 @@ DataList *PlaylistCreatorDecorator::decorate(DataList *datalist)
 
     return datalist;
 }
+
+DataList *CatalogCreatorDecorator::decorate(DataList *datalist)
+{
+    vector<int> song_ids = convert_to_song_ids(datalist);
+
+    QString Qname = QString::fromStdString(name);
+
+    Media_Manager::get()->create_catalog(Qname);
+
+    foreach (int song_id, song_ids) {
+        Music_Item * item = Media_Manager::get()->get_music_item(song_id);
+        Media_Manager::get()->add_to_catalog(Qname, item);
+    }
+
+    return datalist;
+}
+
 
 #include "playlist.h"
 /*
@@ -184,5 +205,3 @@ DataList *LogDatalist::decorate(DataList *datalist)
     }
     return datalist;
 }
-
-

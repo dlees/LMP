@@ -33,7 +33,7 @@ private:
 class Collection;
 //factory_method
 DataListDecoratorCombiner *create_decorator_combiner();
-DataListDecorator *create_playlist_decorator(const std::string &name);
+DataListDecorator *create_playlist_decorator(const std::string &name, bool is_catalog = false);
 DataListDecorator *add_to_collection_decorator(Collection *);
 DataListDecorator *filter_decorator(const std::string &comp, int value);
 DataListDecorator *sort_decorator(const std::string &name);
@@ -51,7 +51,19 @@ public:
 private:
     std::string name;
 };
+/*
+ * Creates a new catalog out of the datalist passed into it.
+ */
+class CatalogCreatorDecorator : public DataListDecorator {
+public:
+    CatalogCreatorDecorator(const std::string &name_) :
+        name(name_)
+    {}
 
+    virtual DataList *decorate(DataList *datalist);
+private:
+    std::string name;
+};
 /*
  * Creates a new playlist using SongValueProxies with the datalist passed into it.
  */

@@ -78,7 +78,7 @@ public slots:
     void became_paused_slot() {emit became_paused();}
     void started_playing_slot() {emit started_playing();}
 
-    void create_catalog(const QString &);
+    Collection *create_catalog(const QString &);
     void add_to_catalog(const QString &, Music_Item *);
 
     void change_rating_cur_song(int rating);

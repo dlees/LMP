@@ -148,9 +148,12 @@ void Media_Manager::set_center(Collection *new_center)
     emit center_changed(new_center);
 }
 
-void Media_Manager::create_catalog(const QString &name)
+Collection *Media_Manager::create_catalog(const QString &name)
 {
-    lib.add_catalog(new Catalog(name));
+    Catalog *catalog = new Catalog(name);
+    lib.add_catalog(catalog);
+    set_center(catalog);
+    return catalog;
 }
 
 void Media_Manager::add_to_catalog(const QString &catalog_name, Music_Item *item)

@@ -17,6 +17,7 @@ Library::Library()
       songs(new Playlist("All Songs"))
 {
     add(songs);
+    id_to_item[songs->get_id()] = songs;
 
 // Load stuff from database
     try
