@@ -603,7 +603,7 @@ QList<SongInfo>* Database::get_all_song_info(){
     //RATINGS!
 
     QMap<int, int> songIDToRating;
-    Handle_Count *rating_handler = new Map_ID_to_Total_Value(songIDToRating);
+    Handle_Count *rating_handler = new Map_ID_to_Value(songIDToRating);
 
     parse_rating_db(rating_handler);
 
