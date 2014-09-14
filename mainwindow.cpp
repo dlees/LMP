@@ -98,6 +98,10 @@ void MainWindow::create_menu()
     connect(add_menu_item((char*)"Remove selected items from table playlist", true, plMenu), SIGNAL(triggered()),
             mainView, SLOT(remove_selected_from_table()));
 
+    plMenu->addSeparator();
+    connect(add_menu_item((char*)"Move current song up", true, plMenu), SIGNAL(triggered()),
+            Media_Manager::get(), SLOT(move_cur_song_up()));
+
  // Catalog Menu
     QMenu *catalogMenu = menuBar()->addMenu(tr("&Catalogs"));
     connect(add_menu_item((char*)"Create Catalog...", true, catalogMenu), SIGNAL(triggered()),

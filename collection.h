@@ -63,6 +63,10 @@ public:
 
   //  virtual int get_rating() const;
 
+    // moves the ith item
+    virtual void move(int i, int pos_to_move_to);
+    virtual void move_up(Music_Item *item);
+
 protected:
     void insert_items_no_db(const QList<Music_Item*> &items);
 

@@ -168,6 +168,11 @@ Music_Item *Media_Manager::get_music_item(int id)
     return lib.get_item(id);
 }
 
+void Media_Manager::move_cur_song_up()
+{
+    cur_list->move_up(playing.get_cur_song());
+}
+
 Collection *Media_Manager::get_playlist()
 {
     return cur_list;

@@ -30,6 +30,9 @@ public:
 
     void set_cur(int index);
 
+    void move(int i, int pos_to_move_to);
+
+
 private:
     int cur;
 };

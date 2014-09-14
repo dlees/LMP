@@ -84,6 +84,8 @@ public slots:
     void change_rating_cur_song(int rating);
 
     Music_Item *get_music_item(int id);
+
+    void move_cur_song_up();
 signals:
     void became_paused();
     void started_playing();

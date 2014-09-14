@@ -61,7 +61,10 @@ void Playlist::prev()
         Error::print_error_msg_str("No songs yet! Add songs to this playlist!");
         return;
     }
-    get_children().at(cur = (cur+count()-1)%count())->begin_playing();
+
+    cur = (cur+count()-1)%count();
+
+    get_children().at(cur)->begin_playing();
 }
 
 void Playlist::next()
@@ -71,12 +74,21 @@ void Playlist::next()
         Error::print_error_msg_str("No songs yet! Add songs to this playlist!");
         return;
     }
-    get_children().at(cur = (cur+1)%count())->begin_playing();
+
+    cur = (cur+1)%count();
+
+    get_children().at(cur)->begin_playing();
 }
 
 void Playlist::set_cur(int index)
 {
     cur = index;
+}
+
+void Playlist::move(int i, int pos_to_move_to)
+{
+    Collection::move(i, pos_to_move_to);
+    cur = pos_to_move_to;
 }
 
 Playlist::~Playlist()

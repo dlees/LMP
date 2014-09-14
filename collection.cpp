@@ -55,9 +55,10 @@ bool Collection::contains(Music_Item* item)
 
 void Collection::add(Music_Item *item)
 {
+    qDebug() << "Adding " << item->get_name();
     if (item->get_id() == get_id())
     {
-        Error::print_error_msg_str("Cannot insert Catalog into itself!");
+        Error::print_error_msg_str("Cannot insert Collection into itself!");
         return;
     }
 
@@ -316,6 +317,23 @@ void Collection::stop_playing()
 void Collection::emit_data_changed()
 {
     emit data_changed();
+}
+
+void Collection::move(int i, int pos_to_move_to)
+{
+    Music_Item *item_to_move = children.at(i);
+
+    children.removeAt(i);
+    children.insert(pos_to_move_to, item_to_move);
+
+    emit_data_changed();
+}
+
+void Collection::move_up(Music_Item*item)
+{
+    int i = children.indexOf(item);
+
+    move(i, (i != 0) ? i-1 : children.size()-1);
 }
 /*
 int Collection::get_rating() const
