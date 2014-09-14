@@ -237,13 +237,17 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     {
         Playing_Song::get().remove_next_hs();
     }
-    else if (event->key() == Qt::Key_F || event->key() == Qt::Key_F7)
+    else if (event->key() == Qt::Key_F)
     {
         Media_Manager::get()->first();
     }
     else if (event->key() == Qt::Key_R || event->key() == Qt::Key_F8)
     {
         Playing_Song::get().change_position(0);
+    }
+    else if (event->key() == Qt::Key_PageUp || event->key() == Qt::Key_F7)
+    {
+        Media_Manager::get()->move_cur_song_up();
     }
     else if (event->key() == Qt::Key_1)
     {

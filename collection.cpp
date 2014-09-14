@@ -55,7 +55,6 @@ bool Collection::contains(Music_Item* item)
 
 void Collection::add(Music_Item *item)
 {
-    qDebug() << "Adding " << item->get_name();
     if (item->get_id() == get_id())
     {
         Error::print_error_msg_str("Cannot insert Collection into itself!");
@@ -317,6 +316,7 @@ void Collection::stop_playing()
 void Collection::emit_data_changed()
 {
     emit data_changed();
+    data_updated();
 }
 
 void Collection::move(int i, int pos_to_move_to)

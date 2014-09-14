@@ -23,7 +23,6 @@ Playlist::Playlist(Collection *col)
        add(item);
 }
 
-
 Playlist::Playlist(const QString &name, int id_,
          const QList<Music_Item*> &items)
     : Collection(name, id_, items),
