@@ -80,6 +80,7 @@ signals:
     void AlmostDone_PlaySong();
     void song_changed(Song *);
     void hs_added();
+    void message(const QString &);
 
 private:
     Playing_Song();

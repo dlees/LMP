@@ -20,9 +20,11 @@ Main_View::Main_View(QWidget *parent)
     Play_Controller *play_controller = new Play_Controller();
 
     //QLineEdit *search = new QLineEdit("search");
-    MiniMode = new QToolButton(this);
-    MiniMode->setText("-");
-    MiniMode->setToolTip("Switch to MiniMode");
+    MiniModeButton = new QToolButton(this);
+    MiniModeButton->setText("-");
+    MiniModeButton->setToolTip("Switch to MiniMode");
+
+    create_message_bar();
 
     // Splitter to hold the center panes
     splitter = new QSplitter(Qt::Horizontal);
@@ -37,7 +39,8 @@ Main_View::Main_View(QWidget *parent)
 
     QGridLayout *center_layout = new QGridLayout;
     //center_layout->addWidget(search, 0, 0, Qt::AlignLeft);
-    center_layout->addWidget(MiniMode, 0, 0, Qt::AlignLeft);
+    center_layout->addWidget(MiniModeButton, 0, 0, Qt::AlignLeft);
+    center_layout->addWidget(message_bar, 0, 1, Qt::AlignLeft);
     center_layout->addWidget(splitter, 1, 0, 1, -1);
 
     // Add all to main_layout
@@ -47,7 +50,7 @@ Main_View::Main_View(QWidget *parent)
     widget->setLayout(main_layout);
     this->setCentralWidget(widget);
 
-    connect(MiniMode, SIGNAL(clicked()),
+    connect(MiniModeButton, SIGNAL(clicked()),
             this, SLOT(send_mini_mode()));
 
     // Set the title of the center pane
@@ -64,6 +67,16 @@ Main_View::Main_View(QWidget *parent)
 
     lib_list->setCurrentIndex(Media_Manager::get()->get_library()->index(0,0));
 
+}
+
+void Main_View::create_message_bar()
+{
+    message_bar = new QLabel(this);
+
+    message_bar->setText("NO Message");
+
+    connect(&Playing_Song::get(), SIGNAL(message(QString)),
+            message_bar, SLOT(setText(QString)));
 }
 
 void Main_View::create_library_pane()

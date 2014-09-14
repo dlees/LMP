@@ -58,15 +58,21 @@ void Playing_Song::update_position()
     // this logic should be changed to the oposite way! 381!
     if (!paused && song_exists() && cur_time - start_time > min_milli_secs_c)
     {
-        long start_sec = position;
+        long start_pos = position;
+
         position = mp.curSong->currentTime();
-        long end_sec = position;
+        long end_pos = position;
+
+        int total_time_since_last_save = cur_time-start_time;
+
+        cur_playing->add_secs(end_pos - start_pos);
+
+        Database::get()->save_sec_count(cur_playing->get_id(), start_pos, end_pos);
+        emit message(QString("Saving Sec Count: " + cur_playing->get_name() +
+                             ". Seconds: " + QString::number(total_time_since_last_save/1000) +
+                             ". Position diff: " + QString::number((end_pos - start_pos)/1000)));
 
         start_time = cur_time;
-
-        cur_playing->add_secs(end_sec - start_sec);
-
-        Database::get()->save_sec_count(cur_playing->get_id(), start_sec, end_sec);
     }
 }
 

@@ -23,6 +23,7 @@ signals:
     void got_name(QString name);
 
 public slots:
+    void create_message_bar();
     void create_library_pane();
     void create_center_pane();
     void create_playlist_pane();
@@ -60,15 +61,17 @@ public slots:
 
     void create_auto_playlist();
     void add_good_to_table();
+
 private:
     QStringList* get_files();
     QAction *add_menu_item(char name[], bool enabled);
 
     QSplitter *splitter;
 
+    QLabel *message_bar;
     QMenu *fileMenu;
     QMenu *editMenu;
-    QToolButton *MiniMode;
+    QToolButton *MiniModeButton;
     QListView *playlist;
     QTableView *table;
     QListView *lib_list;
@@ -78,6 +81,8 @@ private:
     Pane *playlistPane;
 
     QCustomPlot *customPlot;
+
+    QString current_message;
 };
 
 #endif // MAIN_VIEW_H
