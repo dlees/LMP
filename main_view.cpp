@@ -428,6 +428,25 @@ void Main_View::create_auto_playlist()
     delete datalist;
 }
 
+
+void Main_View::create_top_albums_catalog()
+{
+    DataList *datalist = Media_Manager::get()->get_playlist()->convert_to_secCount_datalist();
+
+    try {
+    create_decorator_combiner()
+            ->build(filter_decorator("value", 100000)) //filter out ratings less than 3
+            ->build(sort_decorator("value")) // sort by greatest rating
+            ->build(add_to_collection_decorator(Media_Manager::get()->get_center()))
+        ->decorate(datalist);
+    } catch (Error &e) {
+        e.print_error_msg();
+    }
+
+    delete datalist;
+}
+
+
 void Main_View::add_good_to_table()
 {
     DataList *datalist = Media_Manager::get()->get_playlist()->convert_to_rating_datalist();

@@ -104,6 +104,8 @@ void MainWindow::create_menu()
             mainView, SLOT(create_catalog()));
     connect(add_menu_item((char*)"Add selected Playlist to a Catalog...", true, catalogMenu), SIGNAL(triggered()),
             mainView, SLOT(add_selected_lib_list_to_catalog()));
+    connect(add_menu_item((char*)"Create Top Albums Catalog", true, catalogMenu), SIGNAL(triggered()),
+            mainView, SLOT(create_top_albums_catalog()));
 
  // Ratings Menu
     QMenu *ratingsMenu = menuBar()->addMenu(tr("&Ratings"));

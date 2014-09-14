@@ -61,7 +61,7 @@ public slots:
 
     void create_auto_playlist();
     void add_good_to_table();
-
+    void create_top_albums_catalog();
 private:
     QStringList* get_files();
     QAction *add_menu_item(char name[], bool enabled);
