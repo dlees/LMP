@@ -32,6 +32,9 @@ public:
     QString artistName;
 };
 
+class Handle_Count;
+class DataList;
+
 class Database
 {
 public:
@@ -91,9 +94,12 @@ public:
     void load_file(const std::string &filename, QDomDocument &document, const QString &root_name);
 
     void parse_song_db(QList<SongInfo> *song_list);
-    void parse_rating_db(QMap<int, int> &songIDToRating);
-    void parse_sec_count_db(QMap<int, int> &songIDToSeconds);
+    void parse_rating_db(Handle_Count *handle_count);
+    void parse_sec_count_db(Handle_Count *handle_count);
     void save_sec_count_threaded(int ID, qint64 start, qint64 end);
+    void map_id_to_seconds(int endTime, QMap<int, int> &songIDToSeconds, int startTime, int ID);
+
+    DataList *get_sec_count_data();
 private:
     QDomDocument song;
     QDomDocument playlist;

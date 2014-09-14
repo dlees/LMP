@@ -432,13 +432,79 @@ void Database::parse_song_db(QList<SongInfo> *song_list)
     delete songReader;
 }
 
-void Database::parse_rating_db(QMap<int, int> &songIDToRating)
+#include "datalist.h"
+#include "datapoint.h"
+
+ class Handle_Count {
+ public:
+     virtual void handle(int ID, DataValue* value, const QString &time) = 0;
+ };
+
+ class Add_Count_To_DataList : public Handle_Count {
+ public:
+     Add_Count_To_DataList(DataList *datalist_)
+         : list(datalist_) {}
+
+     void handle(int ID, DataValue* value, const QString &time){
+         list->add_data_point(
+                     DataPoint::get_instance("name", ID, value, QDateTime::fromString(time).toTime_t()));
+     }
+
+ private:
+      DataList *list;
+ };
+
+ DataList *Database::get_sec_count_data()
+ {
+     DataList *datalist = DataList::get_instance();
+
+     Handle_Count *handler = new Add_Count_To_DataList(datalist);
+     parse_sec_count_db(handler);
+
+     return datalist;
+ }
+
+ class Map_ID_to_Total_Value : public Handle_Count {
+ public:
+     Map_ID_to_Total_Value(QMap<int, int> &songIDToTotal_)
+         : songIDToTotalValue(songIDToTotal_) {}
+
+     void handle(int ID, DataValue* value, const QString &){
+         if (songIDToTotalValue.find(ID) == songIDToTotalValue.end())
+             songIDToTotalValue[ID] = 0;
+
+         int total = songIDToTotalValue[ID];
+
+         songIDToTotalValue[ID] = total + value->get_value();
+         delete value;
+     }
+
+ private:
+      QMap<int, int> &songIDToTotalValue;
+ };
+
+ class Map_ID_to_Value : public Handle_Count {
+ public:
+     Map_ID_to_Value(QMap<int, int> &songIDToValue_)
+         : songIDToRating(songIDToValue_) {}
+
+     void handle(int ID, DataValue* value, const QString &){
+         songIDToRating[ID] = value->get_value();
+         delete value;
+     }
+
+ private:
+      QMap<int, int> &songIDToRating;
+ };
+
+void Database::parse_rating_db(Handle_Count *handle_count)
 {
     QFile *ratingFile = new QFile("database/ratingCount.xml");
     ratingFile->open(QIODevice::ReadOnly | QIODevice::Text);
     QXmlStreamReader *ratingReader = new QXmlStreamReader(ratingFile);
 
     int ID = 0;
+    int rating = 0;
     QString temp;
 
     while(!ratingReader->atEnd() && !ratingReader->hasError()){
@@ -458,7 +524,13 @@ void Database::parse_rating_db(QMap<int, int> &songIDToRating)
             }
             if(ratingReader->name() == "rating"){
                 temp = ratingReader->readElementText();
-                songIDToRating[ID] = (temp.toInt());
+                rating = (temp.toInt());
+            }
+            if (ratingReader->name() == "timestamp") {
+                temp = ratingReader->readElementText();
+
+                // This is the last section of the count, so handle our data:
+                handle_count->handle(ID, DataValue::get_instance(rating), temp);
             }
         }
     }
@@ -468,7 +540,7 @@ void Database::parse_rating_db(QMap<int, int> &songIDToRating)
     delete ratingReader;
 }
 
-void Database::parse_sec_count_db(QMap<int, int> &songIDToSeconds)
+void Database::parse_sec_count_db(Handle_Count *handle_count)
 {
     QFile *secFile = new QFile("database/secCount.xml");
     secFile->open(QIODevice::ReadOnly | QIODevice::Text);
@@ -476,6 +548,8 @@ void Database::parse_sec_count_db(QMap<int, int> &songIDToSeconds)
     int ID = 0;
     QString temp;
     int startTime = 0;
+    int endTime = 0;
+
     while(!secReader->atEnd() && !secReader->hasError()){
         //read next
         QXmlStreamReader::TokenType token = secReader->readNext();
@@ -496,12 +570,14 @@ void Database::parse_sec_count_db(QMap<int, int> &songIDToSeconds)
                 startTime = temp.toInt();
             }
             if(secReader->name() == "endTime"){
+                temp = secReader->readElementText();                
+                endTime = temp.toInt();
+            }
+            if (secReader->name() == "timestamp") {
                 temp = secReader->readElementText();
-                if (songIDToSeconds.find(ID) == songIDToSeconds.end())
-                    songIDToSeconds[ID] = 0;
 
-                int total = songIDToSeconds[ID];
-                songIDToSeconds[ID] = total + (temp.toInt() - startTime);
+                // This is the last section of the count, so handle our data:
+                handle_count->handle(ID, DataValue::get_instance(startTime, endTime), temp);
             }
         }
     }
@@ -527,8 +603,11 @@ QList<SongInfo>* Database::get_all_song_info(){
     //RATINGS!
 
     QMap<int, int> songIDToRating;
+    Handle_Count *rating_handler = new Map_ID_to_Total_Value(songIDToRating);
 
-    parse_rating_db(songIDToRating);
+    parse_rating_db(rating_handler);
+
+    delete rating_handler;
 
     //put all the counts from the map into the list
     QMap<int, int>::iterator id_rating_iter;
@@ -549,8 +628,11 @@ QList<SongInfo>* Database::get_all_song_info(){
 
     // Seconds
     QMap<int, int> songIDToSeconds;
+    Handle_Count *sec_handler = new Map_ID_to_Total_Value(songIDToSeconds);
 
-    parse_sec_count_db(songIDToSeconds);
+    parse_sec_count_db(sec_handler);
+
+    delete sec_handler;
 
     //put all the counts from the map into the list
     QMap<int, int>::iterator id_sec_iter;
