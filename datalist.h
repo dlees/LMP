@@ -12,6 +12,11 @@ typedef std::vector<DataPoint*>::iterator datalist_iter_t;
 
 #include "datapointcomparers.h"
 
+class DataListVisitor {
+public:
+    virtual void operator()(DataPoint*) = 0;
+};
+
 class DataList
 {
 public:
@@ -19,9 +24,8 @@ public:
 
     virtual void add_data_point(DataPoint *data) = 0;
 
-    virtual void remove_song(int id) = 0;
-    virtual void remove_song(const std::string &name) = 0;
-
+    virtual void remove_data_point(int id) = 0;
+    virtual void remove_data_point(const std::string &name) = 0;
 
     // Will make it such that data only includes points with time:
     //    start_time <= point.get_time() <= end_time
@@ -37,6 +41,9 @@ public:
 
     int size() {return data.size();}
 
+    // Can pass in DataListVisitor
+    void perform_function(DataListVisitor &function);
+
     virtual ~DataList();
 
 protected:
@@ -44,6 +51,5 @@ protected:
 
     std::vector<DataPoint*> data;
 };
-
 
 #endif // DATALIST_H

@@ -27,6 +27,18 @@ private:
     Comparitor<int> *comp;
 };
 
+class IDComparer : public DataPointComparer {
+public:
+    IDComparer(const std::string & comp_type) : comp(get_comparitor<int>(comp_type)){}
+
+    virtual bool compare(const DataPoint* lhs, const DataPoint* rhs) {
+        return comp->compare(lhs->get_id(), rhs->get_id());
+    }
+
+private:
+    Comparitor<int> *comp;
+};
+
 DataPointComparer *get_DataPointComparer(const std::string &parameter_name, const std::string &comp_type)
 {
     if (parameter_name == "time") {
@@ -34,6 +46,9 @@ DataPointComparer *get_DataPointComparer(const std::string &parameter_name, cons
     }
     else if (parameter_name == "value") {
         return new ValueComparer(comp_type);
+    }
+    else if (parameter_name == "id") {
+        return new IDComparer(comp_type);
     }
     else {
         throw Error(QString("DataPointComparer not implemented: ") + QString::fromStdString(parameter_name));

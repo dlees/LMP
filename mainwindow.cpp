@@ -138,6 +138,14 @@ void MainWindow::create_menu()
 
     connect(ratingsMapper, SIGNAL(mapped(int)), Media_Manager::get(), SLOT(change_rating_cur_song(int)));
 
+
+    // Data Menu
+       QMenu *dataMenu = menuBar()->addMenu(tr("&Data"));
+       connect(add_menu_item((char*)"Export Running Total Graph for table playlist", true, dataMenu), SIGNAL(triggered()),
+               mainView, SLOT(export_running_total()));
+       connect(add_menu_item((char*)"Export Finite Difference Graph for table playlist", true, dataMenu), SIGNAL(triggered()),
+               mainView, SLOT(export_finite_difference()));
+
 }
 
 QAction *MainWindow::add_menu_item(char name[], bool enabled, QMenu *menu)

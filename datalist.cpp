@@ -39,11 +39,11 @@ public:
         data.push_back(data_point);
     }
 
-    void remove_song(int id) {
+    void remove_data_point(int id) {
         throw "Unimplemented";
     }
 
-    void remove_song(const std::string &name) {
+    void remove_data_point(const std::string &name) {
         throw "Unimplemented";
     }
 
@@ -88,6 +88,17 @@ private:
 };
 
 DataList *DataList::get_instance() {return new TimeSortedDataList;}
+
+void DataList::perform_function(DataListVisitor &function)
+{
+    for (datalist_iter_t iter = this->begin() ;
+         iter != this->end() ; ++iter) {
+        DataPoint *point = *iter;
+
+        function(point);
+    }
+}
+
 
 DataList::~DataList(){
     foreach (DataPoint *datapoint, data){

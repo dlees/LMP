@@ -417,8 +417,8 @@ void Main_View::create_auto_playlist()
     DataList *datalist = Media_Manager::get()->get_center()->convert_to_secCount_datalist();
 
     try {
-    create_decorator_combiner()
-            ->build(filter_decorator("less than", 20000))
+    datalist = create_decorator_combiner()
+            ->build(filter_decorator("less than", 5000))
             ->build(sort_decorator("value"))
             ->build(create_playlist_decorator("Auto Playlist"))
         ->decorate(datalist);
@@ -429,34 +429,29 @@ void Main_View::create_auto_playlist()
     delete datalist;
 }
 
-
 void Main_View::create_top_albums_catalog()
 {
     DataList *datalist = Media_Manager::get()->get_library()->convert_to_secCount_datalist();
 
     try {
-    create_decorator_combiner()
-            ->build(filter_decorator("less than", 50000)) //filter out ratings less than 3
+    datalist = create_decorator_combiner()
+            ->build(filter_decorator("less than", 10000)) //filter out ratings less than 3
             ->build(sort_decorator("value")) // sort by greatest rating
-            ->build(new LogDatalist)
             ->build(create_playlist_decorator("Top Playlists", true))
         ->decorate(datalist);
     } catch (Error &e) {
         e.print_error_msg();
     }
 
-
-
     delete datalist;
 }
-
 
 void Main_View::add_good_to_table()
 {
     DataList *datalist = Media_Manager::get()->get_playlist()->convert_to_rating_datalist();
 
     try {
-    create_decorator_combiner()
+    datalist = create_decorator_combiner()
             ->build(filter_decorator("less than", 3)) //filter out ratings less than 3
             ->build(sort_decorator("value")) // sort by greatest rating
             ->build(add_to_collection_decorator(Media_Manager::get()->get_center()))
@@ -467,3 +462,33 @@ void Main_View::add_good_to_table()
 
     delete datalist;
 }
+
+void Main_View::export_running_total()
+{
+    DataList *datalist = Database::get()->get_sec_count_data();
+
+    try {
+    datalist = create_decorator_combiner()
+            ->build(new OutputToFile("Database.txt"))
+        ->decorate(datalist);
+    } catch (Error &e) {
+        e.print_error_msg();
+    }
+    delete datalist;
+}
+
+void Main_View::export_finite_difference()
+{
+    DataList *datalist = Media_Manager::get()->get_library()->convert_to_secCount_datalist();
+
+    try {
+    create_decorator_combiner()
+            ->build(filter_decorator("less than", 10000)) //filter out ratings less than 3
+            ->build(sort_decorator("value")) // sort by greatest rating
+        ->decorate(datalist);
+    } catch (Error &e) {
+        e.print_error_msg();
+    }
+    delete datalist;
+}
+

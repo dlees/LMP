@@ -2,6 +2,7 @@
 #define DATAPOINT_H
 
 #include <string>
+#include <sstream>
 #include <time.h>
 
 class DataValue {
@@ -28,7 +29,17 @@ public:
     const std::string &get_name() const {return name;}
     int get_id() const {return id;}
     const DataValue *get_value() const {return value;}
-    time_t get_time() const {return time;}
+    const time_t get_time() const {return time;}
+
+    const std::string to_string() {
+        std::ostringstream stream;
+        stream << get_id() <<
+            "\t" << get_name() <<
+            "\t " << get_value()->get_value() <<
+            "\t "<< get_time();
+
+        return stream.str();
+    }
 
     virtual ~DataPoint() {
         delete value;

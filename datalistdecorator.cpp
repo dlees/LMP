@@ -2,6 +2,8 @@
 
 #include <Qt>
 
+#include <fstream>
+#include <iostream>
 #include <string>
 using namespace std;
 
@@ -163,45 +165,76 @@ DataList *SortByValue::decorate(DataList *datalist)
 
 DataList *TotalUp::decorate(DataList *datalist)
 {
-    std::map<int, int> labelToSum;
+    std::map<int, int> IDToSum;
 
     for (datalist_iter_t iter = datalist->begin() ;
          iter != datalist->end() ; ++iter) {
         DataPoint *point = *iter;
         int ID = point->get_id();
 
-        if (labelToSum.find(ID) == labelToSum.end())
-            labelToSum[ID] = 0;
+        if (IDToSum.find(ID) == IDToSum.end())
+            IDToSum[ID] = 0;
 
-        int total = labelToSum[ID];
+        int total = IDToSum[ID] + point->get_value()->get_value();
 
-        labelToSum[ID] = total + point->get_value()->get_value();
+        IDToSum[ID] = total;
     }
 
     DataList *newList = DataList::get_instance();
-    for (map<int,int>::iterator map_iter = labelToSum.begin() ;
-         map_iter != labelToSum.end() ; ++map_iter)
+    for (map<int,int>::iterator map_iter = IDToSum.begin() ;
+         map_iter != IDToSum.end() ; ++map_iter)
     {
         newList->add_data_point(DataPoint::get_instance(
-             "name", map_iter->first, DataValue::get_instance(map_iter->second), 0));
+             "", map_iter->first, DataValue::get_instance(map_iter->second), 0));
     }
     delete datalist;
     return newList;
 }
 
-
-
-DataList *LogDatalist::decorate(DataList *datalist)
+DataList *RunningTotal::decorate(DataList *datalist)
 {
+    std::map<int, int> IDToSum;
+
+    DataList *newList = DataList::get_instance();
+
     for (datalist_iter_t iter = datalist->begin() ;
          iter != datalist->end() ; ++iter) {
         DataPoint *point = *iter;
+        int ID = point->get_id();
 
-        qDebug() <<
-            "ID:" << point->get_id() <<
-            "Name:" << QString::fromStdString(point->get_name()) <<
-            "Value:" << point->get_value()->get_value() <<
-            "Time:"<< point->get_time() ;
+        if (IDToSum.find(ID) == IDToSum.end())
+            IDToSum[ID] = 0;
+
+        int total = IDToSum[ID] + point->get_value()->get_value();
+
+        IDToSum[ID] = total;
+
+        newList->add_data_point(DataPoint::get_instance(
+             point->get_name(), ID, DataValue::get_instance(total), point->get_time()));
     }
+
+    delete datalist;
+    return newList;
+}
+
+class PrintDataPoint : public DataListVisitor {
+public:
+    std::ostream &out;
+    PrintDataPoint(std::ostream &out_) : out(out_) {}
+    void operator ()(DataPoint* point) {
+        out << point->to_string() << endl;
+    }
+};
+
+DataList *LogDatalist::decorate(DataList *datalist)
+{
+    datalist->perform_function(PrintDataPoint(cout));
+    return datalist;
+}
+
+DataList *OutputToFile::decorate(DataList *datalist)
+{
+    ofstream fout(filename);
+    datalist->perform_function(PrintDataPoint(fout));
     return datalist;
 }

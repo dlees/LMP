@@ -25,6 +25,12 @@ public:
     bool compare(const T &lhs, const T &rhs) {return lhs > rhs;}
 };
 
+template <typename T>
+class Equal_To : public Comparitor<T> {
+public:
+    bool compare(const T &lhs, const T &rhs) {return lhs == rhs;}
+};
+
 
 /* Possible types:
  *   "less than"
@@ -39,6 +45,10 @@ static Comparitor<T> *get_comparitor(const std::string &type) {
     else if (type == "greater than") {
         static Greater_Than<T> *greater_than = new Greater_Than<T>;
         to_return = greater_than;
+    }
+    else if (type == "equal to") {
+        static Equal_To<T> *equal = new Equal_To<T>;
+        to_return = equal;
     }
     else {
         throw Error(QString("No Comparitor of type:") + QString::fromStdString(type)) ;

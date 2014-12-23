@@ -64,19 +64,6 @@ public:
 private:
     std::string name;
 };
-/*
- * Creates a new playlist using SongValueProxies with the datalist passed into it.
- */
-class ProxiedPlaylistCreatorDecorator : public DataListDecorator {
-public:
-    ProxiedPlaylistCreatorDecorator(const std::string &name_) :
-        name(name_)
-    {}
-
-    virtual DataList *decorate(DataList *datalist);
-private:
-    std::string name;
-};
 
 /*
  * Adds songs in datalist to playlist.
@@ -129,10 +116,20 @@ public:
 };
 
 /*
- * Totals up values for each song
- * Makes time useless.
+ * Totals up values for each unique ID
+ * Makes time and name useless.
  */
 class TotalUp : public DataListDecorator {
+public:
+    virtual DataList *decorate(DataList *datalist);
+};
+
+/*
+ * Replaces the value with the running total of the value
+ * for each unique ID.
+ * Preserves Time
+ */
+class RunningTotal : public DataListDecorator {
 public:
     virtual DataList *decorate(DataList *datalist);
 };
@@ -142,7 +139,16 @@ public:
     virtual DataList *decorate(DataList *datalist);
 };
 
+class OutputToFile : public DataListDecorator {
+public:
+    OutputToFile(const std::string &filename_) :
+        filename(filename_)
+    {}
 
+    virtual DataList *decorate(DataList *datalist);
+private:
+    const std::string filename;
+};
 
 
 
