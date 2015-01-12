@@ -25,10 +25,10 @@ public:
     virtual void select_child(int i);
     virtual void begin_playing();
 
-    void next();
-    void prev();
+    virtual void next();
+    virtual void prev();
 
-    void set_cur(int index);
+    virtual void set_cur(int index);
 
     void move(int i, int pos_to_move_to);
 

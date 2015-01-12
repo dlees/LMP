@@ -10,7 +10,7 @@
 
 #include <iostream>
 
-
+#include "dynamicplaylist.h"
 
 Library::Library()
     : Collection("Library"),

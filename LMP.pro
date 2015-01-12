@@ -39,7 +39,9 @@ SOURCES += main.cpp\
     datalist.cpp \
     datalistdecorator.cpp \
     datapointcomparers.cpp \
-    comparitor.cpp
+    comparitor.cpp \
+    megamix.cpp \
+    dynamicplaylist.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -68,7 +70,9 @@ HEADERS  += mainwindow.h \
     datalist.h \
     datalistdecorator.h \
     datapointcomparers.h \
-    comparitor.h
+    comparitor.h \
+    megamix.h \
+    dynamicplaylist.h
 
 OTHER_FILES +=
 

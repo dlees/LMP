@@ -77,7 +77,7 @@ void MainWindow::create_menu()
             Media_Manager::get(), SLOT(new_playlist()));
     connect(add_menu_item((char*)"Create Playlist From Files...", true, plMenu), SIGNAL(triggered()),
             mainView, SLOT(create_playlist_files()));
-    connect(add_menu_item((char*)"Create Auto Playlist", true, plMenu), SIGNAL(triggered()),
+    connect(add_menu_item((char*)"Create Recent Playlist", true, plMenu), SIGNAL(triggered()),
             mainView, SLOT(create_auto_playlist()));
 
     plMenu->addSeparator();

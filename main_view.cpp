@@ -410,10 +410,11 @@ void Main_View::add_selected_lib_list_to_catalog()
 
 #include "datalist.h"
 #include "datalistdecorator.h"
-
+#include "dynamicplaylist.h"
 void Main_View::create_auto_playlist()
 {
-
+    delete new DynamicPlaylist;
+    /*
     DataList *datalist = Media_Manager::get()->get_center()->convert_to_secCount_datalist();
 
     try {
@@ -426,7 +427,7 @@ void Main_View::create_auto_playlist()
         e.print_error_msg();
     }
 
-    delete datalist;
+    delete datalist;*/
 }
 
 void Main_View::create_top_albums_catalog()
