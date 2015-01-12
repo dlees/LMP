@@ -14,7 +14,7 @@
 
 Library::Library()
     : Collection("Library", Database::get()),
-      songs(new Playlist("All Songs"))
+      songs(new Playlist("All Songs", Database::get()))
 {
     add(songs);
     id_to_item[songs->get_id()] = songs;
@@ -190,7 +190,7 @@ Catalog *Library::get_catalog(const QString &name)
     }
     else
     {   // make a new catalog
-        catalog = new Catalog(name);
+        catalog = new Catalog(name, Database::get());
         add_catalog(catalog);
     }
     return catalog;

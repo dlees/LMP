@@ -374,7 +374,7 @@ void Main_View::create_catalog()
     int ret = msgBox->exec();
 
     if (ret == QMessageBox::Ok && text->text() != "")
-        Media_Manager::get()->create_catalog(text->text());
+        Media_Manager::get()->create_catalog(text->text(), Database::get());
 
     delete msgBox;
 }

@@ -1,10 +1,11 @@
 #include "catalog.h"
 #include "database.h"
 
-Catalog::Catalog(const QString &name)
-    : Collection(name, Database::get())
+Catalog::Catalog(const QString &name, Database *db)
+    : Collection(name, db)
 {
-    Database::get()->new_playlist(get_name(), get_id(), true);
+    if (db)
+        db->new_playlist(get_name(), get_id(), true);
 }
 
 Catalog::Catalog(const QString &name, int id_)

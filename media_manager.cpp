@@ -5,6 +5,7 @@
 #include "library.h"
 #include "playlist.h"
 #include "collection.h"
+#include "database.h"
 
 Media_Manager::Media_Manager()
     : playing(Playing_Song::get())
@@ -103,12 +104,12 @@ void Media_Manager::switch_playlist(Playlist *playlist, int pos)
 
 void Media_Manager::new_playlist()
 {
-    lib.add_playlist(new Playlist());
+    lib.add_playlist(new Playlist("Default Playlist", Database::get()));
 }
 
 void Media_Manager::new_playlist(QStringList *filenames, const QString &name)
 {
-    Playlist *new_pl = new Playlist(name);
+    Playlist *new_pl = new Playlist(name, Database::get());
 
     foreach (QString filename, *filenames)
     {
@@ -125,7 +126,7 @@ void Media_Manager::new_playlist(QStringList *filenames, const QString &name)
 
 void Media_Manager::new_playlist(const std::vector<int> &song_ids, const std::string &name)
 {
-    Playlist *new_pl = new Playlist(QString::fromStdString(name));
+    Playlist *new_pl = new Playlist(QString::fromStdString(name), 0);
 
     foreach (int id, song_ids)
     {
@@ -148,9 +149,9 @@ void Media_Manager::set_center(Collection *new_center)
     emit center_changed(new_center);
 }
 
-Collection *Media_Manager::create_catalog(const QString &name)
+Collection *Media_Manager::create_catalog(const QString &name, Database *db)
 {
-    Catalog *catalog = new Catalog(name);
+    Catalog *catalog = new Catalog(name, db);
     lib.add_catalog(catalog);
     set_center(catalog);
     return catalog;

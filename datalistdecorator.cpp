@@ -95,7 +95,7 @@ DataList *CatalogCreatorDecorator::decorate(DataList *datalist)
 
     QString Qname = QString::fromStdString(name);
 
-    Media_Manager::get()->create_catalog(Qname);
+    Media_Manager::get()->create_catalog(Qname, 0);
 
     foreach (int song_id, song_ids) {
         Music_Item * item = Media_Manager::get()->get_music_item(song_id);

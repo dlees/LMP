@@ -10,7 +10,7 @@
 class Catalog : public Collection
 {
 public:
-    Catalog(const QString &name);
+    Catalog(const QString &name, Database *db);
     Catalog(const QString &name, int id_);
 
     void insert_items_no_db(const QList<Music_Item*> &items);

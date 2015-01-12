@@ -6,12 +6,12 @@
 #include "database.h"
 
 
-Playlist::Playlist(const QString &name)
-    : Collection(name, Database::get()),
+Playlist::Playlist(const QString &name, Database *db)
+    : Collection(name, db),
       cur(0)
 {
-    if (!(get_name() == "Library" || get_name() == "All Songs"))
-        Database::get()->new_playlist(get_name(), get_id(), false);
+    if (!(get_name() == "Library" || get_name() == "All Songs") && db != 0)
+        db->new_playlist(get_name(), get_id(), false);
 }
 
 Playlist::Playlist(Collection *col)

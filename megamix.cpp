@@ -1,5 +1,5 @@
 #include "megamix.h"
 
-Megamix::Megamix()
+Megamix::Megamix() : Playlist("Megamix",0)
 {
 }

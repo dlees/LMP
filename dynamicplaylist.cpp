@@ -5,7 +5,7 @@
 #include <QTime>
 #include "Error.h"
 
-DynamicPlaylist::DynamicPlaylist()
+DynamicPlaylist::DynamicPlaylist() : Playlist("Dynamic", 0)
 {    
     DataList *datalist = Database::get()->get_sec_count_data();
 
