@@ -117,7 +117,7 @@ void Collection::remove(int index)
 {
     qDebug() << "Removing" << index << "from" << get_name();
 
-    if (index == -1)
+    if (index == -1 || index > children.size()-1)
         return;
 
     if (get_name() == "All Songs")

@@ -326,7 +326,10 @@ void Main_View::remove_selected_song()
 void Main_View::remove_selected_from_table()
 {
     QModelIndexList indexes = table->selectionModel()->selectedRows();
-    for (int i = 0; i < indexes.count(); ++i)
+
+    qSort(indexes.begin(), indexes.end());
+
+    for (int i = indexes.count()-1; i >= 0; --i)
     {
         Media_Manager::get()->get_center()->remove(indexes[i].row());
     }
