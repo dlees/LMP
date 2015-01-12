@@ -6,19 +6,19 @@
 
 #include "database.h"
 
-Collection::Collection(const QString &name)
-    : Music_Item(name), tree_model(0)
+Collection::Collection(const QString &name, Database *db)
+    : Music_Item(name), tree_model(0), database(db)
 {
 }
 
-Collection::Collection(const QString &name_, int id_)
-    : Music_Item(name_, id_)
+Collection::Collection(const QString &name_, int id_, Database *db)
+    : Music_Item(name_, id_), database(db)
 {
 }
 
 Collection::Collection(const QString &name_, int id_,
-           const QList<Music_Item*> &items)
-    : Music_Item(name_, id_)
+           const QList<Music_Item*> &items, Database *db)
+    : Music_Item(name_, id_), database(db)
 {
     insert_items_no_db(items);
 }
@@ -76,8 +76,8 @@ void Collection::add(Music_Item *item)
 
     // without the check for id==0, this adds playlists to the collection
     // with id 0 on startup causing it to crash.
-    if (get_name() != "All Songs" && get_id() != 0 && get_name() != "Library")
-        Database::get()->add_to_playlist(item->get_id(), get_id());
+    if (get_name() != "All Songs" && get_id() != 0 && get_name() != "Library" && database != 0)
+        database->add_to_playlist(item->get_id(), get_id());
 
     if (Collection *col = dynamic_cast<Collection*>(item))
     {
@@ -115,6 +115,8 @@ void Collection::remove(Music_Item *item)
 
 void Collection::remove(int index)
 {
+    qDebug() << "Removing" << index << "from" << get_name();
+
     if (index == -1)
         return;
 
@@ -136,10 +138,10 @@ void Collection::remove(int index)
         disconnect(song, SIGNAL(data_changed()),
                 this, SLOT(data_updated()));
 
-        if (get_name() != "All Songs")
+        if (get_name() != "All Songs" && database != 0)
         {
-            qDebug() << "Removing" << song->get_name() << "from" << get_name();
-            Database::get()->delete_from_playlist(song->get_id(), get_id());
+            qDebug() << "Removing" << song->get_name() << "from DB" << get_name();
+            database->delete_from_playlist(song->get_id(), get_id());
         }
     }
 
@@ -148,8 +150,11 @@ void Collection::remove(int index)
         disconnect(col, SIGNAL(data_changed()),
                 this, SLOT(data_updated()));
 
-        if (get_name() == "Library")
-            Database::get()->delete_playlist(col->get_id());
+        if (get_name() == "Library" && database != 0) {
+
+            qDebug() << "Removing" << col->get_name() << "from DB" << get_name();
+            database->delete_playlist(col->get_id());
+        }
     }
 
 

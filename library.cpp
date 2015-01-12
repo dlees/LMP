@@ -13,7 +13,7 @@
 #include "dynamicplaylist.h"
 
 Library::Library()
-    : Collection("Library"),
+    : Collection("Library", Database::get()),
       songs(new Playlist("All Songs"))
 {
     add(songs);

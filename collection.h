@@ -6,16 +6,18 @@
 #include <QList>
 #include <QtGui>
 
+
+class Database;
 class DataList;
 
 class Collection : public QAbstractTableModel, public Music_Item
 {
     Q_OBJECT
 public:
-    Collection(const QString &name);
-    Collection(const QString &name_, int id_);
+    Collection(const QString &name, Database *db);
+    Collection(const QString &name_, int id_, Database *db);
     Collection(const QString &name_, int id_,
-               const QList<Music_Item*> &items);
+               const QList<Music_Item*> &items, Database *db);
 
 public:
     bool contains(Music_Item*);
@@ -86,6 +88,8 @@ private:
     QStandardItemModel *tree_model;
     QStandardItemModel *list_model;
     QStandardItemModel *table_model;
+
+    Database *database;
 };
 
 #endif // COLLECTION_H

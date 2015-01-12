@@ -7,7 +7,7 @@
 
 
 Playlist::Playlist(const QString &name)
-    : Collection(name),
+    : Collection(name, Database::get()),
       cur(0)
 {
     if (!(get_name() == "Library" || get_name() == "All Songs"))
@@ -15,7 +15,7 @@ Playlist::Playlist(const QString &name)
 }
 
 Playlist::Playlist(Collection *col)
-    : Collection(col->get_name()+"_playlist"),
+    : Collection(col->get_name()+"_playlist", 0),
       cur(0)
 {
    Music_Item *item;
@@ -25,7 +25,7 @@ Playlist::Playlist(Collection *col)
 
 Playlist::Playlist(const QString &name, int id_,
          const QList<Music_Item*> &items)
-    : Collection(name, id_, items),
+    : Collection(name, id_, items, Database::get()),
       cur(0)
 {}
 
