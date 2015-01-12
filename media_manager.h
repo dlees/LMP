@@ -45,6 +45,7 @@ public:
         return m;
     }
 
+    void add_playlist_to_library(Playlist *new_pl);
 public slots:
     // plays the current song
     void play_cur();
@@ -71,7 +72,7 @@ public slots:
 
     Collection *get_playlist();
     Collection *get_center();
-    Collection *get_library();
+    Library *get_library();
 
     void set_center(Collection *new_center);
 

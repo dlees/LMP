@@ -1,6 +1,7 @@
 #include "collection.h"
 
 #include "media_manager.h"
+#include "library.h"
 #include "error.h"
 #include "song.h"
 
@@ -89,6 +90,14 @@ void Collection::add(Music_Item *item)
     beginInsertRows(QModelIndex(), count(), count());
     children.push_back(item);
     endInsertRows();
+}
+
+void Collection::add_items(const std::vector<int> &ids)
+{
+    foreach (int id, ids)
+    {
+        add(Media_Manager::get()->get_music_item(id));
+    }
 }
 
 void Collection::data_updated()
@@ -228,6 +237,7 @@ void Collection::begin_playing()
 void Collection::select()
 {
     Media_Manager::get()->set_center(this);
+    emit headerDataChanged(Qt::Horizontal, 0,3);
 }
 
 void Collection::select_child(int i)

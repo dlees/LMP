@@ -106,6 +106,32 @@ DataList::~DataList(){
     }
 }
 
+std::vector<int> DataList::get_ids()
+{
+    vector<int> song_ids;
+
+    for (datalist_iter_t iter = this->begin() ;
+         iter != this->end() ; ++iter)
+    {
+        song_ids.push_back((*iter)->get_id());
+    }
+
+    return song_ids;
+}
+
+std::map<int, int> DataList::get_values()
+{
+    map<int,int> id_to_value;
+
+    for (datalist_iter_t iter = this->begin() ;
+         iter != this->end() ; ++iter)
+    {
+        id_to_value[(*iter)->get_id()] = (*iter)->get_value()->get_value();
+    }
+
+    return id_to_value;
+}
+
 DataList::DataList()
 {
 }

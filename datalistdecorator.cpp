@@ -66,23 +66,11 @@ DataListDecoratorCombiner *DataListDecoratorCombiner::build(DataListDecorator *d
 #include "datalist.h"
 #include "datapoint.h"
 #include "media_manager.h"
-vector<int> convert_to_song_ids(DataList *datalist)
-{
-    vector<int> song_ids;
-
-    for (datalist_iter_t iter = datalist->begin() ;
-         iter != datalist->end() ; ++iter)
-    {
-        song_ids.push_back((*iter)->get_id());
-    }
-
-    return song_ids;
-}
 
 #include "catalog.h"
 DataList *PlaylistCreatorDecorator::decorate(DataList *datalist)
 {
-    vector<int> song_ids = convert_to_song_ids(datalist);
+    vector<int> song_ids = datalist->get_ids();
 
     Media_Manager::get()->new_playlist(song_ids, name);
 
@@ -91,7 +79,7 @@ DataList *PlaylistCreatorDecorator::decorate(DataList *datalist)
 
 DataList *CatalogCreatorDecorator::decorate(DataList *datalist)
 {
-    vector<int> song_ids = convert_to_song_ids(datalist);
+    vector<int> song_ids = datalist->get_ids();
 
     QString Qname = QString::fromStdString(name);
 
@@ -130,12 +118,7 @@ DataList *ProxiedPlaylistCreatorDecorator::decorate(DataList *datalist)
 
 DataList *AddToCollection::decorate(DataList *datalist)
 {
-    vector<int> song_ids = convert_to_song_ids(datalist);
-
-    foreach (int id, song_ids)
-    {
-        collection->add(Media_Manager::get()->get_music_item(id));
-    }
+    collection->add_items(datalist->get_ids());
     return datalist;
 }
 

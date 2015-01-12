@@ -57,8 +57,6 @@ public:
     Star_Rating get_star_rating() const;
     virtual int get_rating() const;
 
-
-
 protected:
     QString name;
 

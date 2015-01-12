@@ -23,6 +23,7 @@ public:
     bool contains(Music_Item*);
 
     virtual void add(Music_Item *);
+    void add_items(const std::vector<int> &ids);
     void add_leaves(Music_Item *);
 
     virtual void remove(Music_Item *);

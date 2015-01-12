@@ -5,6 +5,7 @@
 #include <time.h>
 
 #include <vector>
+#include <map>
 
 class DataPoint;
 
@@ -41,10 +42,12 @@ public:
 
     int size() {return data.size();}
 
-    // Can pass in DataListVisitor
     void perform_function(DataListVisitor &function);
 
     virtual ~DataList();
+
+    std::vector<int> get_ids();
+    std::map<int, int> get_values();
 
 protected:
     DataList();
