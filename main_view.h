@@ -59,12 +59,15 @@ public slots:
     void create_catalog();
     void add_selected_lib_list_to_catalog();
 
-    void create_auto_playlist();
+    void create_recent_playlist();
     void add_good_to_table();
     void create_top_albums_catalog();
 
     void export_running_total();
     void export_finite_difference();
+
+    void test1();
+    void test2();
 private:
     QStringList* get_files();
     QAction *add_menu_item(char name[], bool enabled);

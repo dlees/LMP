@@ -414,24 +414,9 @@ void Main_View::add_selected_lib_list_to_catalog()
 #include "datalist.h"
 #include "datalistdecorator.h"
 #include "dynamicplaylist.h"
-void Main_View::create_auto_playlist()
+void Main_View::create_recent_playlist()
 {
     Media_Manager::get()->add_playlist_to_library(new DynamicPlaylist());
-
-    /*
-    DataList *datalist = Media_Manager::get()->get_center()->convert_to_secCount_datalist();
-
-    try {
-    datalist = create_decorator_combiner()
-            ->build(filter_decorator("less than", 5000))
-            ->build(sort_decorator("value"))
-            ->build(create_playlist_decorator("Auto Playlist"))
-        ->decorate(datalist);
-    } catch (Error &e) {
-        e.print_error_msg();
-    }
-
-    delete datalist;*/
 }
 
 void Main_View::create_top_albums_catalog()
@@ -495,5 +480,17 @@ void Main_View::export_finite_difference()
         e.print_error_msg();
     }
     delete datalist;
+}
+
+
+void Main_View::test1()
+{
+
+}
+
+
+void Main_View::test2()
+{
+
 }
 

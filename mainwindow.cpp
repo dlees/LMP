@@ -59,43 +59,43 @@ void MainWindow::create_menu()
             mainView, SLOT(quit()));
 
     viewMenu = menuBar()->addMenu(tr("&View"));
-    connect(add_menu_item((char*)"Mini", true, viewMenu), SIGNAL(triggered()),
+    connect(add_menu_item((char*)"&Mini", true, viewMenu), SIGNAL(triggered()),
             this, SLOT(switch_view_to_mini()));
-    connect(add_menu_item((char*)"Main", true, viewMenu), SIGNAL(triggered()),
+    connect(add_menu_item((char*)"&Big", true, viewMenu), SIGNAL(triggered()),
             this, SLOT(switch_view_to_main()));
 
  // Hotspots Menu
     hsMenu = menuBar()->addMenu(tr("&Hotspots"));
-    connect(add_menu_item((char*)"Add hotspot", true, hsMenu), SIGNAL(triggered()),
+    connect(add_menu_item((char*)"&Add hotspot", true, hsMenu), SIGNAL(triggered()),
             &Playing_Song::get(), SLOT(set_hs()));
-    connect(add_menu_item((char*)"Delete next hotspot", true, hsMenu), SIGNAL(triggered()),
+    connect(add_menu_item((char*)"&Delete next hotspot", true, hsMenu), SIGNAL(triggered()),
             &Playing_Song::get(), SLOT(remove_next_hs()));
 
  // Playlist Menu
     plMenu = menuBar()->addMenu(tr("&Playlists"));
-    connect(add_menu_item((char*)"Create Empty Playlist", true, plMenu), SIGNAL(triggered()),
+    connect(add_menu_item((char*)"Create Empty &Playlist", true, plMenu), SIGNAL(triggered()),
             Media_Manager::get(), SLOT(new_playlist()));
-    connect(add_menu_item((char*)"Create Playlist From Files...", true, plMenu), SIGNAL(triggered()),
+    connect(add_menu_item((char*)"Create Playlist From &Files...", true, plMenu), SIGNAL(triggered()),
             mainView, SLOT(create_playlist_files()));
-    connect(add_menu_item((char*)"Create Recent Playlist", true, plMenu), SIGNAL(triggered()),
-            mainView, SLOT(create_auto_playlist()));
+    connect(add_menu_item((char*)"Create &Recent Playlist", true, plMenu), SIGNAL(triggered()),
+            mainView, SLOT(create_recent_playlist()));
 
     plMenu->addSeparator();
     connect(add_menu_item((char*)"Delete Selected Playlist in Library", true, plMenu), SIGNAL(triggered()),
             mainView, SLOT(delete_playlist_from_library()));
 
     plMenu->addSeparator();
-    connect(add_menu_item((char*)"Add current song to table playlist", true, plMenu), SIGNAL(triggered()),
+    connect(add_menu_item((char*)"Add &current song to table playlist", true, plMenu), SIGNAL(triggered()),
             Media_Manager::get(), SLOT(add_cur_to_playlist()));
-    connect(add_menu_item((char*)"Add selected songs in table to current playlist", true, plMenu), SIGNAL(triggered()),
+    connect(add_menu_item((char*)"Add selected songs in &table to current playlist", true, plMenu), SIGNAL(triggered()),
             mainView, SLOT(add_selected_to_playlist()));
-    connect(add_menu_item((char*)"Add good songs in Cur List to Table List", true, plMenu), SIGNAL(triggered()),
+    connect(add_menu_item((char*)"Add &good songs in Cur List to Table List", true, plMenu), SIGNAL(triggered()),
             mainView, SLOT(add_good_to_table()));
 
     plMenu->addSeparator();
-    connect(add_menu_item((char*)"Remove selected song from current playlist", true, plMenu), SIGNAL(triggered()),
+    connect(add_menu_item((char*)"Remove selected &song from current playlist", true, plMenu), SIGNAL(triggered()),
             mainView, SLOT(remove_selected_song()));
-    connect(add_menu_item((char*)"Remove selected items from table playlist", true, plMenu), SIGNAL(triggered()),
+    connect(add_menu_item((char*)"Remove selected &items from table playlist", true, plMenu), SIGNAL(triggered()),
             mainView, SLOT(remove_selected_from_table()));
 
     plMenu->addSeparator();
@@ -104,23 +104,23 @@ void MainWindow::create_menu()
 
  // Catalog Menu
     QMenu *catalogMenu = menuBar()->addMenu(tr("&Catalogs"));
-    connect(add_menu_item((char*)"Create Catalog...", true, catalogMenu), SIGNAL(triggered()),
+    connect(add_menu_item((char*)"&Create Catalog...", true, catalogMenu), SIGNAL(triggered()),
             mainView, SLOT(create_catalog()));
-    connect(add_menu_item((char*)"Add selected Playlist to a Catalog...", true, catalogMenu), SIGNAL(triggered()),
+    connect(add_menu_item((char*)"Add selected &Playlist to a Catalog...", true, catalogMenu), SIGNAL(triggered()),
             mainView, SLOT(add_selected_lib_list_to_catalog()));
-    connect(add_menu_item((char*)"Create Top Albums Catalog", true, catalogMenu), SIGNAL(triggered()),
+    connect(add_menu_item((char*)"Create &Top Albums Catalog", true, catalogMenu), SIGNAL(triggered()),
             mainView, SLOT(create_top_albums_catalog()));
 
  // Ratings Menu
     QMenu *ratingsMenu = menuBar()->addMenu(tr("&Ratings"));
 
     QSignalMapper *ratingsMapper = new QSignalMapper(this);
-    QAction *rating1 = add_menu_item((char*)"Rate Current Song: 1 Star", true, ratingsMenu);
-    QAction *rating2 = add_menu_item((char*)"Rate Current Song: 2 Stars", true, ratingsMenu);
-    QAction *rating3 = add_menu_item((char*)"Rate Current Song: 3 Stars", true, ratingsMenu);
-    QAction *rating4 = add_menu_item((char*)"Rate Current Song: 4 Stars", true, ratingsMenu);
-    QAction *rating5 = add_menu_item((char*)"Rate Current Song: 5 Stars", true, ratingsMenu);
-    QAction *rating6 = add_menu_item((char*)"Rate Current Song: SuperStared", true, ratingsMenu);
+    QAction *rating1 = add_menu_item((char*)"Rate Current Song: &1 Star", true, ratingsMenu);
+    QAction *rating2 = add_menu_item((char*)"Rate Current Song: &2 Stars", true, ratingsMenu);
+    QAction *rating3 = add_menu_item((char*)"Rate Current Song: &3 Stars", true, ratingsMenu);
+    QAction *rating4 = add_menu_item((char*)"Rate Current Song: &4 Stars", true, ratingsMenu);
+    QAction *rating5 = add_menu_item((char*)"Rate Current Song: &5 Stars", true, ratingsMenu);
+    QAction *rating6 = add_menu_item((char*)"Rate Current Song: SuperStared (&6)", true, ratingsMenu);
 
     connect(rating1 , SIGNAL(triggered()), ratingsMapper, SLOT(map()));
     connect(rating2 , SIGNAL(triggered()), ratingsMapper, SLOT(map()));
@@ -139,13 +139,19 @@ void MainWindow::create_menu()
     connect(ratingsMapper, SIGNAL(mapped(int)), Media_Manager::get(), SLOT(change_rating_cur_song(int)));
 
 
-    // Data Menu
-       QMenu *dataMenu = menuBar()->addMenu(tr("&Data"));
-       connect(add_menu_item((char*)"Export Running Total Graph for table playlist", true, dataMenu), SIGNAL(triggered()),
-               mainView, SLOT(export_running_total()));
-       connect(add_menu_item((char*)"Export Finite Difference Graph for table playlist", true, dataMenu), SIGNAL(triggered()),
-               mainView, SLOT(export_finite_difference()));
+// Data Menu
+   QMenu *dataMenu = menuBar()->addMenu(tr("&Data"));
+   connect(add_menu_item((char*)"Export &Running Total Graph for table playlist", true, dataMenu), SIGNAL(triggered()),
+           mainView, SLOT(export_running_total()));
+   connect(add_menu_item((char*)"Export &Finite Difference Graph for table playlist", true, dataMenu), SIGNAL(triggered()),
+           mainView, SLOT(export_finite_difference()));
 
+// Test menu
+   QMenu *testMenu = menuBar()->addMenu(tr("&Test"));
+   connect(add_menu_item((char*)"T&1", true, testMenu), SIGNAL(triggered()),
+           mainView, SLOT(test1()));
+   connect(add_menu_item((char*)"T&2", true, testMenu), SIGNAL(triggered()),
+           mainView, SLOT(test2()));
 }
 
 QAction *MainWindow::add_menu_item(char name[], bool enabled, QMenu *menu)
@@ -310,6 +316,4 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     {
         Media_Manager::get()->prev();
     }
-
-
 }
