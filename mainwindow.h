@@ -16,6 +16,8 @@ public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    void save_window_settings(const QString &mode);
+    void restore_window_settings(const QString &mode);
 public slots:
     void play();
     void open_and_play();

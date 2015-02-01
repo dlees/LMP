@@ -202,18 +202,21 @@ void MainWindow::switch_view_to_mini()
 {
     qDebug() << "SWITCH_VIEW_TO_MINI";
 
+    save_window_settings("main");
+
     mainSize = this->size();
 
     mainView->setParent(0);
 
     this->setCentralWidget(miniView);
 
-    this->resize(miniSize);
 
     this->setWindowTitle("LMP");
     this->menuBar()->hide();
     this->setWindowFlags(Qt::WindowStaysOnTopHint);
     this->show();
+    restore_window_settings("mini");
+
 }
 
 void MainWindow::switch_view_to_main()
@@ -222,15 +225,33 @@ void MainWindow::switch_view_to_main()
 
     //miniSize = this->size();
 
+    save_window_settings("mini");
+
     miniView->setParent(0);
 
     this->setCentralWidget(mainView);
 
-    this->resize(mainSize);
+
     this->setWindowTitle("Lucidity Music Player");
     this->menuBar()->show();
     this->setWindowFlags(0);
     this->show();
+    restore_window_settings("main");
+}
+
+void MainWindow::save_window_settings(const QString &mode)
+{
+    QSettings settings("Scalisco", "LMP");
+    settings.setValue(mode + "/geometry", saveGeometry());
+    settings.setValue(mode + "/windowState", saveState());
+}
+
+
+void MainWindow::restore_window_settings(const QString &mode)
+{
+    QSettings settings("Scalisco", "LMP");
+    restoreGeometry(settings.value(mode + "/geometry").toByteArray());
+    restoreState(settings.value(mode + "/windowState").toByteArray());
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
