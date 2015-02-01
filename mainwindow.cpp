@@ -99,7 +99,7 @@ void MainWindow::create_menu()
             mainView, SLOT(remove_selected_from_table()));
 
     plMenu->addSeparator();
-    connect(add_menu_item((char*)"Move current song up", true, plMenu), SIGNAL(triggered()),
+    connect(add_menu_item((char*)"Move current song up (F7)", true, plMenu), SIGNAL(triggered()),
             Media_Manager::get(), SLOT(move_cur_song_up()));
 
  // Catalog Menu
@@ -256,69 +256,7 @@ void MainWindow::restore_window_settings(const QString &mode)
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
-    if (event->key() == Qt::Key_Z || event->key() == Qt::Key_F3)
-    {
-        Playing_Song::get().prev_hs();
-    }
-    else if (event->key() == Qt::Key_X || event->key() == Qt::Key_F4)
-    {
-        Playing_Song::get().next_hs();
-    }
-    else if (event->key() == Qt::Key_C || event->key() == Qt::Key_F5)
-    {
-        Playing_Song::get().set_hs();
-    }
-    else if (event->key() == Qt::Key_V || event->key() == Qt::Key_F6)
-    {
-        Playing_Song::get().remove_next_hs();
-    }
-    else if (event->key() == Qt::Key_F)
-    {
-        Media_Manager::get()->first();
-    }
-    else if (event->key() == Qt::Key_R || event->key() == Qt::Key_F8)
-    {
-        Playing_Song::get().change_position(0);
-    }
-    else if (event->key() == Qt::Key_PageUp || event->key() == Qt::Key_F7)
-    {
-        Media_Manager::get()->move_cur_song_up();
-    }
-    else if (event->key() == Qt::Key_1)
-    {
-        Media_Manager::get()->change_rating_cur_song(1);
-    }
-    else if (event->key() == Qt::Key_2)
-    {
-        Media_Manager::get()->change_rating_cur_song(2);
-    }
-    else if (event->key() == Qt::Key_3 || event->key() == Qt::Key_F9)
-    {
-        Media_Manager::get()->change_rating_cur_song(3);
-    }
-    else if (event->key() == Qt::Key_4 || event->key() == Qt::Key_F10)
-    {
-        Media_Manager::get()->change_rating_cur_song(4);
-    }
-    else if (event->key() == Qt::Key_5 || event->key() == Qt::Key_F11)
-    {
-        Media_Manager::get()->change_rating_cur_song(5);
-    }
-    else if (event->key() == Qt::Key_6 || event->key() == Qt::Key_F12)
-    {
-        Media_Manager::get()->change_rating_cur_song(6);
-    }
-    //Glitchy
-//    else if (event->key() == Qt::Key_A)
-//    {
-//        Playing_Song::get().change_pos_relative(-5);
-//    }
-//    else if (event->key() == Qt::Key_S)
-//    {
-//        Playing_Song::get().change_pos_relative(5);
-//    }
-
-    else if (event->key() == Qt::Key_MediaPlay)
+    if (event->key() == Qt::Key_MediaPlay)
     {
         Media_Manager::get()->play_cur();
     }
@@ -337,4 +275,61 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     {
         Media_Manager::get()->prev();
     }
+    if (event->key() == Qt::Key_F3)
+    {
+        Playing_Song::get().prev_hs();
+    }
+    else if (event->key() == Qt::Key_F4)
+    {
+        Playing_Song::get().next_hs();
+    }
+    else if (event->key() == Qt::Key_F5)
+    {
+        Playing_Song::get().set_hs();
+    }
+    else if (event->key() == Qt::Key_F6)
+    {
+        Playing_Song::get().remove_next_hs();
+    }
+    else if (event->key() == Qt::Key_F)
+    {
+        Media_Manager::get()->first();
+    }
+    else if (event->key() == Qt::Key_R)
+    {
+        Playing_Song::get().change_position(0);
+    }
+    else if (event->key() == Qt::Key_F7)
+    {
+        Media_Manager::get()->move_cur_song_up();
+    }
+    else if (event->key() == Qt::Key_F8)
+    {
+        mainView->create_recent_playlist();
+    }
+    else if (event->key() == Qt::Key_F9)
+    {
+        Media_Manager::get()->change_rating_cur_song(3);
+    }
+    else if (event->key() == Qt::Key_F10)
+    {
+        Media_Manager::get()->change_rating_cur_song(4);
+    }
+    else if (event->key() == Qt::Key_F11)
+    {
+        Media_Manager::get()->change_rating_cur_song(5);
+    }
+    else if (event->key() == Qt::Key_F12)
+    {
+        Media_Manager::get()->change_rating_cur_song(6);
+    }
+    //Glitchy
+//    else if (event->key() == Qt::Key_A)
+//    {
+//        Playing_Song::get().change_pos_relative(-5);
+//    }
+//    else if (event->key() == Qt::Key_S)
+//    {
+//        Playing_Song::get().change_pos_relative(5);
+//    }
 }
