@@ -4,10 +4,12 @@
 #include <string>
 #include <sstream>
 #include <time.h>
+#include "time_ds.h"
 
 class DataValue {
 public:
     static DataValue *get_instance(int value);
+    static DataValue *get_instance(time_t start_time, time_t end_time);
     static DataValue *get_instance(int secCount_start, int secCount_end);
 
     virtual int get_value() const = 0;
@@ -42,7 +44,7 @@ public:
         stream << get_id() <<
             "\t" << get_name() <<
             "\t " << get_value()->to_string() <<
-            "\t "<< get_time();
+            "\t "<< get_human_time(get_time());
 
         return stream.str();
     }

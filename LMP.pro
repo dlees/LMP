@@ -41,7 +41,8 @@ SOURCES += main.cpp\
     datapointcomparers.cpp \
     comparitor.cpp \
     megamix.cpp \
-    dynamicplaylist.cpp
+    dynamicplaylist.cpp \
+    time_ds.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -72,7 +73,8 @@ HEADERS  += mainwindow.h \
     datapointcomparers.h \
     comparitor.h \
     megamix.h \
-    dynamicplaylist.h
+    dynamicplaylist.h \
+    time_ds.h
 
 OTHER_FILES +=
 
