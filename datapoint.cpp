@@ -2,6 +2,8 @@
 
 #include "music_item.h"
 
+using namespace std;
+
 class SimpleDataValue : public DataValue
 {
 public:
@@ -23,6 +25,12 @@ public:
     {}
 
     virtual int get_value() const {return end_pos - start_pos;}
+
+    virtual string to_string() const {
+        ostringstream stream;
+        stream << start_pos << "\t" << end_pos << "\t" << get_value();
+        return stream.str();
+    }
 
 private:
     int start_pos;

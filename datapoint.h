@@ -12,6 +12,12 @@ public:
 
     virtual int get_value() const = 0;
 
+    virtual std::string to_string() const {
+        std::ostringstream stream;
+        stream << get_value();
+        return stream.str();
+    }
+
 protected:
     DataValue() {}
 };
@@ -35,7 +41,7 @@ public:
         std::ostringstream stream;
         stream << get_id() <<
             "\t" << get_name() <<
-            "\t " << get_value()->get_value() <<
+            "\t " << get_value()->to_string() <<
             "\t "<< get_time();
 
         return stream.str();
