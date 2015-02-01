@@ -106,6 +106,17 @@ private:
     time_t end_time;
 };
 
+/*
+ * returns a datalist that includes the time ranges not in the original
+ */
+class InvertTime : public DataListDecorator {
+public:
+    InvertTime()
+    {}
+
+    virtual DataList *decorate(DataList *datalist);
+};
+
 
 /*
  * Sort all data by value

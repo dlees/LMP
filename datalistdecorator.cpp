@@ -221,3 +221,25 @@ DataList *OutputToFile::decorate(DataList *datalist)
     datalist->perform_function(PrintDataPoint(fout));
     return datalist;
 }
+
+DataList *InvertTime::decorate(DataList *datalist)
+{
+    DataList *newList = DataList::get_instance();
+
+    time_t last_time_end = 0;
+
+    for (datalist_iter_t iter = datalist->begin() ;
+         iter != datalist->end() ; ++iter) {
+        DataPoint *point = *iter;
+
+        time_t this_time_start =   point->get_time() - point->get_value()->get_value()/1000;
+
+        newList->add_data_point(DataPoint::get_instance(
+           "name", 1, DataValue::get_instance(last_time_end, this_time_start), 0));
+
+        last_time_end = point->get_time();
+    }
+
+    delete datalist;
+    return newList;
+}
