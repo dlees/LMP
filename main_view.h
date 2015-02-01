@@ -60,6 +60,7 @@ public slots:
     void add_selected_lib_list_to_catalog();
 
     void create_recent_playlist();
+    void create_playlist_date_range();
     void add_good_to_table();
     void create_top_albums_catalog();
 

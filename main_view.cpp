@@ -201,8 +201,6 @@ void Main_View::add_files()
 
 void Main_View::create_playlist_files()
 {
-    QString name;
-
     QInputDialog *getName = new QInputDialog();
 
     getName->setCancelButtonText("Cancel");
@@ -414,9 +412,50 @@ void Main_View::add_selected_lib_list_to_catalog()
 #include "datalist.h"
 #include "datalistdecorator.h"
 #include "dynamicplaylist.h"
+void Main_View::create_playlist_date_range()
+{
+
+    QMessageBox *msgBox = new QMessageBox(this);
+    msgBox->setText("Enter time range");
+    msgBox->resize(300, 600);
+
+    QGridLayout *layout = qobject_cast<QGridLayout *>(msgBox->layout());
+
+    QDateTimeEdit *start_date_w = new QDateTimeEdit(msgBox);
+    start_date_w->setAlignment(Qt::AlignHCenter);
+    start_date_w->setCalendarPopup(true);
+    start_date_w->setDateTime(QDateTime::currentDateTime().addDays(-1));
+    layout->addWidget(start_date_w, 1, 0);
+
+    QDateTimeEdit *end_date_w = new QDateTimeEdit(msgBox);
+    end_date_w->setAlignment(Qt::AlignHCenter);
+    end_date_w->setCalendarPopup(true);
+    end_date_w->setDateTime(QDateTime::currentDateTime());
+    layout->addWidget(end_date_w, 1, 1);
+
+    msgBox->setLayout(layout);
+    msgBox->setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
+    msgBox->setDefaultButton(QMessageBox::Ok);
+    start_date_w->setFocus();
+
+    int ret = msgBox->exec();
+
+    if (ret == QMessageBox::Ok)
+    {
+        time_t start_date = start_date_w->dateTime().toTime_t();
+        time_t end_date = end_date_w->dateTime().toTime_t();
+
+        Media_Manager::get()->add_playlist_to_library(new DynamicPlaylist(start_date, end_date));
+    }
+    delete msgBox;
+
+}
+
 void Main_View::create_recent_playlist()
 {
-    Media_Manager::get()->add_playlist_to_library(new DynamicPlaylist());
+    time_t start_date = QDateTime::currentDateTime().addDays(-1).toTime_t();
+    time_t end_date = QDateTime::currentDateTime().toTime_t();
+    Media_Manager::get()->add_playlist_to_library(new DynamicPlaylist(start_date, end_date));
 }
 
 void Main_View::create_top_albums_catalog()
@@ -426,7 +465,7 @@ void Main_View::create_top_albums_catalog()
     try {
     datalist = create_decorator_combiner()
             ->build(filter_decorator("less than", 10000)) //filter out ratings less than 3
-            ->build(sort_decorator("value")) // sort by greatest rating
+            ->build(sort_decorator("value")) // sort by greatest sec count
             ->build(create_playlist_decorator("Top Playlists", true))
         ->decorate(datalist);
     } catch (Error &e) {

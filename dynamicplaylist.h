@@ -9,7 +9,7 @@ class Datalist;
 class DynamicPlaylist : public Playlist
 {
 public:
-    DynamicPlaylist();
+    DynamicPlaylist(time_t start_time, time_t end_time);
 
     QVariant data(const QModelIndex &index, int role) const;
     QStringList get_headers() const;

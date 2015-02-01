@@ -10,13 +10,13 @@
 
 using namespace std;
 
-DynamicPlaylist::DynamicPlaylist() : Playlist("Recently Played", 0)
+DynamicPlaylist::DynamicPlaylist(time_t start_time, time_t end_time) : Playlist("Recently Played", 0)
 {    
     DataList *datalist = Database::get()->get_sec_count_data();
 
     try {
     datalist = create_decorator_combiner()
-            ->build(new FilterByTime(QDateTime::currentDateTime().addDays(-1).toTime_t(), QDateTime::currentDateTime().toTime_t()))
+            ->build(new FilterByTime(start_time, end_time))
             ->build(new TotalUp())
             ->build(sort_decorator("value"))
             ->build(filter_decorator("less than", 100*1000))

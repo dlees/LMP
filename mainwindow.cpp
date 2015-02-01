@@ -77,8 +77,10 @@ void MainWindow::create_menu()
             Media_Manager::get(), SLOT(new_playlist()));
     connect(add_menu_item((char*)"Create Playlist From &Files...", true, plMenu), SIGNAL(triggered()),
             mainView, SLOT(create_playlist_files()));
-    connect(add_menu_item((char*)"Create &Recent Playlist", true, plMenu), SIGNAL(triggered()),
+    connect(add_menu_item((char*)"Create &Recent Playlist (F8)", true, plMenu), SIGNAL(triggered()),
             mainView, SLOT(create_recent_playlist()));
+    connect(add_menu_item((char*)"Playlist from &Date Range...", true, plMenu), SIGNAL(triggered()),
+            mainView, SLOT(create_playlist_date_range()));
 
     plMenu->addSeparator();
     connect(add_menu_item((char*)"Delete Selected Playlist in Library", true, plMenu), SIGNAL(triggered()),
