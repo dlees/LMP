@@ -34,7 +34,9 @@ public:
         {return children.size();}
 
     virtual int get_milliseconds() const;
-    virtual int get_average_ms() const;
+    virtual int get_average_ms() const;    
+    virtual int get_rating() const;
+
     virtual QLinkedList<Song*> get_leaves() ;
 
     DataList *convert_to_secCount_datalist();
@@ -64,8 +66,6 @@ public:
     virtual void stop_playing();
 
     virtual void emit_data_changed();
-
-  //  virtual int get_rating() const;
 
     // moves the ith item
     virtual void move(int i, int pos_to_move_to);

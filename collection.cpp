@@ -193,6 +193,20 @@ int Collection::get_average_ms() const
     return get_milliseconds()/children.size();
 }
 
+int Collection::get_rating() const
+{
+    Music_Item *item;
+    float sum = 0;
+    int count = children.size();
+
+    foreach (item, children)
+        sum += item->get_rating();
+
+    float avg_rating = sum/count;
+
+    return avg_rating;
+}
+
 
 QLinkedList<Song*> Collection::get_leaves()
 {
@@ -355,15 +369,3 @@ void Collection::move_up(Music_Item*item)
 
     move(i, (i != 0) ? i-1 : children.size()-1);
 }
-/*
-int Collection::get_rating() const
-{
-    Music_Item *item;
-    int sum = 0;
-    int count = const_cast<Collection*>(this)->get_leaves().size();
-
-    foreach (item, children)
-        sum += item->get_rating();
-
-    return sum/count;
-}*/
