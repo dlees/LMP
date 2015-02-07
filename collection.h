@@ -34,6 +34,7 @@ public:
         {return children.size();}
 
     virtual int get_milliseconds() const;
+    virtual int get_average_ms() const;
     virtual QLinkedList<Song*> get_leaves() ;
 
     DataList *convert_to_secCount_datalist();

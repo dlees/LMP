@@ -188,6 +188,11 @@ int Collection::get_milliseconds() const
     return sum;
 }
 
+int Collection::get_average_ms() const
+{
+    return get_milliseconds()/children.size();
+}
+
 
 QLinkedList<Song*> Collection::get_leaves()
 {
@@ -304,14 +309,14 @@ QVariant Collection::headerData(int section, Qt::Orientation orientation, int ro
 QStringList Collection::get_headers() const
 {
     return Music_Item::get_headers()
-            << "Nothing"
+            << "Average"
                ;
 }
 
 QList<QVariant> Collection::get_column_data() const
 {
     return Music_Item::get_column_data()
-            << ("No Data")
+            << get_average_ms() / 1000
                ;
 }
 
