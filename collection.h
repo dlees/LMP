@@ -92,6 +92,9 @@ private:
     QStandardItemModel *table_model;
 
     Database *database;
+
+    mutable int milliseconds_cache;
+    mutable int rating_cache;
 };
 
 #endif // COLLECTION_H

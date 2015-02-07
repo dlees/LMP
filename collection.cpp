@@ -8,18 +8,18 @@
 #include "database.h"
 
 Collection::Collection(const QString &name, Database *db)
-    : Music_Item(name), tree_model(0), database(db)
+    : Music_Item(name), tree_model(0), database(db), milliseconds_cache(0), rating_cache(0)
 {
 }
 
 Collection::Collection(const QString &name_, int id_, Database *db)
-    : Music_Item(name_, id_), database(db)
+    : Music_Item(name_, id_), database(db), milliseconds_cache(0), rating_cache(0)
 {
 }
 
 Collection::Collection(const QString &name_, int id_,
            const QList<Music_Item*> &items, Database *db)
-    : Music_Item(name_, id_), database(db)
+    : Music_Item(name_, id_), database(db), milliseconds_cache(0), rating_cache(0)
 {
     insert_items_no_db(items);
 }
@@ -179,12 +179,16 @@ const QList<Music_Item *> &Collection::get_children() const
 
 int Collection::get_milliseconds() const
 {
+    if (milliseconds_cache != 0)
+        return milliseconds_cache;
+
     Music_Item *item;
     int sum = 0;
 
     foreach (item, children)
         sum += item->get_milliseconds();
 
+    milliseconds_cache = sum;
     return sum;
 }
 
@@ -195,6 +199,9 @@ int Collection::get_average_ms() const
 
 int Collection::get_rating() const
 {
+    if (rating_cache != 0)
+        return rating_cache;
+
     Music_Item *item;
     float sum = 0;
     int count = children.size();
@@ -204,6 +211,7 @@ int Collection::get_rating() const
 
     float avg_rating = sum/count;
 
+    rating_cache = avg_rating;
     return avg_rating;
 }
 
