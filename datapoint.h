@@ -39,6 +39,8 @@ public:
     const DataValue *get_value() const {return value;}
     const time_t get_time() const {return time;}
 
+    void set_name(const std::string &name_) {name = name_;}
+
     const std::string to_string() {
         std::ostringstream stream;
         stream << get_id() <<

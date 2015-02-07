@@ -243,3 +243,18 @@ DataList *InvertTime::decorate(DataList *datalist)
     delete datalist;
     return newList;
 }
+
+
+class GetNameForDataPoint : public DataListVisitor {
+public:
+    void operator ()(DataPoint* point) {
+        int ID = point->get_id();
+        point->set_name(Media_Manager::get()->get_music_item(ID)->get_name().toStdString());
+    }
+};
+
+DataList *GetNamesFromIDs::decorate(DataList *datalist)
+{
+    datalist->perform_function(GetNameForDataPoint());
+    return datalist;
+}

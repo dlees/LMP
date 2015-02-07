@@ -127,6 +127,14 @@ public:
 };
 
 /*
+ * Populate the name field with the appropriate name for the id
+ */
+class GetNamesFromIDs : public DataListDecorator {
+public:
+    virtual DataList *decorate(DataList *datalist);
+};
+
+/*
  * Totals up values for each unique ID
  * Makes time and name useless.
  */

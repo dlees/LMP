@@ -528,7 +528,7 @@ void Main_View::test1()
 
     try {
     datalist = create_decorator_combiner()
-            ->build(new FilterByTime(QDateTime::currentDateTime().addDays(-100).toTime_t(), QDateTime::currentDateTime().toTime_t()))
+            ->build(new FilterByTime(QDateTime::currentDateTime().addDays(-10).toTime_t(), QDateTime::currentDateTime().toTime_t()))
             ->build(new InvertTime())
             ->build(filter_decorator("less than", 3600))
             ->build(new LogDatalist())
@@ -543,5 +543,18 @@ void Main_View::test1()
 void Main_View::test2()
 {
 
+    DataList *datalist = Database::get()->get_sec_count_data();
+
+    try {
+    datalist = create_decorator_combiner()
+            ->build(new FilterByTime(QDateTime::currentDateTime().addDays(-10).toTime_t(), QDateTime::currentDateTime().toTime_t()))
+            ->build(new RunningTotal())
+            ->build(new GetNamesFromIDs)
+            ->build(new LogDatalist)
+        ->decorate(datalist);
+    } catch (Error &e) {
+        e.print_error_msg();
+    }
+    delete datalist;
 }
 
