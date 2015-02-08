@@ -2,6 +2,7 @@
 
 #include <Qt>
 #include <vector>
+#include <set>
 
 #include "datapoint.h"
 #include "datapointcomparers.h"
@@ -10,9 +11,9 @@ using namespace std;
 
 // Deletes data and returns true if value satisfies:
 //   compare(data.value, rhs_value) == true
-class DataPointPredicateDeleter {
+class DeleteIfTrue {
 public:
-    DataPointPredicateDeleter(DataPointComparer *comp, DataPoint *rhs) :
+    DeleteIfTrue(DataPointComparer *comp, DataPoint *rhs) :
         comparer(comp), rhs_point(rhs) {}
 
     bool operator()(DataPoint *dp) {
@@ -29,6 +30,25 @@ public:
 private:
     DataPointComparer *comparer;
     DataPoint *rhs_point;
+};
+
+typedef std::set<DataPoint *, DataPointComparerSTLAdapter> DataPointSet;
+
+// returns true and deletes if data isn't in the rhs list
+class DeleteIfNotFound {
+public:
+    DeleteIfNotFound(DataPointSet &rhs) :
+        rhs_points(rhs) {}
+
+    bool operator()(DataPoint *dp) {
+        if (rhs_points.find(dp) != rhs_points.end())
+            return false;
+
+        delete dp;
+        return true;
+    }
+private:
+    const DataPointSet &rhs_points;
 };
 
 class TimeSortedDataList : public DataList
@@ -59,8 +79,8 @@ public:
 
         qDebug() << "filter time:" << start_time << "-" << end_time;
 
-        DataPointPredicateDeleter predicate(less_than_time, start_time_point);
-        DataPointPredicateDeleter predicate2(greater_than_time, end_time_point);
+        DeleteIfTrue predicate(less_than_time, start_time_point);
+        DeleteIfTrue predicate2(greater_than_time, end_time_point);
 
         data.erase(remove_if(data.begin(), data.end(), predicate), data.end());
         data.erase(remove_if(data.begin(), data.end(), predicate2), data.end());
@@ -72,12 +92,32 @@ public:
 
     }
 
+    void filter_id(const vector<int> &ids)
+    {
+        DataPointComparer *less_than_id = get_DataPointComparer("id", "less than");
+        DataPointComparerSTLAdapter less_than_stl(less_than_id);
+
+        DataPointSet points_to_compare(less_than_stl);
+        foreach (int id, ids) {
+            points_to_compare.insert(DataPoint::get_instance("", id, 0, 0));
+        }
+
+        DeleteIfNotFound predicate(points_to_compare);
+
+        data.erase(remove_if(data.begin(), data.end(), predicate), data.end());
+
+        foreach (auto point, points_to_compare) {
+            delete point;
+        }
+        delete less_than_id;
+    }
+
     void filter_value(int rhs_value, DataPointComparer *comparitor)
     {
         DataPoint *point_to_compare =
                 DataPoint::get_instance("", 0, DataValue::get_instance(rhs_value), 0);
 
-        DataPointPredicateDeleter predicate(comparitor, point_to_compare);
+        DeleteIfTrue predicate(comparitor, point_to_compare);
 
         data.erase(remove_if(data.begin(), data.end(), predicate), data.end());
 

@@ -31,6 +31,11 @@ public:
     bool compare(const T &lhs, const T &rhs) {return lhs == rhs;}
 };
 
+template <typename T>
+class Not_Equal_To : public Comparitor<T> {
+public:
+    bool compare(const T &lhs, const T &rhs) {return lhs != rhs;}
+};
 
 /* Possible types:
  *   "less than"
@@ -48,6 +53,10 @@ static Comparitor<T> *get_comparitor(const std::string &type) {
     }
     else if (type == "equal to") {
         static Equal_To<T> *equal = new Equal_To<T>;
+        to_return = equal;
+    }
+    else if (type == "not equal to") {
+        static Not_Equal_To<T> *equal = new Not_Equal_To<T>;
         to_return = equal;
     }
     else {

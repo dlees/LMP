@@ -244,17 +244,84 @@ DataList *InvertTime::decorate(DataList *datalist)
     return newList;
 }
 
+std::string get_name(int ID)
+{
+    return Media_Manager::get()->get_music_item(ID)->get_name().toStdString();
+}
 
 class GetNameForDataPoint : public DataListVisitor {
 public:
+
     void operator ()(DataPoint* point) {
         int ID = point->get_id();
-        point->set_name(Media_Manager::get()->get_music_item(ID)->get_name().toStdString());
+        point->set_name(get_name(ID));
     }
 };
 
 DataList *GetNamesFromIDs::decorate(DataList *datalist)
 {
     datalist->perform_function(GetNameForDataPoint());
+    return datalist;
+}
+
+
+DataList *ExportToExcel::decorate(DataList *datalist)
+{
+    vector<vector<int> > sumOverTime;
+    vector<int> ids;
+    map<int, int> idToIndex;
+
+    vector<time_t> times;
+
+    for (datalist_iter_t iter = datalist->begin() ;
+         iter != datalist->end() ; ++iter) {
+        DataPoint *point = *iter;
+
+        times.push_back(point->get_time());
+
+        for (int i = 0 ; i < sumOverTime.size() ; i++) {
+            sumOverTime.at(i).push_back(sumOverTime.at(i).at(times.size()-2));
+        }
+
+        if (idToIndex.find(point->get_id()) == idToIndex.end() ) {
+            ids.push_back(point->get_id());
+            idToIndex[point->get_id()] = sumOverTime.size();
+
+            sumOverTime.push_back(vector<int>());
+            for (int i = 0 ; i < times.size() ; i++) {
+                sumOverTime[sumOverTime.size()-1].push_back(0);
+            }
+        }
+
+        sumOverTime.at(idToIndex[point->get_id()]).at(times.size()-1) = point->get_value()->get_value();
+
+    }
+
+    ofstream fout("RunningTotalExcel.txt");
+
+    fout << "Time\t" ;
+
+    foreach (auto id , ids) {
+        fout << get_name(id) << "\t";
+    }
+
+    fout << endl;
+
+    for (int i = 0 ; i < times.size() ; i++) {
+        fout << get_human_time(times[i]) << "\t";
+        foreach (vector<int> itemHistory  , sumOverTime) {
+            fout << itemHistory[i] << "\t";
+        }
+        fout << endl;
+    }
+
+    fout.close();
+    return datalist;
+}
+
+
+DataList *FilterByID::decorate(DataList *datalist)
+{
+    datalist->filter_id( ids_to_include->get_ids());
     return datalist;
 }

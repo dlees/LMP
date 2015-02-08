@@ -18,6 +18,7 @@ public:
     Main_View(QWidget *parent = 0);
     ~Main_View();
 
+    void export_to_excel();
 signals:
     void to_mini_mode();
     void got_name(QString name);

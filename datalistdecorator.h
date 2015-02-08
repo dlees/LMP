@@ -80,7 +80,7 @@ private:
 };
 
 /*
- * Removes all data with a value less than lowest_value
+ * Removes all data with a value comp than lowest_value
  */
 class FilterByValue : public DataListDecorator {
 public:
@@ -92,6 +92,20 @@ public:
 private:
     const std::string &comparison;
     int value;
+};
+
+/*
+ * Removes any data whose ID isn't in datalist_to_include
+ */
+class FilterByID : public DataListDecorator {
+public:
+    FilterByID(DataList *datalist_to_include) :
+        ids_to_include(datalist_to_include)
+    {}
+
+    virtual DataList *decorate(DataList *datalist);
+private:
+    DataList *ids_to_include;
 };
 
 class FilterByTime : public DataListDecorator {
@@ -116,6 +130,7 @@ public:
 
     virtual DataList *decorate(DataList *datalist);
 };
+
 
 
 /*
@@ -154,6 +169,11 @@ public:
 };
 
 class LogDatalist : public DataListDecorator {
+public:
+    virtual DataList *decorate(DataList *datalist);
+};
+
+class ExportToExcel : public DataListDecorator {
 public:
     virtual DataList *decorate(DataList *datalist);
 };

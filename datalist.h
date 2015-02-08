@@ -28,6 +28,8 @@ public:
     virtual void remove_data_point(int id) = 0;
     virtual void remove_data_point(const std::string &name) = 0;
 
+    virtual void filter_id(const std::vector<int> &ids_to_include) = 0;
+
     // Will make it such that data only includes points with time:
     //    start_time <= point.get_time() <= end_time
     virtual void filter_time(time_t start_time, time_t end_time) = 0;

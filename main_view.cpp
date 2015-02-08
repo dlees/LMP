@@ -528,9 +528,9 @@ void Main_View::test1()
 
     try {
     datalist = create_decorator_combiner()
-            ->build(new FilterByTime(QDateTime::currentDateTime().addDays(-10).toTime_t(), QDateTime::currentDateTime().toTime_t()))
-            ->build(new InvertTime())
-            ->build(filter_decorator("less than", 3600))
+            ->build(new FilterByTime(QDateTime::currentDateTime().addDays(-1).toTime_t(), QDateTime::currentDateTime().toTime_t()))
+            ->build(new FilterByID(Media_Manager::get()->get_center()->convert_to_rating_datalist()))
+                       ->build(new RunningTotal()) ->build(new GetNamesFromIDs)
             ->build(new LogDatalist())
         ->decorate(datalist);
     } catch (Error &e) {
@@ -540,21 +540,38 @@ void Main_View::test1()
 }
 
 
-void Main_View::test2()
+void Main_View::export_to_excel()
 {
-
     DataList *datalist = Database::get()->get_sec_count_data();
 
     try {
     datalist = create_decorator_combiner()
             ->build(new FilterByTime(QDateTime::currentDateTime().addDays(-10).toTime_t(), QDateTime::currentDateTime().toTime_t()))
+            ->build(new FilterByID(
+                            create_decorator_combiner()
+                                ->build(new LogDatalist())
+                            ->decorate(
+                                Media_Manager::get()->get_center()->convert_to_secCount_datalist()
+                            )
+                        ))
             ->build(new RunningTotal())
             ->build(new GetNamesFromIDs)
-            ->build(new LogDatalist)
+            ->build(new ExportToExcel)
         ->decorate(datalist);
     } catch (Error &e) {
         e.print_error_msg();
     }
     delete datalist;
+
+    message_bar->setText("Exported data");
+}
+
+void Main_View::test2()
+{
+    static QMutex sec_count_mutex;
+
+    sec_count_mutex.lock();
+    QtConcurrent::run(this, &Main_View::export_to_excel);
+    sec_count_mutex.unlock();
 }
 

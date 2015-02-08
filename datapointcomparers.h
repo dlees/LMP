@@ -17,7 +17,7 @@ public:
     virtual bool compare(const DataPoint*, const DataPoint*) = 0;
 };
 
-class DataPointComparerSTLAdapter{
+class DataPointComparerSTLAdapter : public std::less<DataPoint*>{
 public:
     DataPointComparerSTLAdapter(DataPointComparer *comparer) : comp(comparer) {}
 
