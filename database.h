@@ -1,36 +1,11 @@
 #ifndef DATABASE_H
 #define DATABASE_H
 
+#include "xmldatabase.h"
+
 #include <QDateTime>
 #include <QList>
 #include <QtXml/QtXml>
-
-struct PlaylistInfo{
-    QList<int> songIDs;
-    int ID;
-    QString name;
-    bool is_catalog;
-    PlaylistInfo() : is_catalog(false){}
-};
-
-struct HotspotInfo{
-    int ID;
-    QList<qint64> hotspots;
-};
-
-class SongInfo{
-public:
-    SongInfo();
-    //ID, name, filename, created, seconds, album, artist
-    int songID;
-    QString songName;
-    QString fileName;
-    QDateTime created;
-    int seconds;
-    int rating;
-    QString albumName;
-    QString artistName;
-};
 
 class Handle_Count;
 class DataList;
@@ -58,19 +33,6 @@ public:
     void delete_hotspot(int songID, qint64 hotspot);
     QList<HotspotInfo> *get_hotspot_info();
 
-    // returns the ID of a song that has filepath as its filepath
-    // -1 if file doesn't exit
-    int find_filepath(const QString &filename);
-
-    // returns ID of song with 'name' as its name
-    // -1 if DNE
-    int find_filename(const QString &name);
-
-    // returns all the ids of anything in the database
-    // that has str in it (Songs, Artists, Albums, Playlists)
-    // **NOTE: All Music Items have unique ID's, so there won't be conflictions
-    QList<int> find(const QString &str);
-
     void new_playlist(const QString &name, int ID, bool is_catalog);
     void delete_playlist(int listID);
 
@@ -91,11 +53,6 @@ public:
     void save_cur_timestamp(QDomDocument &document, QDomElement &entry);
     QDomElement create_entry(QDomDocument &document, const QString &entry_name, const QString &root_name);
 
-    void load_file(const std::string &filename, QDomDocument &document, const QString &root_name);
-
-    void parse_song_db(QList<SongInfo> *song_list);
-    void parse_rating_db(Handle_Count *handle_count);
-    void parse_sec_count_db(Handle_Count *handle_count);
     void save_sec_count_threaded(int ID, qint64 start, qint64 end);
     void map_id_to_seconds(int endTime, QMap<int, int> &songIDToSeconds, int startTime, int ID);
 
@@ -103,19 +60,21 @@ public:
     void save_rating_count_threaded(int ID, int rating);
     void save_changed_dbs();
 private:
-    QDomDocument song;
-    QDomDocument playlist;
-    QDomDocument secCount;
-    QDomDocument songsInPlaylist;
-    QDomDocument hotspots;
-    QDomDocument ratingCount;
+    XmlDatabase *database;
 
     Database();
-    void saveFile(QDomDocument &, const QString &);
 
     bool songs_db_changed;
     bool song_in_playlist_changed;
     bool playlist_changed;
+
+    // returns the ID of a song that has filepath as its filepath
+    // -1 if file doesn't exit
+    int find_filepath(const QString &filename);
+
+    // returns ID of song with 'name' as its name
+    // -1 if DNE
+    int find_filename(const QString &name);
 
 };
 

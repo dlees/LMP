@@ -42,7 +42,9 @@ SOURCES += main.cpp\
     comparitor.cpp \
     megamix.cpp \
     dynamicplaylist.cpp \
-    time_ds.cpp
+    time_ds.cpp \
+    xmldatabase.cpp \
+    handle_data_value.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -74,7 +76,9 @@ HEADERS  += mainwindow.h \
     comparitor.h \
     megamix.h \
     dynamicplaylist.h \
-    time_ds.h
+    time_ds.h \
+    xmldatabase.h \
+    handle_data_value.h
 
 OTHER_FILES +=
 
