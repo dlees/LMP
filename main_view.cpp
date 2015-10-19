@@ -494,16 +494,11 @@ void Main_View::add_good_to_table()
 
 void Main_View::export_running_total()
 {
-    DataList *datalist = Database::get()->get_sec_count_data();
+    static QMutex sec_count_mutex;
 
-    try {
-    datalist = create_decorator_combiner()
-            ->build(new OutputToFile("Database.txt"))
-        ->decorate(datalist);
-    } catch (Error &e) {
-        e.print_error_msg();
-    }
-    delete datalist;
+    sec_count_mutex.lock();
+    QtConcurrent::run(this, &Main_View::export_to_excel);
+    sec_count_mutex.unlock();
 }
 
 void Main_View::export_finite_difference()
@@ -546,32 +541,40 @@ void Main_View::export_to_excel()
 
     try {
     datalist = create_decorator_combiner()
-            ->build(new FilterByTime(QDateTime::currentDateTime().addDays(-10).toTime_t(), QDateTime::currentDateTime().toTime_t()))
+            ->build(new FilterByTime(QDateTime::currentDateTime().addDays(-30).toTime_t(), QDateTime::currentDateTime().toTime_t()))
             ->build(new FilterByID(
                             create_decorator_combiner()
-                                ->build(new LogDatalist())
                             ->decorate(
                                 Media_Manager::get()->get_center()->convert_to_secCount_datalist()
                             )
                         ))
             ->build(new RunningTotal())
             ->build(new GetNamesFromIDs)
-            ->build(new ExportToExcel)
+            ->build(new ExportToExcel("RunningTotalExcel.txt"))
         ->decorate(datalist);
+
+    message_bar->setText("Exported data");
+
     } catch (Error &e) {
         e.print_error_msg();
     }
     delete datalist;
-
-    message_bar->setText("Exported data");
 }
 
 void Main_View::test2()
 {
-    static QMutex sec_count_mutex;
+    // Playcount Data
+    DataList *datalist = Database::get()->get_sec_count_data();
 
-    sec_count_mutex.lock();
-    QtConcurrent::run(this, &Main_View::export_to_excel);
-    sec_count_mutex.unlock();
+     try {
+     datalist = create_decorator_combiner()
+             ->build(new FilterByID(911))
+             ->build(new PlayCountCalculator(100))
+             ->build(new ExportToExcel("PlayCount.txt"))
+         ->decorate(datalist);
+    } catch (Error &e) {
+        e.print_error_msg();
+    }
+    delete datalist;
 }
 

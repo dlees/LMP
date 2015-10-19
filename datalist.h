@@ -57,4 +57,15 @@ protected:
     std::vector<DataPoint*> data;
 };
 
+
+class SumDataList : public DataListVisitor {
+
+public:
+    SumDataList() : sum(0) {}
+
+    virtual void operator()(DataPoint*);
+
+    int sum;
+};
+
 #endif // DATALIST_H

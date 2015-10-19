@@ -38,26 +38,6 @@ private:
     time_t end;
 };
 
-class SecCountData : public DataValue
-{
-public:
-    SecCountData(int start_pos_, int end_pos_)
-        : start_pos(start_pos_), end_pos(end_pos_)
-    {}
-
-    virtual int get_value() const {return end_pos - start_pos;}
-
-    virtual string to_string() const {
-        ostringstream stream;
-        stream << start_pos << "\t" << end_pos << "\t" << get_value();
-        return stream.str();
-    }
-
-private:
-    int start_pos;
-    int end_pos;
-};
-
 DataPoint::DataPoint(const std::string &name_, int id_, DataValue *value_, time_t time_) :
     name(name_), id(id_), value(value_), time(time_)
 {
@@ -76,4 +56,22 @@ DataValue *DataValue::get_instance(int secCount_start, int secCount_end)
 DataValue *DataValue::get_instance(time_t start_time, time_t end_time)
 {
     return new TimeRangeValue(start_time, end_time);
+}
+
+#include "datalist.h"
+int DataListDataValue::get_value() const
+{
+    SumDataList sumDataList;
+    datalist->perform_function(sumDataList);
+    return sumDataList.sum;
+}
+
+string DataListDataValue::to_string() const
+{
+    return "DATALIST";
+}
+
+DataList *DataListDataValue::getDataList()
+{
+    return datalist;
 }

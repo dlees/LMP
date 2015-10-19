@@ -44,7 +44,8 @@ SOURCES += main.cpp\
     dynamicplaylist.cpp \
     time_ds.cpp \
     xmldatabase.cpp \
-    handle_data_value.cpp
+    handle_data_value.cpp \
+    scaliseapplication.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -78,7 +79,8 @@ HEADERS  += mainwindow.h \
     dynamicplaylist.h \
     time_ds.h \
     xmldatabase.h \
-    handle_data_value.h
+    handle_data_value.h \
+    scaliseapplication.h
 
 OTHER_FILES +=
 

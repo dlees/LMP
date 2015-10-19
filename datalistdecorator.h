@@ -94,18 +94,31 @@ private:
     int value;
 };
 
+#include "datalist.h"
+
 /*
  * Removes any data whose ID isn't in datalist_to_include
  */
 class FilterByID : public DataListDecorator {
 public:
     FilterByID(DataList *datalist_to_include) :
-        ids_to_include(datalist_to_include)
+        ids_to_include(datalist_to_include->get_ids())
+    {
+    }
+
+    FilterByID(std::vector<int> &ids_to_include_) :
+        ids_to_include(ids_to_include_)
     {}
+
+    FilterByID(int ID) :
+        ids_to_include(1)
+    {
+        ids_to_include.push_back(ID);
+    }
 
     virtual DataList *decorate(DataList *datalist);
 private:
-    DataList *ids_to_include;
+    std::vector<int> ids_to_include;
 };
 
 class FilterByTime : public DataListDecorator {
@@ -168,6 +181,30 @@ public:
     virtual DataList *decorate(DataList *datalist);
 };
 
+/*
+ *
+ *  Input: Requires SecCount Values
+ *      Contains Song IDs
+ *  Granularity - Should we look at each millisecond? decisecond? second? minute?
+ *      - this is the number of millisecond granularity to calculate to.
+ *      - 1000 means a position is returned for every second
+ *
+ *  Result: Time = position in the song
+ *      Value = number of times the position was played
+ *      ID/Name = ID/Name of the Song
+ *
+ */
+class PlayCountCalculator : public DataListDecorator {
+public:
+    PlayCountCalculator(int granularity_ms_ = 1000) :
+        granularity_ms(granularity_ms_) {}
+
+    virtual DataList *decorate(DataList *datalist);
+
+private:
+    int granularity_ms;
+};
+
 class LogDatalist : public DataListDecorator {
 public:
     virtual DataList *decorate(DataList *datalist);
@@ -175,7 +212,13 @@ public:
 
 class ExportToExcel : public DataListDecorator {
 public:
+    ExportToExcel(const std::string &filename_) :
+        filename(filename_)
+    {}
+
     virtual DataList *decorate(DataList *datalist);
+private:
+    const std::string filename;
 };
 
 class OutputToFile : public DataListDecorator {

@@ -297,7 +297,7 @@ DataList *ExportToExcel::decorate(DataList *datalist)
 
     }
 
-    ofstream fout("RunningTotalExcel.txt");
+    ofstream fout(filename);
 
     fout << "Time\t" ;
 
@@ -322,6 +322,69 @@ DataList *ExportToExcel::decorate(DataList *datalist)
 
 DataList *FilterByID::decorate(DataList *datalist)
 {
-    datalist->filter_id( ids_to_include->get_ids());
+    datalist->filter_id( ids_to_include);
     return datalist;
 }
+
+DataList* convert_to_datalist(vector<int> &list, string name, int id, int start = 0, int end = -1) {
+    DataList *dataList = DataList::get_instance();
+
+    if (end == -1) {
+        end = list.size();
+    }
+
+    for (int i = start; i < end ; i++) {
+        dataList->add_data_point(DataPoint::get_instance(name, id, DataValue::get_instance(list.at(i)), i));
+    }
+    return dataList;
+}
+
+int infer_end_of_song(vector<int> &list) {
+    int num_consecutive_zeros = 0;
+
+    // 100th of the array size - i.e. 5 seconds
+    int num_zeros_to_infer_end = list.size() / 50;
+
+    for (int i = 0; i < list.size() ; i++) {
+        if (list.at(i) == 0) {
+            num_consecutive_zeros++;
+        } else {
+            num_consecutive_zeros = 0;
+        }
+
+        if (num_consecutive_zeros >= num_zeros_to_infer_end) {
+            return i;
+        }
+    }
+    return list.size();
+}
+
+DataList *PlayCountCalculator::decorate(DataList *datalist)
+{
+    // Initial size is 1000 seconds because a song won't be longer than 1000 sec (I'm sure there's one)
+    vector<int> songPositions(1000*1000/granularity_ms, 0);
+
+    for (datalist_iter_t iter = datalist->begin() ;
+         iter != datalist->end() ; ++iter) {
+        DataPoint *point = *iter;
+
+        const SecCountData *secCount = dynamic_cast<const SecCountData*>(point->get_value());
+
+        if (!secCount) {
+            throw new Error("PlayCountCalculator MUST take in a datalist that contains SecCountData");
+        }
+
+        int intervalStart = secCount->get_start_pos()/granularity_ms;
+        int intervalEnd = secCount->get_end_pos()/granularity_ms;
+
+        for (int i = intervalStart; i < intervalEnd ; i++) {
+            songPositions.at(i)++;
+        }
+    }
+
+    DataList *payCountByPos = convert_to_datalist(songPositions, "name", 0, 0 , infer_end_of_song(songPositions));
+
+    delete datalist;
+    return payCountByPos;
+}
+

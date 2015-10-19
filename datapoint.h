@@ -68,4 +68,44 @@ private:
     time_t time;
 };
 
+class SecCountData : public DataValue
+{
+public:
+    SecCountData(int start_pos_, int end_pos_)
+        : start_pos(start_pos_), end_pos(end_pos_)
+    {}
+
+    virtual int get_value() const {return end_pos - start_pos;}
+
+    virtual std::string to_string() const {
+        std::ostringstream stream;
+        stream << start_pos << "\t" << end_pos << "\t" << get_value();
+        return stream.str();
+    }
+
+    int get_start_pos() const {return start_pos;}
+    int get_end_pos() const {return end_pos;}
+
+private:
+    int start_pos;
+    int end_pos;
+};
+
+class DataList;
+
+class DataListDataValue : public DataValue
+{
+public:
+    DataListDataValue(DataList *datalist_) : datalist(datalist_) {}
+
+    virtual int get_value() const;
+
+    virtual std::string to_string() const;
+
+    DataList *getDataList();
+
+private:
+    DataList *datalist;
+};
+
 #endif // DATAPOINT_H

@@ -175,3 +175,9 @@ std::map<int, int> DataList::get_values()
 DataList::DataList()
 {
 }
+
+
+void SumDataList::operator()(DataPoint *data)
+{
+    sum += data->get_value()->get_value();
+}
