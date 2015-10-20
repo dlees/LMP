@@ -198,7 +198,11 @@ Catalog *Library::get_catalog(const QString &name)
 
 Music_Item *Library::get_item(int id)
 {
-    return id_to_item[id];
+    QMap<int, Music_Item*>::Iterator iter = id_to_item.find(id);
+    if (iter == id_to_item.end()) {
+        throw Error("Cannot find id " + QString::number(id) + " in database.");
+    }
+    return *iter;
 }
 
 void Library::add_song(Song *song)

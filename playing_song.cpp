@@ -117,7 +117,7 @@ void Playing_Song::set_song(Song* song_)
 void Playing_Song::change_position(int new_pos_millisecs)
 {
     if (new_pos_millisecs > totalDuration || new_pos_millisecs < 0)
-        throw new Error("Cant Seek to that position:" + QString(new_pos_millisecs));
+        throw new Error("Cant Seek to that position:" + QString::number(new_pos_millisecs));
 
     update_position();
 
