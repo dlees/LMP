@@ -516,7 +516,6 @@ void Main_View::export_finite_difference()
     delete datalist;
 }
 
-
 void Main_View::test1()
 {
     DataList *datalist = Database::get()->get_sec_count_data();
@@ -542,12 +541,6 @@ void Main_View::export_to_excel()
     try {
     datalist = create_decorator_combiner()
             ->build(new FilterByTime(QDateTime::currentDateTime().addDays(-30).toTime_t(), QDateTime::currentDateTime().toTime_t()))
-            ->build(new FilterByID(
-                            create_decorator_combiner()
-                            ->decorate(
-                                Media_Manager::get()->get_center()->convert_to_secCount_datalist()
-                            )
-                        ))
             ->build(new RunningTotal())
             ->build(new GetNamesFromIDs)
             ->build(new ExportToExcel("RunningTotalExcel.txt"))
@@ -561,20 +554,48 @@ void Main_View::export_to_excel()
     delete datalist;
 }
 
-void Main_View::test2()
+
+void Main_View::export_playcount_data()
 {
+
     // Playcount Data
     DataList *datalist = Database::get()->get_sec_count_data();
 
      try {
      datalist = create_decorator_combiner()
-             ->build(new FilterByID(911))
-             ->build(new PlayCountCalculator(100))
-             ->build(new ExportToExcel("PlayCount.txt"))
+             ->build(new GetNamesFromIDs)
+           //  ->build(new FilterByTime(QDateTime::currentDateTime().addDays(-300).toTime_t(), QDateTime::currentDateTime().toTime_t()))
+             ->build(new FilterByID(
+                             create_decorator_combiner()
+                             ->decorate(
+                                 Media_Manager::get()->get_center()->convert_to_secCount_datalist()
+                             )
+                         ))
+             ->build(new SplitByID)
+             ->build(new SplitDatalistDecorator(
+                         create_decorator_combiner()
+                         ->build(new PlayCountCalculator(1000))
+                         ))
+             ->build(new ExportToExcelSplit("PlayCount.txt"))
          ->decorate(datalist);
     } catch (Error &e) {
         e.print_error_msg();
     }
     delete datalist;
+}
+
+void Main_View::export_playcount_data_async()
+{
+    static QMutex play_count_mutex;
+
+    play_count_mutex.lock();
+    QtConcurrent::run(this, &Main_View::export_playcount_data);
+    play_count_mutex.unlock();
+}
+
+
+void Main_View::test2()
+{
+    export_playcount_data_async();
 }
 

@@ -21,7 +21,7 @@ class DataPointComparerSTLAdapter : public std::less<DataPoint*>{
 public:
     DataPointComparerSTLAdapter(DataPointComparer *comparer) : comp(comparer) {}
 
-    virtual bool operator()(const DataPoint *lhs, const DataPoint *rhs) {
+    virtual bool operator()(const DataPoint *lhs, const DataPoint *rhs) const {
         return comp->compare(lhs, rhs);
     }
 private:

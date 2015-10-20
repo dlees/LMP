@@ -319,6 +319,88 @@ DataList *ExportToExcel::decorate(DataList *datalist)
     return datalist;
 }
 
+void initializeRow(map<time_t, vector<int> > &spreadsheet, time_t time, int size)
+{
+    cout << "initializing row for " << time << " of size: " << size << endl;
+    spreadsheet[time] = vector<int>(size, 0);
+}
+
+void insertColumn(map<time_t, vector<int> > &spreadsheet, DataList *datalist, int indexOfList, int maxRowSize){
+
+    cout << "Attempting to insert column " << indexOfList << " with max rows " << maxRowSize << endl;
+    cout << "Datalist size is: " << datalist->size() << endl;
+
+    for (datalist_iter_t iter = datalist->begin() ;
+         iter != datalist->end() ; ++iter) {
+        DataPoint *point = *iter;
+        time_t dataTime = point->get_time();
+
+        cout << "inserting " << dataTime << ", " << point->get_value()->get_value() << " into " << indexOfList << endl;
+
+        if (spreadsheet.find(dataTime) == spreadsheet.end()) {
+            initializeRow(spreadsheet, dataTime, maxRowSize);
+        }
+
+        spreadsheet[dataTime].at(indexOfList) = point->get_value()->get_value();
+    }
+}
+
+DataList *ExportToExcelSplit::decorate(DataList *datalist)
+{
+    map<time_t, vector<int> > spreadsheet;
+    vector<string> headings;
+
+    for (datalist_iter_t iter = datalist->begin() ;
+         iter != datalist->end() ; ++iter) {
+        DataPoint *point = *iter;
+        cout << point->get_name() << " column attempting to insert." << endl;
+        DataList *innerDataList = dynamic_cast<DataListDataValue*>(point->get_value())->get_datalist();
+
+        if (!innerDataList) {
+            throw new Error("SplitDatalistDecorator MUST take in a datalist that contains DataListDataValue");
+        }
+
+        insertColumn(spreadsheet, innerDataList, headings.size(), datalist->size());
+        headings.push_back(point->get_name());
+
+        cout << point->get_name() << " column inserted." << endl;
+    }
+
+    cout << "Spreadsheet initialized with " << spreadsheet.size() << " entries for " << headings.size() << " datalists" << endl;
+
+    outputToFile(spreadsheet, headings);
+
+    return datalist;
+}
+
+void ExportToExcelSplit::outputToFile(
+        const map<time_t, vector<int> > &spreadsheet,
+        const vector<string> &headings)
+{
+    ofstream fout(filename);
+
+    fout << "Time\t" ;
+
+    foreach (string heading , headings) {
+        fout << heading << "\t";
+    }
+
+    fout << endl;
+
+    for (map<time_t, vector<int> >::const_iterator iter = spreadsheet.begin() ;
+            iter != spreadsheet.end() ; ++iter) {
+
+        fout << get_human_time(iter->first) << "\t";
+
+        foreach (int value, iter->second) {
+            fout << value << "\t";
+        }
+
+        fout << endl;
+    }
+
+    fout.close();
+}
 
 DataList *FilterByID::decorate(DataList *datalist)
 {
@@ -364,9 +446,14 @@ DataList *PlayCountCalculator::decorate(DataList *datalist)
     // Initial size is 1000 seconds because a song won't be longer than 1000 sec (I'm sure there's one)
     vector<int> songPositions(1000*1000/granularity_ms, 0);
 
+    string name = "";
+    int id = 0;
+
     for (datalist_iter_t iter = datalist->begin() ;
          iter != datalist->end() ; ++iter) {
         DataPoint *point = *iter;
+        name = point->get_name();
+        id = point->get_id();
 
         const SecCountData *secCount = dynamic_cast<const SecCountData*>(point->get_value());
 
@@ -382,9 +469,52 @@ DataList *PlayCountCalculator::decorate(DataList *datalist)
         }
     }
 
-    DataList *payCountByPos = convert_to_datalist(songPositions, "name", 0, 0 , infer_end_of_song(songPositions));
-
     delete datalist;
+    DataList *payCountByPos = convert_to_datalist(songPositions, name, id, 0, infer_end_of_song(songPositions));
     return payCountByPos;
 }
 
+DataList *SplitByID::decorate(DataList *datalist)
+{
+    DataList *splitDatalist = DataList::get_instance();
+
+    map<int, DataList*> idToDataList;
+
+    for (datalist_iter_t iter = datalist->begin() ;
+         iter != datalist->end() ; ++iter) {
+        DataPoint *point = *iter;
+
+        int cur_id = point->get_id();
+
+        if (idToDataList.find(cur_id) == idToDataList.end()) {
+            DataList *newDatalist = DataList::get_instance();
+            splitDatalist->add_data_point(DataPoint::get_instance(point->get_name(), cur_id,
+                                                            new DataListDataValue(newDatalist), point->get_time()));
+            idToDataList[cur_id] = newDatalist;
+        }
+
+        idToDataList[cur_id]->add_data_point(DataPoint::get_instance(*point));
+    }
+
+    delete datalist;
+    return splitDatalist;
+}
+
+
+DataList *SplitDatalistDecorator::decorate(DataList *datalist)
+{
+    for (datalist_iter_t iter = datalist->begin() ;
+         iter != datalist->end() ; ++iter) {
+        DataPoint *point = *iter;
+
+        DataList *innerDataList = dynamic_cast<DataListDataValue*>(point->get_value())->get_datalist();
+
+        if (!innerDataList) {
+            throw new Error("SplitDatalistDecorator MUST take in a datalist that contains DataListDataValue");
+        }
+        point->set_value(DataValue::get_instance(decorator->decorate(innerDataList)));
+  //      delete innerDataList;
+    }
+
+    return datalist;
+}

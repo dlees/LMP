@@ -15,7 +15,7 @@ protected:
     DataListDecorator();
 };
 
-/*-
+/**
  * Allows you to create a list of decorators
  *
  * Iterates through the decorators in order
@@ -38,7 +38,7 @@ DataListDecorator *add_to_collection_decorator(Collection *);
 DataListDecorator *filter_decorator(const std::string &comp, int value);
 DataListDecorator *sort_decorator(const std::string &name);
 DataListDecorator *aggregator_decorator(const std::string &type);
-/*
+/**
  * Creates a new playlist out of the datalist passed into it.
  */
 class PlaylistCreatorDecorator : public DataListDecorator {
@@ -51,7 +51,7 @@ public:
 private:
     std::string name;
 };
-/*
+/**
  * Creates a new catalog out of the datalist passed into it.
  */
 class CatalogCreatorDecorator : public DataListDecorator {
@@ -65,7 +65,7 @@ private:
     std::string name;
 };
 
-/*
+/**
  * Adds songs in datalist to playlist.
  */
 class AddToCollection : public DataListDecorator {
@@ -79,7 +79,7 @@ private:
     Collection *collection;
 };
 
-/*
+/**
  * Removes all data with a value comp than lowest_value
  */
 class FilterByValue : public DataListDecorator {
@@ -96,7 +96,7 @@ private:
 
 #include "datalist.h"
 
-/*
+/**
  * Removes any data whose ID isn't in datalist_to_include
  */
 class FilterByID : public DataListDecorator {
@@ -133,7 +133,7 @@ private:
     time_t end_time;
 };
 
-/*
+/**
  * returns a datalist that includes the time ranges not in the original
  */
 class InvertTime : public DataListDecorator {
@@ -146,7 +146,7 @@ public:
 
 
 
-/*
+/**
  * Sort all data by value
  */
 class SortByValue : public DataListDecorator {
@@ -154,7 +154,7 @@ public:
     virtual DataList *decorate(DataList *datalist);
 };
 
-/*
+/**
  * Populate the name field with the appropriate name for the id
  */
 class GetNamesFromIDs : public DataListDecorator {
@@ -162,7 +162,7 @@ public:
     virtual DataList *decorate(DataList *datalist);
 };
 
-/*
+/**
  * Totals up values for each unique ID
  * Makes time and name useless.
  */
@@ -171,7 +171,7 @@ public:
     virtual DataList *decorate(DataList *datalist);
 };
 
-/*
+/**
  * Replaces the value with the running total of the value
  * for each unique ID.
  * Preserves Time
@@ -181,7 +181,7 @@ public:
     virtual DataList *decorate(DataList *datalist);
 };
 
-/*
+/**
  *
  *  Input: Requires SecCount Values
  *      Contains Song IDs
@@ -221,6 +221,30 @@ private:
     const std::string filename;
 };
 
+/**
+ * Requires a DataList of DataListDataValues
+ *
+ *  Excel format:
+ *
+ *  Time | datalist1.name | datalist2.name |...
+ *  Time1|datalist1.value1|datalist2.value1|...
+ *  Time2|datalist1.value2|datalist2.value2|...
+ *
+ */
+class ExportToExcelSplit : public DataListDecorator {
+public:
+    ExportToExcelSplit(const std::string &filename_) :
+        filename(filename_)
+    {}
+
+    virtual DataList *decorate(DataList *datalist);
+private:
+    const std::string filename;
+
+    void outputToFile(const std::map<time_t, std::vector<int> > &spreadsheet, const std::vector<std::string> &headings);
+};
+
+
 class OutputToFile : public DataListDecorator {
 public:
     OutputToFile(const std::string &filename_) :
@@ -232,6 +256,30 @@ private:
     const std::string filename;
 };
 
+/**
+ * Split a datalist into a datalist of datalists
+ * Each ID goes into a separate datalist.
+ */
+class SplitByID : public DataListDecorator {
+public:
+    virtual DataList *decorate(DataList *datalist);
+};
+
+/**
+ * Performs the decorator passed in on all datalists inside the datalist
+ *
+ *  Requires: datalist datavalues to be DataListDataValues
+ *
+ */
+class SplitDatalistDecorator : public DataListDecorator {
+public:
+    SplitDatalistDecorator(DataListDecorator *decorator_) :
+        decorator(decorator_) {}
+
+    virtual DataList *decorate(DataList *datalist);
+private:
+    DataListDecorator *decorator;
+};
 
 
 #endif // DATALISTDECORATOR_H

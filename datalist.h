@@ -10,6 +10,8 @@
 class DataPoint;
 
 typedef std::vector<DataPoint*>::iterator datalist_iter_t;
+typedef std::vector<DataPoint*>::const_iterator const_datalist_iter_t;
+
 
 #include "datapointcomparers.h"
 
@@ -22,6 +24,7 @@ class DataList
 {
 public:
     static DataList *get_instance();
+    static DataList *get_instance(const DataList &rhs);
 
     virtual void add_data_point(DataPoint *data) = 0;
 
@@ -41,6 +44,8 @@ public:
 
     virtual datalist_iter_t begin() { return data.begin();}
     virtual datalist_iter_t end() {return data.end();}
+    virtual const_datalist_iter_t constBegin() const { return data.begin();}
+    virtual const_datalist_iter_t constEnd() const {return data.end();}
 
     int size() {return data.size();}
 

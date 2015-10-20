@@ -77,7 +77,7 @@ public:
         DataPointComparer *less_than_time = get_DataPointComparer("time", "less than");
         DataPointComparer *greater_than_time = get_DataPointComparer("time", "greater than");
 
-        qDebug() << "filter time:" << start_time << "-" << end_time;
+        //qDebug() << "filter time:" << start_time << "-" << end_time;
 
         DeleteIfTrue predicate(less_than_time, start_time_point);
         DeleteIfTrue predicate2(greater_than_time, end_time_point);
@@ -124,10 +124,17 @@ public:
         delete point_to_compare;
     }
 
+    TimeSortedDataList(const DataList &rhs);
+    TimeSortedDataList() : DataList() {}
+
 private:
 };
 
 DataList *DataList::get_instance() {return new TimeSortedDataList;}
+
+DataList *DataList::get_instance(const DataList &rhs) {
+    return new TimeSortedDataList(rhs);
+}
 
 void DataList::perform_function(DataListVisitor &function)
 {
@@ -174,6 +181,14 @@ std::map<int, int> DataList::get_values()
 
 DataList::DataList()
 {
+}
+
+TimeSortedDataList::TimeSortedDataList(const DataList &rhs)
+{
+    for (const_datalist_iter_t iter = rhs.constBegin() ;
+         iter != rhs.constEnd() ; ++iter) {
+        add_data_point(DataPoint::get_instance(**iter));
+    }
 }
 
 

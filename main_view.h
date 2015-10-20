@@ -68,6 +68,9 @@ public slots:
     void export_running_total();
     void export_finite_difference();
 
+    void export_playcount_data();
+    void export_playcount_data_async();
+
     void test1();
     void test2();
 private:

@@ -12,6 +12,8 @@ public:
         : value(value_)
     {}
 
+    virtual DataValue *clone() const {return new SimpleDataValue(value);}
+
     virtual int get_value() const {return value;}
 
 private:
@@ -26,6 +28,10 @@ public:
     {}
 
     virtual int get_value() const {return end - start;}
+
+    virtual DataValue *clone() const {
+        return new TimeRangeValue(start, end);
+    }
 
     virtual string to_string() const {
         ostringstream stream;
@@ -53,6 +59,11 @@ DataValue *DataValue::get_instance(int secCount_start, int secCount_end)
     return new SecCountData(secCount_start, secCount_end);
 }
 
+DataValue *DataValue::get_instance(DataList *datalist)
+{
+    return new DataListDataValue(datalist);
+}
+
 DataValue *DataValue::get_instance(time_t start_time, time_t end_time)
 {
     return new TimeRangeValue(start_time, end_time);
@@ -68,10 +79,15 @@ int DataListDataValue::get_value() const
 
 string DataListDataValue::to_string() const
 {
-    return "DATALIST";
+    return std::to_string((long long)get_value());;
 }
 
-DataList *DataListDataValue::getDataList()
+DataValue *DataListDataValue::clone() const
+{
+    return new DataListDataValue(DataList::get_instance(*datalist));
+}
+
+DataList *DataListDataValue::get_datalist()
 {
     return datalist;
 }
