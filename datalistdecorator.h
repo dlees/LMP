@@ -266,6 +266,19 @@ public:
 };
 
 /**
+ * Split a datalist into a datalist of datalists
+ * Every delta_seconds_ seconds goes into a separate datalist
+ */
+class SplitByTime : public DataListDecorator {
+public:
+    SplitByTime(int delta_seconds_) : delta_seconds(delta_seconds_) {}
+
+    virtual DataList *decorate(DataList *datalist);
+private:
+    int delta_seconds;
+};
+
+/**
  * Performs the decorator passed in on all datalists inside the datalist
  *
  *  Requires: datalist datavalues to be DataListDataValues

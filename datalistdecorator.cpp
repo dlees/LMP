@@ -500,6 +500,37 @@ DataList *SplitByID::decorate(DataList *datalist)
     return splitDatalist;
 }
 
+DataList *SplitByTime::decorate(DataList *datalist)
+{
+    DataList *splitDatalist = DataList::get_instance();
+
+    // The time_t is the start_time of the bucket
+    map<time_t, DataList*> bucketToDataList;
+
+    for (datalist_iter_t iter = datalist->begin() ;
+         iter != datalist->end() ; ++iter) {
+        DataPoint *point = *iter;
+
+        // In this implementation, sec_count data ignores the fact that
+        // the time the song started playing could be before the start_time
+        // of the bucket it will go in.
+        // For example, delta = 1 hr. sec_count = 4:58-5:02.
+        // This gets put into the 5:00 bucket.
+        time_t cur_bucket = point->get_time() - point->get_time()%delta_seconds;
+
+        if (bucketToDataList.find(cur_bucket) == bucketToDataList.end()) {
+            DataList *newDatalist = DataList::get_instance();
+            splitDatalist->add_data_point(DataPoint::get_instance(get_human_time(cur_bucket), cur_bucket,
+                                                            new DataListDataValue(newDatalist), point->get_time()));
+            bucketToDataList[cur_bucket] = newDatalist;
+        }
+
+        bucketToDataList[cur_bucket]->add_data_point(DataPoint::get_instance(*point));
+    }
+
+    delete datalist;
+    return splitDatalist;
+}
 
 DataList *SplitDatalistDecorator::decorate(DataList *datalist)
 {
@@ -513,7 +544,7 @@ DataList *SplitDatalistDecorator::decorate(DataList *datalist)
             throw new Error("SplitDatalistDecorator MUST take in a datalist that contains DataListDataValue");
         }
         point->set_value(DataValue::get_instance(decorator->decorate(innerDataList)));
-  //      delete innerDataList;
+    //    delete innerDataList;
     }
 
     return datalist;
