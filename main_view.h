@@ -18,7 +18,7 @@ public:
     Main_View(QWidget *parent = 0);
     ~Main_View();
 
-    void export_to_excel();
+    void export_running_total_by_song();
 signals:
     void to_mini_mode();
     void got_name(QString name);
@@ -66,6 +66,7 @@ public slots:
     void create_top_albums_catalog();
 
     void export_running_total();
+    void export_complete_running_total();
     void export_finite_difference();
 
     void export_playcount_data();

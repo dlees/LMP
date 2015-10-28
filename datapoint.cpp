@@ -8,16 +8,16 @@ using namespace std;
 class SimpleDataValue : public DataValue
 {
 public:
-    SimpleDataValue(int value_)
+    SimpleDataValue(DataValueResult value_)
         : value(value_)
     {}
 
     virtual DataValue *clone() const {return new SimpleDataValue(value);}
 
-    virtual int get_value() const {return value;}
+    virtual DataValueResult get_value() const {return value;}
 
 private:
-    int value;
+    DataValueResult value;
 };
 
 class TimeRangeValue : public DataValue
@@ -27,7 +27,7 @@ public:
         : start(start_), end(end_)
     {}
 
-    virtual int get_value() const {return end - start;}
+    virtual DataValueResult get_value() const {return end - start;}
 
     virtual DataValue *clone() const {
         return new TimeRangeValue(start, end);
@@ -49,7 +49,7 @@ DataPoint::DataPoint(const std::string &name_, int id_, DataValue *value_, time_
 {
 }
 
-DataValue *DataValue::get_instance(int value)
+DataValue *DataValue::get_instance(DataValueResult value)
 {
     return new SimpleDataValue(value);
 }
@@ -70,7 +70,7 @@ DataValue *DataValue::get_instance(time_t start_time, time_t end_time)
 }
 
 #include "datalist.h"
-int DataListDataValue::get_value() const
+DataValueResult DataListDataValue::get_value() const
 {
     SumDataList sumDataList;
     datalist->perform_function(sumDataList);

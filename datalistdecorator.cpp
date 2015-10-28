@@ -176,7 +176,7 @@ DataList *TotalUp::decorate(DataList *datalist)
 
 DataList *RunningTotal::decorate(DataList *datalist)
 {
-    std::map<int, int> IDToSum;
+    std::map<int, DataValueResult> IDToSum;
 
     DataList *newList = DataList::get_instance();
 
@@ -188,7 +188,7 @@ DataList *RunningTotal::decorate(DataList *datalist)
         if (IDToSum.find(ID) == IDToSum.end())
             IDToSum[ID] = 0;
 
-        int total = IDToSum[ID] + point->get_value()->get_value();
+        DataValueResult total = IDToSum[ID] + point->get_value()->get_value();
 
         IDToSum[ID] = total;
 
@@ -279,7 +279,7 @@ DataList *ExportToExcel::decorate(DataList *datalist)
 
         times.push_back(point->get_time());
 
-        for (int i = 0 ; i < sumOverTime.size() ; i++) {
+        for (size_t i = 0 ; i < sumOverTime.size() ; i++) {
             sumOverTime.at(i).push_back(sumOverTime.at(i).at(times.size()-2));
         }
 
@@ -288,7 +288,7 @@ DataList *ExportToExcel::decorate(DataList *datalist)
             idToIndex[point->get_id()] = sumOverTime.size();
 
             sumOverTime.push_back(vector<int>());
-            for (int i = 0 ; i < times.size() ; i++) {
+            for (size_t i = 0 ; i < times.size() ; i++) {
                 sumOverTime[sumOverTime.size()-1].push_back(0);
             }
         }
@@ -307,7 +307,7 @@ DataList *ExportToExcel::decorate(DataList *datalist)
 
     fout << endl;
 
-    for (int i = 0 ; i < times.size() ; i++) {
+    for (size_t i = 0 ; i < times.size() ; i++) {
         fout << get_human_time(times[i]) << "\t";
         foreach (vector<int> itemHistory  , sumOverTime) {
             fout << itemHistory[i] << "\t";
@@ -319,23 +319,17 @@ DataList *ExportToExcel::decorate(DataList *datalist)
     return datalist;
 }
 
-void initializeRow(map<time_t, vector<int> > &spreadsheet, time_t time, int size)
+void initializeRow(map<time_t, vector<DataValueResult> > &spreadsheet, time_t time, int size)
 {
-    cout << "initializing row for " << time << " of size: " << size << endl;
-    spreadsheet[time] = vector<int>(size, 0);
+    spreadsheet[time] = vector<DataValueResult>(size, 0);
 }
 
-void insertColumn(map<time_t, vector<int> > &spreadsheet, DataList *datalist, int indexOfList, int maxRowSize){
-
-    cout << "Attempting to insert column " << indexOfList << " with max rows " << maxRowSize << endl;
-    cout << "Datalist size is: " << datalist->size() << endl;
+void insertColumn(map<time_t, vector<DataValueResult> > &spreadsheet, DataList *datalist, int indexOfList, int maxRowSize){
 
     for (datalist_iter_t iter = datalist->begin() ;
          iter != datalist->end() ; ++iter) {
         DataPoint *point = *iter;
         time_t dataTime = point->get_time();
-
-        cout << "inserting " << dataTime << ", " << point->get_value()->get_value() << " into " << indexOfList << endl;
 
         if (spreadsheet.find(dataTime) == spreadsheet.end()) {
             initializeRow(spreadsheet, dataTime, maxRowSize);
@@ -347,13 +341,13 @@ void insertColumn(map<time_t, vector<int> > &spreadsheet, DataList *datalist, in
 
 DataList *ExportToExcelSplit::decorate(DataList *datalist)
 {
-    map<time_t, vector<int> > spreadsheet;
+    map<time_t, vector<DataValueResult> > spreadsheet;
     vector<string> headings;
 
     for (datalist_iter_t iter = datalist->begin() ;
          iter != datalist->end() ; ++iter) {
         DataPoint *point = *iter;
-        cout << point->get_name() << " column attempting to insert." << endl;
+
         DataList *innerDataList = dynamic_cast<DataListDataValue*>(point->get_value())->get_datalist();
 
         if (!innerDataList) {
@@ -362,11 +356,7 @@ DataList *ExportToExcelSplit::decorate(DataList *datalist)
 
         insertColumn(spreadsheet, innerDataList, headings.size(), datalist->size());
         headings.push_back(point->get_name());
-
-        cout << point->get_name() << " column inserted." << endl;
     }
-
-    cout << "Spreadsheet initialized with " << spreadsheet.size() << " entries for " << headings.size() << " datalists" << endl;
 
     outputToFile(spreadsheet, headings);
 
@@ -374,7 +364,7 @@ DataList *ExportToExcelSplit::decorate(DataList *datalist)
 }
 
 void ExportToExcelSplit::outputToFile(
-        const map<time_t, vector<int> > &spreadsheet,
+        const map<time_t, vector<DataValueResult> > &spreadsheet,
         const vector<string> &headings)
 {
     ofstream fout(filename);
@@ -387,12 +377,12 @@ void ExportToExcelSplit::outputToFile(
 
     fout << endl;
 
-    for (map<time_t, vector<int> >::const_iterator iter = spreadsheet.begin() ;
+    for (map<time_t, vector<DataValueResult> >::const_iterator iter = spreadsheet.begin() ;
             iter != spreadsheet.end() ; ++iter) {
 
         fout << get_human_time(iter->first) << "\t";
 
-        foreach (int value, iter->second) {
+        foreach (DataValueResult value, iter->second) {
             fout << value << "\t";
         }
 
@@ -427,7 +417,7 @@ int infer_end_of_song(vector<int> &list) {
     // 100th of the array size - i.e. 5 seconds
     int num_zeros_to_infer_end = list.size() / 50;
 
-    for (int i = 0; i < list.size() ; i++) {
+    for (size_t i = 0; i < list.size() ; i++) {
         if (list.at(i) == 0) {
             num_consecutive_zeros++;
         } else {
@@ -545,6 +535,19 @@ DataList *SplitDatalistDecorator::decorate(DataList *datalist)
         }
         point->set_value(DataValue::get_instance(decorator->decorate(innerDataList)));
     //    delete innerDataList;
+    }
+
+    return datalist;
+}
+
+
+DataList *MergeIDToOne::decorate(DataList *datalist)
+{
+    for (datalist_iter_t iter = datalist->begin() ;
+         iter != datalist->end() ; ++iter) {
+        DataPoint *point = *iter;
+
+        point->set_id(1);
     }
 
     return datalist;

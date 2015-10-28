@@ -497,7 +497,7 @@ void Main_View::export_running_total()
     static QMutex sec_count_mutex;
 
     sec_count_mutex.lock();
-    QtConcurrent::run(this, &Main_View::export_to_excel);
+    QtConcurrent::run(this, &Main_View::export_complete_running_total);
     sec_count_mutex.unlock();
 }
 
@@ -534,7 +534,7 @@ void Main_View::test1()
 }
 
 
-void Main_View::export_to_excel()
+void Main_View::export_running_total_by_song()
 {
     DataList *datalist = Database::get()->get_sec_count_data();
 
@@ -543,10 +543,10 @@ void Main_View::export_to_excel()
             ->build(new FilterByTime(QDateTime::currentDateTime().addDays(-30).toTime_t(), QDateTime::currentDateTime().toTime_t()))
             ->build(new RunningTotal())
             ->build(new GetNamesFromIDs)
-            ->build(new ExportToExcel("RunningTotalExcel.txt"))
+            ->build(new ExportToExcel("RunningTotalBySongExcel.txt"))
         ->decorate(datalist);
 
-    message_bar->setText("Exported data");
+    message_bar->setText("Exported RunningTotalBySongExcel");
 
     } catch (Error &e) {
         e.print_error_msg();
@@ -554,11 +554,28 @@ void Main_View::export_to_excel()
     delete datalist;
 }
 
+void Main_View::export_complete_running_total()
+{
+    DataList *datalist = Database::get()->get_sec_count_data();
+
+    try {
+    datalist = create_decorator_combiner()
+            ->build(new MergeIDToOne())
+            ->build(new RunningTotal())
+            ->build(new SplitByID)
+            ->build(new ExportToExcelSplit("RunningTotalExcel.txt"))
+        ->decorate(datalist);
+
+    message_bar->setText("Exported RunningTotalExcel");
+
+    } catch (Error &e) {
+        e.print_error_msg();
+    }
+    delete datalist;
+}
 
 void Main_View::export_playcount_data()
 {
-
-    // Playcount Data
     DataList *datalist = Database::get()->get_sec_count_data();
 
      try {
@@ -578,6 +595,8 @@ void Main_View::export_playcount_data()
                          ))
              ->build(new ExportToExcelSplit("PlayCount.txt"))
          ->decorate(datalist);
+
+     message_bar->setText("Exported PlayCount");
     } catch (Error &e) {
         e.print_error_msg();
     }

@@ -221,6 +221,8 @@ private:
     const std::string filename;
 };
 
+#include "datapoint.h"
+
 /**
  * Requires a DataList of DataListDataValues
  *
@@ -241,7 +243,7 @@ public:
 private:
     const std::string filename;
 
-    void outputToFile(const std::map<time_t, std::vector<int> > &spreadsheet, const std::vector<std::string> &headings);
+    void outputToFile(const std::map<time_t, std::vector<DataValueResult> > &spreadsheet, const std::vector<std::string> &headings);
 };
 
 
@@ -276,6 +278,14 @@ public:
     virtual DataList *decorate(DataList *datalist);
 private:
     int delta_seconds;
+};
+
+/**
+ * Merge all the data into the same ID
+ */
+class MergeIDToOne : public DataListDecorator {
+public:
+    virtual DataList *decorate(DataList *datalist);
 };
 
 /**

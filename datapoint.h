@@ -7,16 +7,19 @@
 #include "time_ds.h"
 
 class DataList;
+
+typedef long long DataValueResult;
+
 class DataValue {
 public:
-    static DataValue *get_instance(int value);
+    static DataValue *get_instance(DataValueResult value);
     static DataValue *get_instance(time_t start_time, time_t end_time);
     static DataValue *get_instance(int secCount_start, int secCount_end);
     static DataValue *get_instance(DataList* datalist);
 
     virtual ~DataValue() {}
 
-    virtual int get_value() const = 0;
+    virtual DataValueResult get_value() const = 0;
 
     virtual std::string to_string() const {
         std::ostringstream stream;
@@ -58,6 +61,7 @@ public:
 
     void set_name(const std::string &name_) {name = name_;}
     void set_value(DataValue *value_) {value = value_;}
+    void set_id(int id_) {id = id_;}
 
     const std::string to_string() {
         std::ostringstream stream;
@@ -93,7 +97,7 @@ public:
         : start_pos(start_pos_), end_pos(end_pos_)
     {}
 
-    virtual int get_value() const {return end_pos - start_pos;}
+    virtual DataValueResult get_value() const {return end_pos - start_pos;}
 
     virtual DataValue *clone() const {return new SecCountData(start_pos, end_pos);}
 
@@ -116,7 +120,7 @@ class DataListDataValue : public DataValue
 public:
     DataListDataValue(DataList *datalist_) : datalist(datalist_) {}
 
-    virtual int get_value() const;
+    virtual DataValueResult get_value() const;
 
     virtual std::string to_string() const;
 
