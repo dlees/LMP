@@ -149,6 +149,7 @@ DataList *SortByValue::decorate(DataList *datalist)
 DataList *TotalUp::decorate(DataList *datalist)
 {
     std::map<int, int> IDToSum;
+    std::map<int, DataPoint*> idToPoint;
 
     for (datalist_iter_t iter = datalist->begin() ;
          iter != datalist->end() ; ++iter) {
@@ -161,6 +162,10 @@ DataList *TotalUp::decorate(DataList *datalist)
         int total = IDToSum[ID] + point->get_value()->get_value();
 
         IDToSum[ID] = total;
+
+        if (idToPoint.find(ID) == idToPoint.end()) {
+            idToPoint[ID] = point;
+        }
     }
 
     DataList *newList = DataList::get_instance();
@@ -168,7 +173,7 @@ DataList *TotalUp::decorate(DataList *datalist)
          map_iter != IDToSum.end() ; ++map_iter)
     {
         newList->add_data_point(DataPoint::get_instance(
-             "", map_iter->first, DataValue::get_instance(map_iter->second), 0));
+                                    idToPoint[map_iter->first]->get_name(), map_iter->first, DataValue::get_instance(map_iter->second), 0));
     }
     delete datalist;
     return newList;

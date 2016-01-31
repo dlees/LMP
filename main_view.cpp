@@ -612,9 +612,64 @@ void Main_View::export_playcount_data_async()
     play_count_mutex.unlock();
 }
 
+#include <fstream>
+#include <iostream>
+
+DataList *create_datalist_from_android_seccounts() {
+    std::string filename = "E:\\Downloads\\secCount.txt";
+    std::ifstream fin(filename);
+
+    DataList *datalist = DataList::get_instance();
+
+    std::map<std::string, int> nameToId;
+    int max_id = 0;
+
+    for( std::string line; getline( fin, line ); ) // Get's the name or eof
+    {
+        std::string name = line;
+
+        if (nameToId.find(name) == nameToId.end()) {
+            nameToId[name] = max_id++;
+        }
+
+        int id = nameToId[name];
+
+        getline( fin, line );
+        int start_count = atoi(line.c_str());
+
+        getline( fin, line );
+        int end_count = atoi(line.c_str());
+
+        getline( fin, line ); // First time is start time. we are used to seeing end time in other DBs
+        getline( fin, line );
+        time_t time = QDateTime::fromString(QString::fromStdString(line)).toTime_t();
+
+        getline( fin, line );  // get the "==="
+
+        datalist->add_data_point(DataPoint::get_instance(name, id, DataValue::get_instance(start_count, end_count), time));
+    }
+
+    return datalist;
+}
 
 void Main_View::test2()
 {
-    export_playcount_data_async();
+    //export_playcount_data_async();
+    DataList *datalist = create_datalist_from_android_seccounts();
+
+    try {
+    datalist = create_decorator_combiner()
+            ->build(new TotalUp())
+            ->build(sort_decorator("value"))
+            ->build(new FilterByValue("less than", 1000))
+            ->build(new LogDatalist)
+        ->decorate(datalist);
+
+    message_bar->setText("Exported PlayCount");
+   } catch (Error &e) {
+       e.print_error_msg();
+   }
+   delete datalist;
+
 }
 

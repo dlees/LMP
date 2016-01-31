@@ -230,6 +230,18 @@ QMap<int, SongInfo> XmlDatabase::parse_song_db()
                 songIDtoInfo.insert(curSong->songID, *curSong);
 
             }
+            if (songReader->hasError()) {
+                // This error happens when the filename or name of a song
+                // has a bad character in it (like a bad apostrophe.
+                // This doesn't have to be the song that errored, it is usually
+                // around 20 songs later. Just check the new ones.
+                qDebug() << songReader->errorString();
+                qDebug() << "Last read song: "
+                         << curSong->songID << " :"
+                         << curSong->songName<< " :"
+                         << curSong->fileName<< " :"
+                         << curSong->created;
+            }
         }
     }
     songFile->close();

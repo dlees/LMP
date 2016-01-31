@@ -200,7 +200,7 @@ Music_Item *Library::get_item(int id)
 {
     QMap<int, Music_Item*>::Iterator iter = id_to_item.find(id);
     if (iter == id_to_item.end()) {
-        throw Error(QString("Cannot find id %i in database.").arg(id));
+        throw Error(QString("Cannot find id %1 in database.").arg(id));
     }
     return *iter;
 }
