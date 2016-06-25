@@ -158,7 +158,7 @@ void Playing_Song::next_hs()
     }
     catch (Error &e)
     {
-        e.print_error_msg();
+       // e.print_error_msg();
     }
 }
 
